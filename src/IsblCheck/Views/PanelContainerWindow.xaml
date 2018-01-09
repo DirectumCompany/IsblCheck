@@ -1,0 +1,247 @@
+﻿<Window x:Class="IsblCheck.Views.PanelContainerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ad="http://schemas.xceed.com/wpf/xaml/avalondock"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:l="clr-namespace:IsblCheck.UI.Localization"
+        xmlns:t="clr-namespace:IsblCheck.UI.Templates"
+        xmlns:s="clr-namespace:IsblCheck.UI.Styles"
+        xmlns:vmp="clr-namespace:IsblCheck.ViewModels.Panels"
+        xmlns:vp="clr-namespace:IsblCheck.Views.Panels"
+        mc:Ignorable="d"
+        Icon="/Resources/App.ico" Height="768" Width="1024"
+        Title="{l:Localization WINDOWS_TITLE}" 
+        ResizeMode="CanResizeWithGrip">
+  <Window.Resources>
+    <ad:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+
+    <Style x:Key="ToolbarButtonStyle" TargetType="Button">
+      <Style.Triggers>
+        <Trigger Property="IsEnabled" Value="False">
+          <Setter Property="Opacity" Value="0.5"/>
+        </Trigger>
+      </Style.Triggers>
+    </Style>
+
+    <Style x:Key="AnchorablePanelStyle" TargetType="ad:LayoutAnchorableItem">
+      <Setter Property="ContentId" Value="{Binding Model.ContentId, Mode=OneWay}"/>
+      <Setter Property="Title" Value="{Binding Model.Title, Mode=OneWay}"/>
+      <Setter Property="IconSource" Value="{Binding Model.IconSource, Mode=OneWay}"/>
+      <Setter Property="IsSelected" Value="{Binding Model.IsSelected, Mode=TwoWay}"/>
+      <Setter Property="IsActive" Value="{Binding Model.IsActive, Mode=TwoWay}"/>
+      <Setter Property="Visibility" Value="{Binding Model.IsVisible, Mode=TwoWay,
+                                                    Converter={StaticResource BoolToVisibilityConverter},
+                                                    ConverterParameter={x:Static Visibility.Hidden}}"/>
+      <Style.Triggers>
+        <DataTrigger Binding="{Binding Model.HasTitleLocalization, Mode=OneWay}" Value="True">
+          <Setter Property="Title" Value="{l:Localization KeyBinding={Binding Model.TitleLocalizationKey, Mode=OneWay}}"/>
+        </DataTrigger>
+      </Style.Triggers>
+    </Style>
+
+    <Style x:Key="PanelStyle" TargetType="ad:LayoutItem">
+      <Setter Property="ContentId" Value="{Binding Model.ContentId, Mode=OneWay}"/>
+      <Setter Property="Title" Value="{Binding Model.Title, Mode=OneWay}"/>
+      <Setter Property="IconSource" Value="{Binding Model.IconSource, Mode=OneWay}"/>
+      <Setter Property="IsSelected" Value="{Binding Model.IsSelected, Mode=TwoWay}"/>
+      <Setter Property="IsActive" Value="{Binding Model.IsActive, Mode=TwoWay}"/>
+      <Setter Property="CanClose" Value="{Binding Model.CanClose, Mode=OneWay}"/>
+      <Setter Property="CloseCommand" Value="{Binding Model.CloseCommand, Mode=OneWay}"/>
+      <Style.Triggers>
+        <DataTrigger Binding="{Binding Model.HasTitleLocalization, Mode=OneWay}" Value="True">
+          <Setter Property="Title" Value="{l:Localization KeyBinding={Binding Model.TitleLocalizationKey, Mode=OneWay}}"/>
+        </DataTrigger>
+      </Style.Triggers>
+    </Style>
+
+    <s:DynamicStyleSelector x:Key="PanelStyleSelector">
+      <s:StyleDefinition SelectByContainer="True"
+                         Type="{x:Type ad:LayoutAnchorableItem}"
+                         Style="{StaticResource AnchorablePanelStyle}"/>
+      <s:StyleDefinition SelectByContainer="True"
+                         Type="{x:Type ad:LayoutDocumentItem}"
+                         Style="{StaticResource PanelStyle}"/>
+    </s:DynamicStyleSelector>
+
+    <DataTemplate x:Key="StartPageTemplate">
+      <vp:StartPageView/>
+    </DataTemplate>
+
+    <DataTemplate x:Key="DocumentViewerTemplate">
+      <vp:DocumentViewerView/>
+    </DataTemplate>
+
+    <DataTemplate x:Key="SourceExplorerTemplate">
+      <vp:SourceExplorerView/>
+    </DataTemplate>
+
+    <DataTemplate x:Key="ReportViewerTemplate">
+      <vp:ReportViewerView/>
+    </DataTemplate>
+
+    <t:DynamicTemplateSelector x:Key="PanelTemplateSelector">
+      <t:TemplateDefinition Type="{x:Type vmp:StartPageViewModel}"
+                            DataTemplate="{StaticResource StartPageTemplate}"/>
+      <t:TemplateDefinition Type="{x:Type vmp:DocumentViewerViewModel}"
+                            DataTemplate="{StaticResource DocumentViewerTemplate}"/>
+      <t:TemplateDefinition Type="{x:Type vmp:SourceExplorerViewModel}"
+                            DataTemplate="{StaticResource SourceExplorerTemplate}"/>
+      <t:TemplateDefinition Type="{x:Type vmp:ReportViewerViewModel}"
+                            DataTemplate="{StaticResource ReportViewerTemplate}"/>
+    </t:DynamicTemplateSelector>
+  </Window.Resources>
+
+  <xctk:BusyIndicator Name="BusyIndicator"
+                      IsBusy="{Binding IsBusyIndicatorVisible, Mode=OneWay}"
+                      BusyContent="{Binding BusyIndicatorCaption, Mode=OneWay, TargetNullValue={l:Localization BUSY_INDICATOR_DEFAULT_CAPTION}}">
+    <Grid>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="*"/>
+        <RowDefinition Height="Auto"/>
+      </Grid.RowDefinitions>
+
+      <!-- Главное меню. -->
+      <Menu Grid.Row="0">
+        <MenuItem Header="{l:Localization FILE}">
+          <MenuItem Header="{l:Localization OPEN}">
+            <MenuItem Header="{l:Localization OPEN_PACKAGE}"
+                    Command="{Binding OpenPackageCommand, Mode=OneWay}">
+              <MenuItem.Icon>
+                <Image Source="/Resources/AddPackage_16.png"/>
+              </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="{l:Localization OPEN_DATABASE}"
+                    Command="{Binding OpenDatabaseCommand, Mode=OneWay}">
+              <MenuItem.Icon>
+                <Image Source="/Resources/AddDatabase_16.png"/>
+              </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="{l:Localization OPEN_FOLDER}"
+                    Command="{Binding OpenFolderCommand, Mode=OneWay}">
+              <MenuItem.Icon>
+                <Image Source="/Resources/AddFolder_16.png"/>
+              </MenuItem.Icon>
+            </MenuItem>
+          </MenuItem>
+          <MenuItem Header="{l:Localization EXIT}"
+                  Command="{Binding ExitCommand}"/>
+        </MenuItem>
+        <MenuItem Header="{l:Localization VIEW}">
+          <MenuItem Header="{l:Localization SOURCE_EXPLORER}"
+                  Command="{Binding ShowSourceExplorerCommand, Mode=OneTime}"/>
+          <MenuItem Header="{l:Localization REPORT_VIEWER}"
+                  Command="{Binding ShowReportViewerCommand, Mode=OneTime}"/>
+          <MenuItem Header="{l:Localization START_PAGE}"
+                  Command="{Binding ShowStartPageCommand, Mode=OneTime}"/>
+        </MenuItem>
+        <!-- TODO: Надо доделать. -->
+        <!--<MenuItem Header="{l:Localization OPTIONS}">
+        <MenuItem Header="{l:Localization SETTINGS}"/>
+      </MenuItem>-->
+        <MenuItem Header="{l:Localization HELP}">
+          <MenuItem Header="{l:Localization ABOUT}"
+                  Command="{Binding ShowAboutCommand, Mode=OneTime}"/>
+        </MenuItem>
+      </Menu>
+
+      <!-- Панель кнопок. -->
+      <ToolBarTray Grid.Row="1">
+        <ToolBar DataContext="{Binding StandardToolbar, Mode=OneTime}">
+          <Button Command="{Binding OpenPackageCommand, Mode=OneTime}"
+                Style="{StaticResource ToolbarButtonStyle}"
+                ToolTip="{l:Localization OPEN_PACKAGE}">
+            <Image Source="/Resources/AddPackage_20.png"/>
+          </Button>
+          <Button Command="{Binding OpenDatabaseCommand, Mode=OneTime}"
+                Style="{StaticResource ToolbarButtonStyle}"
+                ToolTip="{l:Localization OPEN_DATABASE}">
+            <Image Source="/Resources/AddDatabase_20.png"/>
+          </Button>
+          <Button Command="{Binding OpenFolderCommand, Mode=OneTime}"
+                Style="{StaticResource ToolbarButtonStyle}"
+                ToolTip="{l:Localization OPEN_FOLDER}">
+            <Image Source="/Resources/AddFolder_20.png"/>
+          </Button>
+          <Separator/>
+          <Button Command="{Binding CheckCommand, Mode=OneTime}"
+                Style="{StaticResource ToolbarButtonStyle}"
+                ToolTip="{l:Localization CHECK_ACTIVE_TAB}">
+            <Image Source="/Resources/Check_20.png"/>
+          </Button>
+          <Button Command="{Binding CheckAllCommand, Mode=OneTime}"
+                Style="{StaticResource ToolbarButtonStyle}"
+                ToolTip="{l:Localization CHECK_OPENED_TABS}">
+            <Image Source="/Resources/CheckAll_20.png"/>
+          </Button>
+        </ToolBar>
+      </ToolBarTray>
+
+      <!-- Док панель.-->
+      <ad:DockingManager x:Name="DockingManager" Grid.Row="2"
+                       DocumentsSource="{Binding Panels, Mode=OneTime}"
+                       AnchorablesSource="{Binding AnchorablePanels, Mode=OneTime}"
+                       LayoutItemContainerStyleSelector="{StaticResource PanelStyleSelector}"
+                       LayoutItemTemplateSelector="{StaticResource PanelTemplateSelector}">
+        <ad:DockingManager.Theme>
+          <ad:AeroTheme/>
+        </ad:DockingManager.Theme>
+
+        <ad:LayoutRoot>
+          <ad:LayoutPanel Orientation="Horizontal">
+            <ad:LayoutAnchorablePane DockWidth="250"/>
+            <ad:LayoutDocumentPane/>
+          </ad:LayoutPanel>
+        </ad:LayoutRoot>
+      </ad:DockingManager>
+
+      <!-- Статус. -->
+      <StatusBar Grid.Row="3" Height="20">
+        <StatusBar.ItemsPanel>
+          <ItemsPanelTemplate>
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="20"/>
+              </Grid.ColumnDefinitions>
+            </Grid>
+          </ItemsPanelTemplate>
+        </StatusBar.ItemsPanel>
+        <StatusBarItem Grid.Column="0"
+                     HorizontalContentAlignment="Stretch"
+                     VerticalContentAlignment="Stretch">
+          <ProgressBar Minimum="0"
+                     Maximum="{Binding ProgressMaximum, Mode=OneWay}"
+                     Value="{Binding ProgressValue, Mode=OneWay}"
+                     Visibility="{Binding IsProgressVisible, Mode=OneWay,
+                                          Converter={StaticResource BoolToVisibilityConverter},
+                                          ConverterParameter={x:Static Visibility.Hidden}}"/>
+        </StatusBarItem>
+        <Separator Grid.Column="1"/>
+        <!-- TODO: Надо доделать. -->
+        <!--<StatusBarItem Grid.Column="2">
+        <StackPanel>
+          <TextBlock Text="Длина, количество строк"/>
+          <Separator/>
+        </StackPanel>
+      </StatusBarItem>
+      <Separator Grid.Column="3"/>
+      <StatusBarItem Grid.Column="4">
+        <StackPanel>
+          <TextBlock Text="Строка, столбец, выделено"/>
+          <Separator/>
+        </StackPanel>
+      </StatusBarItem>
+      <Separator Grid.Column="5"/>-->
+      </StatusBar>
+    </Grid>
+  </xctk:BusyIndicator>
+</Window>

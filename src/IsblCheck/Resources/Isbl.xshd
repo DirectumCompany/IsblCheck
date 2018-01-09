@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SyntaxDefinition name="ISBL" extensions=".isbl" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+  <Color name="Comment" foreground="#FF555555" fontStyle="italic" exampleText="// Comment" />
+  <Color name="String" foreground="#FF000080" exampleText="Text = &quot;Hello, World!&quot;" />
+  <Color name="Number" foreground="#FF000000" exampleText="Value = 0.01" />
+  <Color name="Function" foreground="#FF008080" exampleText="ShowMessage(Value)"/>
+  <Color name="MethodCall" foreground="#FF000000" exampleText="Object.Open()" />
+  <Color name="Type" foreground="#FF000000" exampleText="A : IConnection = Application.Connection" />
+  <Color name="Operator" foreground="#FF000000" exampleText="A = B + C"/>
+  <Color name="Keyword" foreground="#FF000000" fontWeight="bold" exampleText="exitfor" />
+  <Color name="Constant" foreground="#FF000080" fontWeight="bold" exampleText="Type = ecWarnign" />
+  <Color name="PredefinedVariable" foreground="#FF6F1C00" fontWeight="bold" exampleText="Connection = Application.Connection" />
+  <Color name="Variable" foreground="#FF5E1700" exampleText="A = B" />
+
+  <RuleSet name="Dynamic"/>
+    
+  <RuleSet ignoreCase="true">
+    <Span color="Comment">
+      <Begin>//</Begin>
+    </Span>
+    <Span color="Comment" multiline="true">
+      <Begin>/\*</Begin>
+      <End>\*/</End>
+    </Span>
+    <Span color="String" multiline="true">
+      <Begin>"</Begin>
+      <End>"</End>
+    </Span>
+    <Span color="String">
+      <Begin>'</Begin>
+      <End>'</End>
+    </Span>
+    <Keywords color="Operator">
+      <Word>==</Word>
+      <Word>&lt;&lt;&gt;&gt;</Word>
+      <Word>&gt;&gt;=</Word>
+      <Word>&lt;&lt;=</Word>
+      <Word>&gt;=</Word>
+      <Word>&lt;=</Word>
+      <Word>&gt;</Word>
+      <Word>&lt;</Word>
+      <Word>=</Word>
+      <Word>+</Word>
+      <Word>-</Word>
+      <Word>*</Word>
+      <Word>/</Word>
+      <Word>^</Word>
+      <Word>&amp;</Word>
+      <Word>(</Word>
+      <Word>)</Word>
+      <Word>[</Word>
+      <Word>]</Word>
+      <Word>;</Word>
+      <Word>.</Word>
+    </Keywords>
+    <Keywords color="Keyword">
+      <Word>and</Word>
+      <Word>и</Word>
+      <Word>else</Word>
+      <Word>иначе</Word>
+      <Word>endexcept</Word>
+      <Word>endfinally</Word>
+      <Word>endforeach</Word>
+      <Word>конецвсе</Word>
+      <Word>endif</Word>
+      <Word>конецесли</Word>
+      <Word>endwhile</Word>
+      <Word>конецпока</Word>
+      <Word>except</Word>
+      <Word>exitfor</Word>
+      <Word>finally</Word>
+      <Word>foreach</Word>
+      <Word>все</Word>
+      <Word>if</Word>
+      <Word>если</Word>
+      <Word>in</Word>
+      <Word>в</Word>
+      <Word>not</Word>
+      <Word>не</Word>
+      <Word>or</Word>
+      <Word>или</Word>
+      <Word>try</Word>
+      <Word>while</Word>
+      <Word>пока</Word>
+    </Keywords>
+    <Import ruleSet="Dynamic"/>
+    <Rule color="Number">\b0[xX][0-9a-fA-F]+|(\b\d+(\.[0-9]+)?|\.[0-9]+)([eE][+-]?[0-9]+)?</Rule>
+    <Rule color="Function">(?&lt;![A-Za-zА-Яа-я!_\.])[A-Za-zА-Яа-я!_]+[ \r\n]*(?=\()</Rule>
+    <Rule color="MethodCall">(?&lt;=\.)[ \r\n]*[A-Za-zА-Яа-я!_]+</Rule>
+    <Rule color="Type">(?&lt;=\:)[ \r\n]*[A-Za-zА-Яа-я!_]+</Rule>
+    <Rule color="Variable">[A-Za-zА-Яа-я!][A-Za-zА-Яа-я0-9_!]*</Rule>
+  </RuleSet>
+</SyntaxDefinition>

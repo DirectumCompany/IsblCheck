@@ -1,0 +1,66 @@
+﻿<UserControl x:Class="IsblCheck.Views.Panels.StartPageView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:c="clr-namespace:IsblCheck.UI.Controls"
+             xmlns:l="clr-namespace:IsblCheck.UI.Localization"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+
+  <UserControl.Resources>
+    <c:DataContextProxy x:Key="DataContextProxy" DataContext="{Binding}"/>
+  </UserControl.Resources>
+
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
+
+    <TextBlock Grid.Row="0"
+               Margin="20,20,0,20"
+               FontSize="30" FontWeight="Medium"
+               Text="{l:Localization APP_NAME}"/>
+
+    <StackPanel Grid.Row="1" Margin="30,0,0,20">
+      <TextBlock Margin="0,10"
+                 FontSize="16" FontWeight="Medium"
+                 Text="{l:Localization START}"/>
+      <TextBlock FontSize="14">
+        <Hyperlink Command="{Binding OpenPackageCommand, Mode=OneWay}">
+          <Run Text="{l:Localization OPEN_PACKAGE}"/>
+        </Hyperlink>
+      </TextBlock>
+      <TextBlock FontSize="14">
+        <Hyperlink Command="{Binding OpenDatabaseCommand, Mode=OneWay}">
+          <Run Text="{l:Localization OPEN_DATABASE}"/>
+        </Hyperlink>
+      </TextBlock>
+      <TextBlock FontSize="14">
+        <Hyperlink Command="{Binding OpenFolderCommand, Mode=OneWay}">
+          <Run Text="{l:Localization OPEN_FOLDER}"/>
+        </Hyperlink>
+      </TextBlock>
+    </StackPanel>
+
+    <StackPanel Grid.Row="2" Margin="30,0,0,0">
+      <TextBlock Margin="0,10"
+                 FontSize="16" FontWeight="Medium"
+                 Text="{l:Localization RECENT}"/>
+      <ItemsControl ItemsSource="{Binding LastOpenedPackagesView, Mode=OneWay}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate>
+            <TextBlock FontSize="14">
+              <Hyperlink Command="{Binding DataContext.OpenSpecifiedPackageCommand, Source={StaticResource DataContextProxy}}"
+                         CommandParameter="{Binding Mode=OneWay}">
+                <Run Text="{Binding Mode=OneWay}"/>
+              </Hyperlink>
+            </TextBlock>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </StackPanel>
+  </Grid>
+</UserControl>

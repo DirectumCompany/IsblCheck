@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  
+  <!-- Путь до бинарников, из которых будет собираться инсталлятор. -->
+  <?define ArtifactsDir = "$(var.ProjectDir)..\..\artifacts\bin\IsblCheck.Agent\Release\" ?>
+  <!-- Имя продукта. -->
+  <?define ProductName = "IsblCheck Agent" ?>
+
+  <Product Id="*" Name="$(var.ProductName)" Language="1033" Version="1.0.0.0" Manufacturer="NPO Computer" UpgradeCode="5d5977b3-85d7-492e-a27c-0366afa42c29">
+    <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+    <MajorUpgrade DowngradeErrorMessage="A newer version of $(var.ProductName) is already installed." />
+    <MediaTemplate EmbedCab="yes"/>
+
+    <Feature Id="ProductFeature" Title="IsblCheck.Agent" Level="1">
+      <!-- Бинарники. -->
+      <ComponentGroupRef Id="Binaries" />
+      <!-- Сборки с правилами. -->
+      <ComponentGroupRef Id="Rules" />
+    </Feature>
+    
+    <!-- Без возможности восстановить -->
+    <Property Id="ARPNOREPAIR" Value="yes" Secure="yes" />
+    <!-- Без возможности изменить -->
+    <Property Id="ARPNOMODIFY" Value="yes" Secure="yes" />
+
+    <!-- Структура папок. -->
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="INSTALLDIR" Name="$(var.ProductName)">
+          <Directory Id="RulesDir" Name="Rules" />
+        </Directory>
+      </Directory>
+    </Directory>
+
+    <!-- Компоненты. -->
+    <ComponentGroup Id="Binaries" Directory="INSTALLDIR">
+      <Component Id="IsblCheck.Agent.exe" Guid="*">
+        <File Id="IsblCheck.Agent.exe" Source="$(var.ArtifactsDir)IsblCheck.Agent.exe" KeyPath="yes" Checksum="yes"/>
+      </Component>
+      <Component Id="Antlr4.Runtime.dll" Guid="*">
+        <File Id="Antlr4.Runtime.dll" Source="$(var.ArtifactsDir)Antlr4.Runtime.dll" KeyPath="yes" Checksum="yes"/>
+      </Component>
+      <Component Id="Common.Logging.dll" Guid="*">
+        <File Id="Common.Logging.dll" Source="$(var.ArtifactsDir)Common.Logging.dll" KeyPath="yes" Checksum="yes"/>
+      </Component>
+      <Component Id="Common.Logging.Core.dll" Guid="*">
+        <File Id="Common.Logging.Core.dll" Source="$(var.ArtifactsDir)Common.Logging.Core.dll" KeyPath="yes" Checksum="yes"/>
+      </Component>
+      <Component Id="Common.Logging.NLog41.dll" Guid="*">
+        <File Id="Common.Logging.NLog41.dll" Source="$(var.ArtifactsDir)Common.Logging.NLog41.dll" KeyPath="yes" Checksum="yes"/>
+      </Component>
+      <Component Id="IsblCheck.Agent.exe.config" Guid="*">
+        <File Id="IsblCheck.Agent.exe.config" Source="$(var.ArtifactsDir)IsblCheck.Agent.exe.config" KeyPath="yes" Checksum="yes"/>
+      </Component>
+      <Component Id="IsblCheck.Context.Application.dll" Guid="*">
+        <File Id="IsblCheck.Context.Application.dll" Source="$(var.ArtifactsDir)IsblCheck.Context.Application.dll" KeyPath="yes" Checksum="yes"/>
+      </Component>
+      <Component Id="IsblCheck.Context.Development.dll" Guid="*">
+        <File Id="IsblCheck.Context.Development.dll" Source="$(var.ArtifactsDir)IsblCheck.Context.Development.dll" KeyPath="yes" Checksum="yes"/>
+      </Component>
+      <Component Id="IsblCheck.Core.dll" Guid="*">
+        <File Id="IsblCheck.Core.dll" Source="$(var.ArtifactsDir)IsblCheck.Core.dll" KeyPath="yes" Checksum="yes"/>
+      </Component>
+      <Component Id="IsblCheck.Reports.dll" Guid="*">
+        <File Id="IsblCheck.Reports.dll" Source="$(var.ArtifactsDir)IsblCheck.Reports.dll" KeyPath="yes" Checksum="yes"/>
+      </Component>
+      <Component Id="NLog.dll" Guid="*">
+        <File Id="NLog.dll" Source="$(var.ArtifactsDir)NLog.dll" KeyPath="yes" Checksum="yes"/>
+      </Component>
+    </ComponentGroup>
+    <ComponentGroup Id="Rules" Directory="RulesDir">
+      <Component Id="IsblCheck.BaseRules.dll" Guid="*">
+        <File Id="IsblCheck.BaseRules.dll" Source="$(var.ArtifactsDir)Rules\IsblCheck.BaseRules.dll" KeyPath="yes" Checksum="yes"/>
+      </Component>
+    </ComponentGroup>
+  </Product>
+</Wix>

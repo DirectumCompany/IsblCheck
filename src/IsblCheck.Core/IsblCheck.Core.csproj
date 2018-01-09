@@ -1,0 +1,193 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\packages\Antlr4.4.5.3\build\Antlr4.props" Condition="Exists('..\..\packages\Antlr4.4.5.3\build\Antlr4.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{649C4B83-058D-4BCA-B662-6B54D86FDDF7}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>IsblCheck.Core</RootNamespace>
+    <AssemblyName>IsblCheck.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <IntermediateOutputPath>..\..\artifacts\obj\IsblCheck\Debug\</IntermediateOutputPath>
+    <OutputPath>..\..\artifacts\bin\IsblCheck\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <IntermediateOutputPath>..\..\artifacts\obj\IsblCheck\Release\</IntermediateOutputPath>
+    <OutputPath>..\..\artifacts\bin\IsblCheck\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Antlr4.Runtime, Version=4.5.0.0, Culture=neutral, PublicKeyToken=09abb75b9ed49849, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Antlr4.Runtime.4.5.3\lib\net45\Antlr4.Runtime.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Common.Logging, Version=3.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Common.Logging.3.3.1\lib\net40\Common.Logging.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Common.Logging.Core, Version=3.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Common.Logging.Core.3.3.1\lib\net40\Common.Logging.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\ProductInfo.cs">
+      <Link>Properties\ProductInfo.cs</Link>
+    </Compile>
+    <Compile Include="Checker\CodeChecker.cs" />
+    <Compile Include="Checker\Document.cs" />
+    <Compile Include="Checker\ComponentType.cs" />
+    <Compile Include="Checker\ICodeChecker.cs" />
+    <Compile Include="Checker\IDocument.cs" />
+    <Compile Include="Checker\ProgressCounter.cs" />
+    <Compile Include="Checker\ReportErrorListener.cs" />
+    <Compile Include="Context\Application\IApplicationContextFactory.cs" />
+    <Compile Include="Context\Context.cs" />
+    <Compile Include="Context\ContextManager.cs" />
+    <Compile Include="Context\Development\Action.cs" />
+    <Compile Include="Context\Development\ActionWithHandler.cs" />
+    <Compile Include="Context\Development\MethodParam.cs" />
+    <Compile Include="Context\Development\Method.cs" />
+    <Compile Include="Context\Development\MethodParamType.cs" />
+    <Compile Include="Context\Development\StandardRoute.cs" />
+    <Compile Include="Context\Development\Wizard.cs" />
+    <Compile Include="Context\Development\WizardStepAction.cs" />
+    <Compile Include="Context\Development\WizardEvent.cs" />
+    <Compile Include="Context\Development\WizardStep.cs" />
+    <Compile Include="Context\Development\WorkflowBlockProperty.cs" />
+    <Compile Include="Context\Development\WorkflowEvent.cs" />
+    <Compile Include="Context\Development\CardRequisite.cs" />
+    <Compile Include="Context\Development\CommonReport.cs" />
+    <Compile Include="Context\Development\ComponentState.cs" />
+    <Compile Include="Context\Development\Constant.cs" />
+    <Compile Include="Context\Development\DisplayRequisite.cs" />
+    <Compile Include="Context\Development\Event.cs" />
+    <Compile Include="Context\Development\EventType.cs" />
+    <Compile Include="Context\Development\IDevelopmentContextProvider.cs" />
+    <Compile Include="Context\Development\Dialog.cs" />
+    <Compile Include="Context\Development\DialogRequisite.cs" />
+    <Compile Include="Context\Development\DocumentCardType.cs" />
+    <Compile Include="Context\Development\Component.cs" />
+    <Compile Include="Context\Development\DocumentRequisite.cs" />
+    <Compile Include="Context\Development\Function.cs" />
+    <Compile Include="Context\Development\FunctionArgument.cs" />
+    <Compile Include="Context\Development\FunctionArgumentType.cs" />
+    <Compile Include="Context\Application\IApplicationContext.cs" />
+    <Compile Include="Context\Development\IntegratedReport.cs" />
+    <Compile Include="Context\Development\LocalizationValue.cs" />
+    <Compile Include="Context\Development\NumerationMethod.cs" />
+    <Compile Include="Context\Development\ReferenceRequisite.cs" />
+    <Compile Include="Context\Development\RequisitePickValue.cs" />
+    <Compile Include="Context\Development\RouteBlock.cs" />
+    <Compile Include="Context\Development\RouteBlockType.cs" />
+    <Compile Include="Context\Development\View.cs" />
+    <Compile Include="Context\Development\WorkflowBlock.cs" />
+    <Compile Include="Context\Development\WorkflowDescription.cs" />
+    <Compile Include="Context\IContext.cs" />
+    <Compile Include="Context\Development\IDevelopmentContext.cs" />
+    <Compile Include="Context\Development\IDevelopmentContextFactory.cs" />
+    <Compile Include="Context\Development\LocalizationString.cs" />
+    <Compile Include="Context\Development\ReferenceType.cs" />
+    <Compile Include="Context\Development\Report.cs" />
+    <Compile Include="Context\Development\Requisite.cs" />
+    <Compile Include="Context\Development\RequisiteFormat.cs" />
+    <Compile Include="Context\Development\RequisiteSection.cs" />
+    <Compile Include="Context\Development\RequisiteType.cs" />
+    <Compile Include="Context\Development\Script.cs" />
+    <Compile Include="Context\Development\Viewer.cs" />
+    <Compile Include="Context\Development\ViewerType.cs" />
+    <Compile Include="Context\IContextManager.cs" />
+    <Compile Include="Exceptions\AssemblyLoadingFailedException.cs" />
+    <Compile Include="Parser\Isbl.g4.lexer.cs">
+      <DependentUpon>Isbl.g4</DependentUpon>
+    </Compile>
+    <Compile Include="Parser\Isbl.g4.parser.cs">
+      <DependentUpon>Isbl.g4</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reports\Severity.cs" />
+    <Compile Include="Reports\IReport.cs" />
+    <Compile Include="Reports\IReportManager.cs" />
+    <Compile Include="Reports\IReportMessage.cs" />
+    <Compile Include="Reports\IReportPrinter.cs" />
+    <Compile Include="Reports\Report.cs" />
+    <Compile Include="Reports\ReportManager.cs" />
+    <Compile Include="Reports\ReportMessage.cs" />
+    <Compile Include="Reports\TextPosition.cs" />
+    <Compile Include="Reports\TokenExtensions.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Rules\IRule.cs" />
+    <Compile Include="Rules\IRuleFactory.cs" />
+    <Compile Include="Rules\IRuleInfo.cs" />
+    <Compile Include="Rules\IRuleManager.cs" />
+    <Compile Include="Rules\AbstractRule.cs" />
+    <Compile Include="Rules\AbstractRuleFactory.cs" />
+    <Compile Include="Rules\RuleInfo.cs" />
+    <Compile Include="Rules\RuleManager.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Antlr4 Include="Parser\Isbl.g4">
+      <Generator>MSBuild:Compile</Generator>
+      <CustomToolNamespace>IsblCheck.Core.Parser</CustomToolNamespace>
+    </Antlr4>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\Antlr4.4.5.3\build\Antlr4.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Antlr4.4.5.3\build\Antlr4.props'))" />
+    <Error Condition="!Exists('..\..\packages\Antlr4.4.5.3\build\Antlr4.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Antlr4.4.5.3\build\Antlr4.targets'))" />
+  </Target>
+  <Import Project="..\..\packages\Antlr4.4.5.3\build\Antlr4.targets" Condition="Exists('..\..\packages\Antlr4.4.5.3\build\Antlr4.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

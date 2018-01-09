@@ -1,0 +1,142 @@
+﻿<UserControl x:Class="IsblCheck.Views.Panels.ReportViewerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:b="clr-namespace:IsblCheck.UI.Behaviors"
+             xmlns:l="clr-namespace:IsblCheck.UI.Localization"
+             xmlns:r="clr-namespace:IsblCheck.Core.Reports;assembly=IsblCheck.Core"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="600">
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
+
+    <ToolBarPanel Grid.Row="0">
+      <ToolBar ToolBarTray.IsLocked="True">
+        <ToggleButton IsChecked="{Binding IsErrorsShown, Mode=TwoWay}">
+          <StackPanel Orientation="Horizontal">
+            <Image Source="/Resources/Error_20.png" VerticalAlignment="Center"/>
+            <TextBlock VerticalAlignment="Center">
+              <TextBlock.Text>
+                <l:Localization Key="COUNT_ERRORS">
+                  <Binding Path="ErrorCount" Mode="OneWay"/>
+                </l:Localization>
+              </TextBlock.Text>
+            </TextBlock>
+          </StackPanel>
+        </ToggleButton>
+        <Separator/>
+        <ToggleButton IsChecked="{Binding IsWarningsShown, Mode=TwoWay}">
+          <StackPanel Orientation="Horizontal">
+            <Image Source="/Resources/Warning_20.png" VerticalAlignment="Center"/>
+            <TextBlock VerticalAlignment="Center">
+              <TextBlock.Text>
+                <l:Localization Key="COUNT_WARNINGS">
+                  <Binding Path="WarningCount" Mode="OneWay"/>
+                </l:Localization>
+              </TextBlock.Text>
+            </TextBlock>
+          </StackPanel>
+        </ToggleButton>
+        <Separator/>
+        <ToggleButton IsChecked="{Binding IsInformationsShown, Mode=TwoWay}">
+          <StackPanel Orientation="Horizontal">
+            <Image Source="/Resources/Information_20.png" VerticalAlignment="Center"/>
+            <TextBlock VerticalAlignment="Center">
+              <TextBlock.Text>
+                <l:Localization Key="COUNT_MESSAGES">
+                  <Binding Path="InformationCount" Mode="OneWay"/>
+                </l:Localization>
+              </TextBlock.Text>
+            </TextBlock>
+          </StackPanel>
+        </ToggleButton>
+        <Separator/>
+        <Button Command="{Binding ExportAsCsvCommand, Mode=OneWay}"
+                ToolTip="{l:Localization EXPORT_AS_CSV}">
+          <Image Source="/Resources/CSV_20.png"/>
+        </Button>
+      </ToolBar>
+    </ToolBarPanel>
+
+    <DataGrid Grid.Row="1"
+              ItemsSource="{Binding ReportMessages, Mode=OneWay, IsAsync=True}"
+              AutoGenerateColumns="False"
+              HorizontalGridLinesBrush="LightGray"
+              VerticalGridLinesBrush="LightGray"
+              SelectionUnit="FullRow"
+              RowHeight="20"
+              EnableRowVirtualization="True" 
+              CanUserResizeRows="False">
+      <DataGrid.Columns>
+        <DataGridTemplateColumn Width="25" CanUserResize="False" 
+                                CanUserSort="True" SortMemberPath="Level">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate>
+              <Image HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="None">
+                <Image.Style>
+                  <Style TargetType="Image">
+                    <Setter Property="Source" Value="{x:Null}"/>
+                    <Style.Triggers>
+                      <DataTrigger Binding="{Binding Severity, Mode=OneWay}" Value="{x:Static r:Severity.Error}">
+                        <Setter Property="Source" Value="/Resources/Error_20.png"/>
+                      </DataTrigger>
+                      <DataTrigger Binding="{Binding Severity, Mode=OneWay}" Value="{x:Static r:Severity.Warning}">
+                        <Setter Property="Source" Value="/Resources/Warning_20.png"/>
+                      </DataTrigger>
+                      <DataTrigger Binding="{Binding Severity, Mode=OneWay}" Value="{x:Static r:Severity.Information}">
+                        <Setter Property="Source" Value="/Resources/Information_20.png"/>
+                      </DataTrigger>
+                    </Style.Triggers>
+                  </Style>
+                </Image.Style>
+              </Image>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+        <DataGridTextColumn Header="{l:Localization MESSAGE_CODE}"
+                            Width="Auto"    
+                            Binding="{Binding Code, Mode=OneWay}"/>
+        <DataGridTextColumn Header="{l:Localization MESSAGE_DESCRIPTION}"
+                            Width="*"
+                            Binding="{Binding Description, Mode=OneWay}"/>
+        <DataGridTextColumn Header="{l:Localization MESSAGE_DOCUMENT}"
+                            Width="Auto"
+                            Binding="{Binding Document.Name, Mode=OneWay}"/>
+        <DataGridTextColumn Header="{l:Localization MESSAGE_LINE}"
+                            Width="Auto"
+                            Binding="{Binding Position.Line, Mode=OneWay}"/>
+        <DataGridTextColumn Header="{l:Localization MESSAGE_COLUMN}"
+                            Width="Auto"
+                            Binding="{Binding Position.Column, Mode=OneWay}"/>
+      </DataGrid.Columns>
+      <DataGrid.CellStyle>
+        <Style TargetType="DataGridCell">
+          <Setter Property="BorderThickness" Value="0"/>
+          <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+          <Setter Property="ToolTip" 
+                  Value="{Binding RelativeSource={RelativeSource Self}, Path=Content.Text}"/>
+        </Style>
+      </DataGrid.CellStyle>
+      <DataGrid.RowStyle>
+        <Style TargetType="DataGridRow">
+          <Setter Property="b:MouseDoubleClickBehavior.Command"
+                  Value="{Binding DataContext.ShowReportMessageCommand,
+                                  RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid},
+                                  Mode=OneWay}"/>
+          <Setter Property="b:MouseDoubleClickBehavior.CommandParameter"
+                  Value="{Binding}"/>
+          <Setter Property="b:EnterDownBehavior.Command"
+                  Value="{Binding DataContext.ShowReportMessageCommand,
+                                  RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid},
+                                  Mode=OneWay}"/>
+          <Setter Property="b:EnterDownBehavior.CommandParameter"
+                  Value="{Binding}"/>
+        </Style>
+      </DataGrid.RowStyle>
+    </DataGrid>
+  </Grid>
+</UserControl>

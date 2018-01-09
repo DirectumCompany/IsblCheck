@@ -1,0 +1,463 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{7BC7FB86-D6F5-4114-BC97-A228C9680942}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>IsblCheck</RootNamespace>
+    <AssemblyName>IsblCheck</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <IntermediateOutputPath>..\..\artifacts\obj\IsblCheck\Debug\</IntermediateOutputPath>
+    <OutputPath>..\..\artifacts\bin\IsblCheck\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <IntermediateOutputPath>..\..\artifacts\obj\IsblCheck\Release\</IntermediateOutputPath>
+    <OutputPath>..\..\artifacts\bin\IsblCheck\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Resources\App.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup />
+  <PropertyGroup />
+  <PropertyGroup />
+  <PropertyGroup />
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>false</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>E078EB2FB23A4B354227F4A0F93EBAF8269C36DF</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>IsblCheck_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <NoWin32Manifest>true</NoWin32Manifest>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Autofac, Version=4.2.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Autofac.4.2.1\lib\net45\Autofac.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Common.Logging, Version=3.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Common.Logging.3.3.1\lib\net40\Common.Logging.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Common.Logging.Core, Version=3.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Common.Logging.Core.3.3.1\lib\net40\Common.Logging.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Common.Logging.NLog41, Version=3.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Common.Logging.NLog41.3.3.1\lib\net40\Common.Logging.NLog41.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FluentValidation, Version=6.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\FluentValidation.6.2.1.0\lib\Net45\FluentValidation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="GalaSoft.MvvmLight, Version=5.3.0.19026, Culture=neutral, PublicKeyToken=e7570ab207bcb616, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\MvvmLightLibs.5.3.0.0\lib\net45\GalaSoft.MvvmLight.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="GalaSoft.MvvmLight.Platform, Version=5.3.0.19032, Culture=neutral, PublicKeyToken=5f873c45e98af8a1, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\MvvmLightLibs.5.3.0.0\lib\net45\GalaSoft.MvvmLight.Platform.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ICSharpCode.AvalonEdit, Version=5.0.3.0, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\AvalonEdit.5.0.3\lib\Net40\ICSharpCode.AvalonEdit.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\WindowsAPICodePack-Core.1.1.2\lib\Microsoft.WindowsAPICodePack.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack.Shell, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\WindowsAPICodePack-Shell.1.1.1\lib\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NLog.4.4.4\lib\net45\NLog.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\MvvmLightLibs.5.3.0.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="Xceed.Wpf.AvalonDock, Version=3.0.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Extended.Wpf.Toolkit.3.0\lib\net40\Xceed.Wpf.AvalonDock.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Aero, Version=3.0.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Extended.Wpf.Toolkit.3.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Aero.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Metro, Version=3.0.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Extended.Wpf.Toolkit.3.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Metro.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.VS2010, Version=3.0.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Extended.Wpf.Toolkit.3.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.VS2010.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Xceed.Wpf.DataGrid, Version=3.0.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Extended.Wpf.Toolkit.3.0\lib\net40\Xceed.Wpf.DataGrid.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Xceed.Wpf.Toolkit, Version=3.0.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Extended.Wpf.Toolkit.3.0\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="Common\AppInfoUtils.cs" />
+    <Compile Include="Common\Dialogs\DialogManager.cs" />
+    <Compile Include="Common\Dialogs\IDialog.cs" />
+    <Compile Include="Common\Native\MapType.cs" />
+    <Compile Include="Common\Native\RECT.cs" />
+    <Compile Include="Common\Native\SetWindowPosFlags.cs" />
+    <Compile Include="Common\Native\ShowWindowCommands.cs" />
+    <Compile Include="Common\Panels\IPanelContainer.cs" />
+    <Compile Include="Common\Patterns\Singleton.cs" />
+    <Compile Include="Common\Settings\SettingsProvider.cs" />
+    <Compile Include="Common\Settings\ISettingsProvider.cs" />
+    <Compile Include="Common\Settings\SettingsManager.cs" />
+    <Compile Include="Common\Native\NativeMethods.cs" />
+    <Compile Include="Common\Windows\IWindow.cs" />
+    <Compile Include="Common\Windows\WindowManager.cs" />
+    <Compile Include="Services\CodeCheckerService.cs" />
+    <Compile Include="Common\Dialogs\FileDialogSettings.cs" />
+    <Compile Include="Services\ICodeCheckerService.cs" />
+    <Compile Include="Services\IViewService.cs" />
+    <Compile Include="Common\Dialogs\OpenFileDialogSettings.cs" />
+    <Compile Include="Common\Dialogs\OpenFileDialogWrapper.cs" />
+    <Compile Include="Common\Dialogs\SaveFileDialogSettings.cs" />
+    <Compile Include="Common\Dialogs\SaveFileDialogWrapper.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Services\ViewService.cs" />
+    <Compile Include="UI\Behaviors\CaretOffsetBehavior.cs" />
+    <Compile Include="UI\Behaviors\DialogResultBehavior.cs" />
+    <Compile Include="UI\Behaviors\EnterDownBehavior.cs" />
+    <Compile Include="UI\Behaviors\FocusBehavior.cs" />
+    <Compile Include="UI\Behaviors\MouseDoubleClickBehavior.cs" />
+    <Compile Include="UI\Behaviors\PasswordBehavior.cs" />
+    <Compile Include="UI\Behaviors\TextMarkerViewBehavior.cs" />
+    <Compile Include="UI\Controls\DataContextProxy.cs" />
+    <Compile Include="UI\Controls\ValidationPopup.cs" />
+    <Compile Include="UI\Editor\TextMarker.cs" />
+    <Compile Include="UI\Editor\TextMarkerTooltipService.cs" />
+    <Compile Include="UI\Editor\TextMarkerTrackAdorner.cs" />
+    <Compile Include="UI\Editor\TextMarkerType.cs" />
+    <Compile Include="UI\Editor\TextMarkerViewRenderer.cs" />
+    <Compile Include="UI\Localization\LocalizationBindingConverter.cs" />
+    <Compile Include="UI\Localization\LocalizationBinding.cs" />
+    <Compile Include="Common\Localization\ILocalizationProvider.cs" />
+    <Compile Include="UI\Localization\LocalizationExtension.cs" />
+    <Compile Include="UI\Localization\LocalizationString.cs" />
+    <Compile Include="Common\Localization\LocalizationManager.cs" />
+    <Compile Include="Common\Localization\ResxLocalizationProvider.cs" />
+    <Compile Include="UI\Styles\DynamicStyleSelector.cs" />
+    <Compile Include="UI\Styles\StyleDefinition.cs" />
+    <Compile Include="UI\Templates\DynamicTemplateSelector.cs" />
+    <Compile Include="UI\Templates\TemplateDefinition.cs" />
+    <Compile Include="ViewModels\Dialogs\AboutViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\DialogViewModelBase.cs" />
+    <Compile Include="ViewModels\Dialogs\DatabaseCredentialViewModel.cs" />
+    <Compile Include="Common\Panels\IPanel.cs" />
+    <Compile Include="Common\Panels\PanelManager.cs" />
+    <Compile Include="ViewModels\OpenCommandHandlers.cs" />
+    <Compile Include="ViewModels\Panels\ReportViewerViewModel.cs" />
+    <Compile Include="ViewModels\Panels\SourceExplorerViewModel.cs" />
+    <Compile Include="ViewModels\Toolbars\StandardToolbarViewModel.cs" />
+    <Compile Include="ViewModels\Tree\ContainerTreeNode.cs" />
+    <Compile Include="ViewModels\Tree\DocumentTreeNode.cs" />
+    <Compile Include="ViewModels\Tree\SourceTreeGenerator.cs" />
+    <Compile Include="ViewModels\Tree\TreeNode.cs" />
+    <Compile Include="ViewModels\Panels\DocumentViewerViewModel.cs" />
+    <Compile Include="ViewModels\Panels\StartPageViewModel.cs" />
+    <Compile Include="ViewModels\PanelContainerViewModel.cs" />
+    <Compile Include="ViewModels\Panels\PanelViewModelBase.cs" />
+    <Page Include="Styles\ValidationErrorTemplate.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Dialogs\AboutWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\DatabaseCredentialWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Panels\ReportViewerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Panels\SourceExplorerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Panels\DocumentViewerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Panels\StartPageView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PanelContainerWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="..\ProductInfo.cs">
+      <Link>Properties\ProductInfo.cs</Link>
+    </Compile>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ViewModels\Validation\DatabaseCredentialValidator.cs" />
+    <Compile Include="Views\Dialogs\AboutWindow.xaml.cs">
+      <DependentUpon>AboutWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\DatabaseCredentialWindow.xaml.cs">
+      <DependentUpon>DatabaseCredentialWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Panels\ReportViewerView.xaml.cs">
+      <DependentUpon>ReportViewerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Panels\SourceExplorerView.xaml.cs">
+      <DependentUpon>SourceExplorerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Panels\DocumentViewerView.xaml.cs">
+      <DependentUpon>DocumentViewerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Panels\StartPageView.xaml.cs">
+      <DependentUpon>StartPageView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PanelContainerWindow.xaml.cs">
+      <DependentUpon>PanelContainerWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="IsblCheck.PanelContainer.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="NLog.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+    <None Include="Resources\Isbl.xshd" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.5">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.5 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\IsblCheck.Context.Application\IsblCheck.Context.Application.csproj">
+      <Project>{8298b176-261b-40bf-97c5-a64b5f46363f}</Project>
+      <Name>IsblCheck.Context.Application</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\IsblCheck.Context.Development\IsblCheck.Context.Development.csproj">
+      <Project>{7747e427-96bf-48af-af41-02a0f118ac00}</Project>
+      <Name>IsblCheck.Context.Development</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\IsblCheck.Core\IsblCheck.Core.csproj">
+      <Project>{649c4b83-058d-4bca-b662-6b54d86fddf7}</Project>
+      <Name>IsblCheck.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\IsblCheck.Reports\IsblCheck.Reports.csproj">
+      <Project>{90646a7e-0e23-4e6b-8a24-e0fed3b50c45}</Project>
+      <Name>IsblCheck.Reports</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\AddDatabase_16.png" />
+    <Resource Include="Resources\AddFile_16.png" />
+    <Resource Include="Resources\AddFolder_16.png" />
+    <Resource Include="Resources\AddPackage_16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\App.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Error_20.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Warning_20.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Information_20.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\AddDatabase_20.png" />
+    <Resource Include="Resources\AddFile_20.png" />
+    <Resource Include="Resources\AddFolder_20.png" />
+    <Resource Include="Resources\AddPackage_20.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Check_20.png" />
+    <Resource Include="Resources\CheckAll_20.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\DocumentCardTypes_16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Functions_16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ReferenceTypes_16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Reports_16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\RouteBlocks_16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Scripts_16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Dialogs_20.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\DocumentCardTypes_20.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Functions_20.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ReferenceTypes_20.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Reports_20.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\RouteBlocks_20.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Scripts_20.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Dialogs_16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\CheckAll_16.png" />
+    <Resource Include="Resources\Check_16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="IsblCheck.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Resource Include="Resources\Wizards_20.png" />
+    <Resource Include="Resources\Wizards_16.png" />
+    <Resource Include="Resources\StandardRoutes_16.png" />
+    <Resource Include="Resources\StandardRoutes_20.png" />
+    <Resource Include="Resources\AppLogo.png" />
+    <Resource Include="Resources\CSV_20.png" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

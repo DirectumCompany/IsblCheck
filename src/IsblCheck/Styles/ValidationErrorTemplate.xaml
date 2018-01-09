@@ -1,0 +1,87 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:o="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
+                    xmlns:controls="clr-namespace:IsblCheck.UI.Controls">
+
+  <SolidColorBrush x:Key="ValidationBorderBrush" Color="#FFBB4949" o:Freeze="True" />
+  <SolidColorBrush x:Key="ValidationBackgroundBrush" Color="#FFFFD6D6" o:Freeze="True" />
+  <SolidColorBrush x:Key="ValidationTextBrush" Color="#FFFFFFFF" o:Freeze="True" />
+
+  <ControlTemplate x:Key="ValidationErrorTemplate">
+    <AdornedElementPlaceholder x:Name="PlaceHolder">
+      <Grid SnapsToDevicePixels="True">
+        <Rectangle x:Name="PopupTargetElement"
+                   StrokeThickness="0"  Margin="-5,0,-5,0"
+                   DataContext="{Binding ElementName=PlaceHolder}"/>
+        <Border x:Name="ValidationErrorElement"
+                BorderBrush="{StaticResource ValidationBorderBrush}"
+                BorderThickness="1"
+                DataContext="{Binding ElementName=PlaceHolder}">
+          <Path Data="M 0,0 L 8,0 L 8,8 Z"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Fill="{StaticResource ValidationBorderBrush}"/>
+        </Border>
+        <controls:ValidationPopup AllowsTransparency="True"
+                                  HorizontalAlignment="Right"
+                                  HorizontalOffset="0"
+                                  VerticalOffset="0"
+                                  PopupAnimation="Fade"
+                                  Placement="Right"
+                                  PlacementTarget="{Binding ElementName=PopupTargetElement}"
+                                  CloseOnMouseLeftButtonDown="False">
+          <controls:ValidationPopup.Style>
+            <Style TargetType="controls:ValidationPopup">
+              <Style.Triggers>
+                <DataTrigger Binding="{Binding ElementName=PlaceHolder, Path=AdornedElement.IsMouseOver, Mode=OneWay}" Value="True">
+                  <Setter Property="IsOpen" Value="True"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding ElementName=PlaceHolder, Path=AdornedElement.IsKeyboardFocusWithin, Mode=OneWay}" Value="True">
+                  <Setter Property="IsOpen" Value="True"/>
+                </DataTrigger>
+              </Style.Triggers>
+            </Style>
+          </controls:ValidationPopup.Style>
+          <Grid x:Name="Root" Margin="4">
+            <Grid.Resources>
+              <Style TargetType="Border">
+                <Style.Triggers>
+                  <DataTrigger Binding="{Binding ElementName=Root, Path=IsMouseOver, Mode=OneWay}" Value="True">
+                    <DataTrigger.EnterActions>
+                      <BeginStoryboard>
+                        <Storyboard>
+                          <DoubleAnimation Storyboard.TargetProperty="Opacity" To="0.15" Duration="0:0:0.1" />
+                        </Storyboard>
+                      </BeginStoryboard>
+                    </DataTrigger.EnterActions>
+                    <DataTrigger.ExitActions>
+                      <BeginStoryboard>
+                        <Storyboard>
+                          <DoubleAnimation Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.1" />
+                        </Storyboard>
+                      </BeginStoryboard>
+                    </DataTrigger.ExitActions>
+                  </DataTrigger>
+                </Style.Triggers>
+              </Style>
+            </Grid.Resources>
+            <Border Background="{StaticResource ValidationBorderBrush}"
+                    CornerRadius="2">
+              <Border.Resources>
+                <DataTemplate DataType="{x:Type ValidationError}">
+                  <TextBlock Foreground="{StaticResource ValidationTextBrush}"
+                             MaxWidth="250"
+                             Margin="8,4,8,4"
+                             TextWrapping="Wrap"
+                             Text="{Binding ErrorContent}"
+                             UseLayoutRounding="false" />
+                </DataTemplate>
+              </Border.Resources>
+              <ContentPresenter Content="{Binding CurrentItem}" />
+            </Border>
+          </Grid>
+        </controls:ValidationPopup>
+      </Grid>
+    </AdornedElementPlaceholder>
+  </ControlTemplate>
+</ResourceDictionary>
