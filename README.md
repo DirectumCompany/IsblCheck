@@ -41,7 +41,7 @@ Standalone-инсталлятор для IsblCheck. Пока без интерф
 [**IsblCheck.Agent.Setup**](https://github.com/DirectumCompany/IsblCheck/tree/master/installer/IsblCheck.Agent.Setup)
 Standalone-инсталлятор для агента IsblCheck. Пока без интерфейса, простой msi-пакет.
 
-# Сборка и публикация
+# Сборка
 
 #### Установка необходимого ПО
 
