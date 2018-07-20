@@ -1,11 +1,11 @@
-﻿using IsblCheck.Common.Dialogs;
+﻿using System;
+using IsblCheck.Common.Dialogs;
 using IsblCheck.Common.Localization;
 using IsblCheck.Common.Panels;
 using IsblCheck.Services;
 using IsblCheck.ViewModels.Dialogs;
 using IsblCheck.ViewModels.Panels;
 using Microsoft.WindowsAPICodePack.Dialogs;
-using System;
 
 namespace IsblCheck.ViewModels
 {
@@ -28,7 +28,7 @@ namespace IsblCheck.ViewModels
     /// <summary>
     /// Сервис представлений.
     /// </summary>
-    private IViewService viewService;
+    private readonly IViewService viewService;
 
     #endregion
 
@@ -109,7 +109,7 @@ namespace IsblCheck.ViewModels
     /// <summary>
     /// Открыть пакет разработки.
     /// </summary>
-    /// <param name="file">Файл.</param>
+    /// <param name="filename">Файл.</param>
     public void OpenSpecifiedPackage(string filename)
     {
       var sourceExplorer = PanelManager.Instance.GetPanel<SourceExplorerViewModel>();

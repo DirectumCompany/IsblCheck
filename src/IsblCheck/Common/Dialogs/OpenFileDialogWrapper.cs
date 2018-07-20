@@ -1,6 +1,6 @@
-﻿using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Windows;
+using Microsoft.Win32;
 
 namespace IsblCheck.Common.Dialogs
 {
@@ -33,9 +33,9 @@ namespace IsblCheck.Common.Dialogs
     public bool? ShowDialog(Window owner)
     {
       if (owner == null)
-        throw new ArgumentNullException("owner");
+        throw new ArgumentNullException(nameof(owner));
 
-      bool? result = this.openFileDialog.ShowDialog(owner);
+      var result = this.openFileDialog.ShowDialog(owner);
       this.settings.FileName = this.openFileDialog.FileName;
       this.settings.FileNames = this.openFileDialog.FileNames;
       return result;
@@ -52,7 +52,7 @@ namespace IsblCheck.Common.Dialogs
     public OpenFileDialogWrapper(OpenFileDialogSettings settings)
     {
       if (settings == null)
-        throw new ArgumentNullException("settings");
+        throw new ArgumentNullException(nameof(settings));
 
       this.settings = settings;
       this.openFileDialog = new OpenFileDialog

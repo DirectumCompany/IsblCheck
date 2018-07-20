@@ -1,8 +1,8 @@
-﻿using IsblCheck.Context.Development.Package.Handlers;
+﻿using System.Collections.Generic;
+using System.Linq;
+using IsblCheck.Context.Development.Package.Handlers;
 using IsblCheck.Context.Development.Package.Models;
 using IsblCheck.Core.Context.Development;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace IsblCheck.Context.Development.Folder.Handlers
 {
@@ -47,9 +47,9 @@ namespace IsblCheck.Context.Development.Folder.Handlers
 
     #region FolderHandlerBase
 
-    protected override string FolderName { get { return "Viewers"; } }
+    protected override string FolderName => "Viewers";
 
-    protected override string CardModelRootNode { get { return "Viewer"; } }
+    protected override string CardModelRootNode => "Viewer";
 
     protected override IEnumerable<Viewer> ReadComponents(ComponentModel model, string componentFolderPath)
     {

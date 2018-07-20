@@ -36,6 +36,11 @@
     IntegratedReport,
 
     /// <summary>
+    /// Управляемая папка.
+    /// </summary>
+    ManagedFolder,
+
+    /// <summary>
     /// Тип справочника.
     /// </summary>
     ReferenceType,

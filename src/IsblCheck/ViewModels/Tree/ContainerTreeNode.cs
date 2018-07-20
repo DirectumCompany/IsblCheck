@@ -14,7 +14,7 @@ namespace IsblCheck.ViewModels.Tree
     /// <summary>
     /// Дочерние элементы.
     /// </summary>
-    public ICollection<TreeNode> Items { get; private set; }
+    public ICollection<TreeNode> Items { get; }
 
     /// <summary>
     /// Установить фильтр.
@@ -25,7 +25,7 @@ namespace IsblCheck.ViewModels.Tree
       if (predicate == null)
         this.ItemsView.Filter = null;
       else
-        this.ItemsView.Filter = (obj) => predicate((TreeNode)obj);
+        this.ItemsView.Filter = obj => predicate((TreeNode)obj);
       this.ItemsView.Refresh();
     }
 

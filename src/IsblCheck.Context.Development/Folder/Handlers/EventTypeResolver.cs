@@ -1,6 +1,6 @@
-﻿using IsblCheck.Core.Context.Development;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using IsblCheck.Core.Context.Development;
 
 namespace IsblCheck.Context.Development.Folder.Handlers
 {
@@ -146,8 +146,7 @@ namespace IsblCheck.Context.Development.Folder.Handlers
 
     public static EventType GetExportedEventType(string fileName)
     {
-      EventType eventType;
-      if (!EventTypeByFile.TryGetValue(fileName, out eventType))
+      if (!EventTypeByFile.TryGetValue(fileName, out EventType eventType))
         eventType = EventType.Unknown;
       return eventType;
     }

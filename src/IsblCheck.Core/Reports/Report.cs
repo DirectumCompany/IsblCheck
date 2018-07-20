@@ -1,6 +1,6 @@
-﻿using IsblCheck.Core.Checker;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
+using IsblCheck.Core.Checker;
 
 namespace IsblCheck.Core.Reports
 {
@@ -14,13 +14,7 @@ namespace IsblCheck.Core.Reports
     /// <summary>
     /// Сообщения.
     /// </summary>
-    public IEnumerable<IReportMessage> Messages
-    {
-      get
-      {
-        return this.messages;
-      }
-    }
+    public IEnumerable<IReportMessage> Messages => this.messages;
 
     /// <summary>
     /// Добавить ошибку.

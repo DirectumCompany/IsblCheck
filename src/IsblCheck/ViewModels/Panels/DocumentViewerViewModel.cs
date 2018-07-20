@@ -1,4 +1,9 @@
-﻿using ICSharpCode.AvalonEdit.Document;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Windows.Media;
+using System.Xml;
+using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using IsblCheck.Context.Application;
@@ -6,11 +11,6 @@ using IsblCheck.Core.Context.Application;
 using IsblCheck.Core.Reports;
 using IsblCheck.Properties;
 using IsblCheck.UI.Editor;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Windows.Media;
-using System.Xml;
 using IDocument = IsblCheck.Core.Checker.IDocument;
 
 namespace IsblCheck.ViewModels.Panels
@@ -25,7 +25,7 @@ namespace IsblCheck.ViewModels.Panels
     /// <summary>
     /// Контекст приложения.
     /// </summary>
-    private static IApplicationContext applicationContext;
+    private static readonly IApplicationContext applicationContext;
 
     /// <summary>
     /// Цвет ошибки.
@@ -45,7 +45,7 @@ namespace IsblCheck.ViewModels.Panels
     /// <summary>
     /// Документ.
     /// </summary>
-    public IDocument Document { get; private set; }
+    public IDocument Document { get; }
 
     /// <summary>
     /// Документ.
@@ -123,8 +123,10 @@ namespace IsblCheck.ViewModels.Panels
     {
       foreach (var message in messages)
       {
-        var marker = new TextMarker(message.Position.StartIndex, message.Position.Length);
-        marker.MarkerType = TextMarkerType.SquigglyUnderline | TextMarkerType.LineInScrollBar;
+        var marker = new TextMarker(message.Position.StartIndex, message.Position.Length)
+        {
+          MarkerType = TextMarkerType.SquigglyUnderline | TextMarkerType.LineInScrollBar
+        };
         switch (message.Severity)
         {
           case Severity.Error:

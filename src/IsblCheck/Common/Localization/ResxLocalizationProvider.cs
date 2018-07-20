@@ -1,6 +1,6 @@
-﻿using IsblCheck.Properties;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
+using IsblCheck.Properties;
 
 namespace IsblCheck.Common.Localization
 {
@@ -12,7 +12,7 @@ namespace IsblCheck.Common.Localization
     /// <summary>
     /// Список культур.
     /// </summary>
-    private IList<CultureInfo> cultures = new List<CultureInfo>
+    private readonly IList<CultureInfo> cultures = new List<CultureInfo>
     {
       new CultureInfo("ru-RU"),
       new CultureInfo("en-US")
@@ -21,7 +21,7 @@ namespace IsblCheck.Common.Localization
     /// <summary>
     /// Список культур.
     /// </summary>
-    public IEnumerable<CultureInfo> Cultures { get { return this.cultures; } }
+    public IEnumerable<CultureInfo> Cultures => this.cultures;
 
     /// <summary>
     /// Получить локализацию по ключу.

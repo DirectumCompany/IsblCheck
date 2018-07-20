@@ -1,8 +1,8 @@
-﻿using Common.Logging;
+﻿using System;
+using Common.Logging;
 using IsblCheck.Core.Context.Application;
 using IsblCheck.Core.Context.Development;
 using IsblCheck.Core.Properties;
-using System;
 
 namespace IsblCheck.Core.Context
 {
@@ -40,7 +40,7 @@ namespace IsblCheck.Core.Context
     /// <summary>
     /// Глобальный контекст.
     /// </summary>
-    public IContext Context { get { return this.context; } }
+    public IContext Context => this.context;
 
     /// <summary>
     /// Событие изменения контекста.
@@ -54,7 +54,7 @@ namespace IsblCheck.Core.Context
     public void Load(IApplicationContextFactory factory)
     {
       if (factory == null)
-        throw new ArgumentNullException("factory");
+        throw new ArgumentNullException(nameof(factory));
 
       this.applicationContextFactory = factory;
       this.context.Application = this.CreateApplicationContext();
@@ -68,7 +68,7 @@ namespace IsblCheck.Core.Context
     public void Load(IDevelopmentContextFactory factory)
     {
       if (factory == null)
-        throw new ArgumentNullException("factory");
+        throw new ArgumentNullException(nameof(factory));
 
       this.developmentContextFactory = factory;
       this.context.Development = this.CreateDevelopmentContext();
@@ -95,9 +95,8 @@ namespace IsblCheck.Core.Context
     /// <param name="args">Аргументы события.</param>
     protected virtual void OnContextChanged(EventArgs args)
     {
-      EventHandler handler = this.ContextChanged;
-      if (handler != null)
-        handler.Invoke(this, args);
+      var handler = this.ContextChanged;
+      handler?.Invoke(this, args);
     }
 
     /// <summary>

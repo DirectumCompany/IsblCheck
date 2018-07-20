@@ -1,12 +1,12 @@
-﻿using Common.Logging;
-using IsblCheck.Context.Development.Folder.Models;
-using IsblCheck.Context.Development.Utils;
-using IsblCheck.Core.Context.Development;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Common.Logging;
+using IsblCheck.Context.Development.Folder.Models;
+using IsblCheck.Context.Development.Utils;
+using IsblCheck.Core.Context.Development;
 
 namespace IsblCheck.Context.Development.Folder.Handlers
 {
@@ -49,7 +49,7 @@ namespace IsblCheck.Context.Development.Folder.Handlers
     /// <summary>
     /// Имена файлов событий ТМ.
     /// </summary>
-    private readonly Dictionary<string, string> eventFileNames = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+    private static readonly Dictionary<string, string> eventFileNames = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
     {
       { "InitScript", "TaskBeforeSelection.isbl" },
       { "Script", "TaskAfterSelection.isbl" },
@@ -66,15 +66,17 @@ namespace IsblCheck.Context.Development.Folder.Handlers
 
     #region FolderHandlerBase
 
-    protected override string FolderName { get { return "Routes"; } }
+    protected override string FolderName => "Routes";
 
-    protected override string CardModelRootNode { get { return "RouteRecord"; } }
+    protected override string CardModelRootNode => "RouteRecord";
 
     protected override IEnumerable<StandardRoute> ReadComponents(RecordRefModel model, string componentFolderPath)
     {
-      var route = new StandardRoute();
-      route.Name = model.Code;
-      route.Title = model.Name;
+      var route = new StandardRoute
+      {
+        Name = model.Code,
+        Title = model.Name
+      };
       var stateReq = model.Requisites
         .FirstOrDefault(r => r.Name == StateReqName);
       if (stateReq != null)
@@ -84,9 +86,9 @@ namespace IsblCheck.Context.Development.Folder.Handlers
       {
         var descriptionData = File.ReadAllText(descriptionFile, Encoding.GetEncoding(1251));
         route.WorkflowDescription = WorkflowDescriptionParser.Parse(descriptionData);
-        this.ReadActions(route.WorkflowDescription, componentFolderPath);
-        this.ReadBlocks(route.WorkflowDescription, componentFolderPath);
-        this.ReadEvents(route.WorkflowDescription, componentFolderPath);
+        ReadActions(route.WorkflowDescription, componentFolderPath);
+        ReadBlocks(route.WorkflowDescription, componentFolderPath);
+        ReadEvents(route.WorkflowDescription, componentFolderPath);
       }
       else
         log.Warn($"File not found {descriptionFile}");
@@ -96,12 +98,11 @@ namespace IsblCheck.Context.Development.Folder.Handlers
 
     #endregion
 
-    private void ReadEvents(WorkflowDescription description, string componentFolderPath)
+    private static void ReadEvents(WorkflowDescription description, string componentFolderPath)
     {
       foreach (var @event in description.Events)
       {
-        string eventFileName;
-        if (eventFileNames.TryGetValue(@event.Name, out eventFileName))
+        if (eventFileNames.TryGetValue(@event.Name, out string eventFileName))
         {
           var eventFile = Path.Combine(componentFolderPath, "Events", eventFileName);
           if (File.Exists(eventFile))
@@ -116,18 +117,18 @@ namespace IsblCheck.Context.Development.Folder.Handlers
       }
     }
 
-    private void ReadBlocks(WorkflowDescription description, string componentFolderPath)
+    private static void ReadBlocks(WorkflowDescription description, string componentFolderPath)
     {
       foreach (var block in description.Blocks)
       {
         var blockFolderPath = Path.Combine(componentFolderPath, "Blocks", block.Id);
-        this.ReadActions(block, blockFolderPath);
-        this.ReadEvents(block, blockFolderPath);
-        this.ReadProperties(block, blockFolderPath);
+        ReadActions(block, blockFolderPath);
+        ReadEvents(block, blockFolderPath);
+        ReadProperties(block, blockFolderPath);
       }
     }
 
-    private void ReadActions(WorkflowDescription description, string componentFolderPath)
+    private static void ReadActions(WorkflowDescription description, string componentFolderPath)
     {
       foreach (var action in description.Actions)
       {
@@ -141,7 +142,7 @@ namespace IsblCheck.Context.Development.Folder.Handlers
       }
     }
 
-    private void ReadActions(WorkflowBlock block, string blocksFolderPath)
+    private static void ReadActions(WorkflowBlock block, string blocksFolderPath)
     {
       foreach (var action in block.Actions)
       {
@@ -155,12 +156,11 @@ namespace IsblCheck.Context.Development.Folder.Handlers
       }
     }
 
-    private void ReadEvents(WorkflowBlock block, string blocksFolderPath)
+    private static void ReadEvents(WorkflowBlock block, string blocksFolderPath)
     {
       foreach (var @event in block.Events)
       {
-        string eventFileName;
-        if (blockEventFileNames.TryGetValue(@event.Name, out eventFileName))
+        if (blockEventFileNames.TryGetValue(@event.Name, out string eventFileName))
         {
           var eventFile = Path.Combine(blocksFolderPath, "Events", eventFileName);
           if (File.Exists(eventFile))
@@ -175,12 +175,11 @@ namespace IsblCheck.Context.Development.Folder.Handlers
       }
     }
 
-    private void ReadProperties(WorkflowBlock block, string blocksFolderPath)
+    private static void ReadProperties(WorkflowBlock block, string blocksFolderPath)
     {
       foreach (var property in block.IsblProperties)
       {
-        string propertyFileName;
-        if (blockEventFileNames.TryGetValue(property.Name, out propertyFileName))
+        if (blockEventFileNames.TryGetValue(property.Name, out string propertyFileName))
         {
           var propertyCalculationFile = Path.Combine(blocksFolderPath, "Events", propertyFileName);
           if (File.Exists(propertyCalculationFile))

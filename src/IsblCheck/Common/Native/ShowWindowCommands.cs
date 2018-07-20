@@ -1,4 +1,5 @@
-﻿namespace IsblCheck.Common.Native
+﻿// ReSharper disable InconsistentNaming
+namespace IsblCheck.Common.Native
 {
   /// <summary>
   /// Параметры показа окна.

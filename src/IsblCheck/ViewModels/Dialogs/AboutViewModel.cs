@@ -1,7 +1,7 @@
-﻿using GalaSoft.MvvmLight.CommandWpf;
+﻿using System.Windows.Input;
+using GalaSoft.MvvmLight.CommandWpf;
 using IsblCheck.Common;
 using IsblCheck.Services;
-using System.Windows.Input;
 
 namespace IsblCheck.ViewModels.Dialogs
 {
@@ -13,7 +13,7 @@ namespace IsblCheck.ViewModels.Dialogs
     /// <summary>
     /// Сервис представлений.
     /// </summary>
-    private IViewService viewService;
+    private readonly IViewService viewService;
 
     /// <summary>
     /// Имя продукта.

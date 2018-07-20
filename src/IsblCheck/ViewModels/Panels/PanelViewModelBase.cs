@@ -1,10 +1,10 @@
-﻿using GalaSoft.MvvmLight;
+﻿using System;
+using System.Windows.Input;
+using System.Windows.Media;
+using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using IsblCheck.Common.Panels;
 using IsblCheck.Services;
-using System;
-using System.Windows.Input;
-using System.Windows.Media;
 
 namespace IsblCheck.ViewModels.Panels
 {
@@ -78,7 +78,7 @@ namespace IsblCheck.ViewModels.Panels
     /// <summary>
     /// Есть строка локализации для заголовка.
     /// </summary>
-    public bool HasTitleLocalization { get { return !string.IsNullOrEmpty(this.TitleLocalizationKey); } }
+    public bool HasTitleLocalization => !string.IsNullOrEmpty(this.TitleLocalizationKey);
 
     /// <summary>
     /// Признак выделения.
@@ -174,10 +174,8 @@ namespace IsblCheck.ViewModels.Panels
     /// </summary>
     protected virtual void OnClosing()
     {
-      EventHandler handler = this.Closing;
-
-      if (handler != null)
-        handler(this, EventArgs.Empty);
+      var handler = this.Closing;
+      handler?.Invoke(this, EventArgs.Empty);
     }
 
     /// <summary>
@@ -190,10 +188,8 @@ namespace IsblCheck.ViewModels.Panels
     /// </summary>
     protected virtual void OnClosed()
     {
-      EventHandler handler = this.Closed;
-
-      if (handler != null)
-        handler(this, EventArgs.Empty);
+      var handler = this.Closed;
+      handler?.Invoke(this, EventArgs.Empty);
     }
 
     #endregion
@@ -203,7 +199,7 @@ namespace IsblCheck.ViewModels.Panels
     /// <summary>
     /// Команда закрытия.
     /// </summary>
-    public ICommand CloseCommand { get; private set; }
+    public ICommand CloseCommand { get; }
 
     #endregion
 

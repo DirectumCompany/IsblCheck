@@ -61,13 +61,9 @@ namespace IsblCheck.UI.Behaviors
     private void PasswordChangedHandler(object sender, RoutedEventArgs e)
     {
       var binding = BindingOperations.GetBindingExpression(this, PasswordProperty);
-      if (binding != null)
-      {
-        var property = binding.DataItem.GetType()
-           .GetProperty(binding.ParentBinding.Path.Path);
-        if (property != null)
-          property.SetValue(binding.DataItem, this.AssociatedObject.SecurePassword, null);
-      }
+      var property = binding?.DataItem.GetType()
+        .GetProperty(binding.ParentBinding.Path.Path);
+      property?.SetValue(binding.DataItem, this.AssociatedObject.SecurePassword, null);
     }
 
     #endregion

@@ -1,15 +1,14 @@
-﻿using Antlr4.Runtime.Misc;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
 using IsblCheck.BaseRules.Properties;
 using IsblCheck.Core.Checker;
 using IsblCheck.Core.Context;
-using IsblCheck.Core.Context.Development;
 using IsblCheck.Core.Parser;
 using IsblCheck.Core.Reports;
 using IsblCheck.Core.Rules;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace IsblCheck.BaseRules.Variables
 {
@@ -73,19 +72,19 @@ namespace IsblCheck.BaseRules.Variables
       /// <summary>
       /// Необъявленные переменные.
       /// </summary>
-      public List<IsblParser.VariableContext> NotAssignedVariables { get; private set; }
+      public List<IsblParser.VariableContext> NotAssignedVariables { get; }
 
       /// <summary>
       /// Неопределенные переменные.
       /// </summary>
-      public List<IsblParser.VariableContext> UncertainVariables { get; private set; }
+      public List<IsblParser.VariableContext> UncertainVariables { get; }
 
       /// <summary>
       /// Получить родительский блок предложений.
       /// </summary>
       /// <param name="ruleNode">Узел правил.</param>
       /// <returns>Блок предложений.</returns>
-      private IsblParser.StatementBlockContext GetParentStatementBlock(IRuleNode ruleNode)
+      private static IsblParser.StatementBlockContext GetParentStatementBlock(IRuleNode ruleNode)
       {
         var parent = ruleNode.Parent;
         while (parent != null)
@@ -118,14 +117,14 @@ namespace IsblCheck.BaseRules.Variables
           {
             VariableName = variableName,
             IsReinitialized = false,
-            StatementBlock = this.GetParentStatementBlock(context)
+            StatementBlock = GetParentStatementBlock(context)
           };
           this.variableDefinitions.Add(variableDefinition);
         }
         else if (variableDefinition.StatementBlock == null)
         {
           variableDefinition.IsReinitialized = true;
-          variableDefinition.StatementBlock = this.GetParentStatementBlock(context);
+          variableDefinition.StatementBlock = GetParentStatementBlock(context);
         }
       }
 
@@ -157,14 +156,14 @@ namespace IsblCheck.BaseRules.Variables
           {
             VariableName = variableName,
             IsReinitialized = false,
-            StatementBlock = this.GetParentStatementBlock(context)
+            StatementBlock = GetParentStatementBlock(context)
           };
           this.variableDefinitions.Add(variableDefinition);
         }
         else if (variableDefinition.StatementBlock == null)
         {
           variableDefinition.IsReinitialized = true;
-          variableDefinition.StatementBlock = this.GetParentStatementBlock(context);
+          variableDefinition.StatementBlock = GetParentStatementBlock(context);
         }
       }
 
@@ -272,13 +271,13 @@ namespace IsblCheck.BaseRules.Variables
     /// <summary>
     /// Инфо правила.
     /// </summary>
-    private static Lazy<IRuleInfo> info = new Lazy<IRuleInfo>(() => 
+    private static readonly Lazy<IRuleInfo> info = new Lazy<IRuleInfo>(() => 
       new RuleInfo(typeof(UsingNotAssignedVarRule).Name, Resources.UsingNotAssignedVarRuleDescription), true);
 
     /// <summary>
     /// Инфо правила.
     /// </summary>
-    public static IRuleInfo Info { get { return info.Value; } }
+    public static IRuleInfo Info => info.Value;
 
     #endregion
 
@@ -289,7 +288,6 @@ namespace IsblCheck.BaseRules.Variables
     /// </summary>
     /// <param name="report">Отчет.</param>
     /// <param name="document">Документ.</param>
-    /// <param name="tree">Дерево исходного кода.</param>
     /// <param name="context">Контекст.</param>
     public override void Apply(IReport report, IDocument document, IContext context)
     {

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace IsblCheck.Core.Context.Development
+﻿namespace IsblCheck.Core.Context.Development
 {
   /// <summary>
   /// Действие этапа мастера действий.

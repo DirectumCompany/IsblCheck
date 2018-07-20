@@ -1,11 +1,11 @@
-﻿using IsblCheck.BaseRules.Properties;
+﻿using System;
+using System.Linq;
+using System.Text.RegularExpressions;
+using IsblCheck.BaseRules.Properties;
 using IsblCheck.Core.Checker;
 using IsblCheck.Core.Context;
 using IsblCheck.Core.Reports;
 using IsblCheck.Core.Rules;
-using System;
-using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace IsblCheck.BaseRules.Other
 {
@@ -48,13 +48,13 @@ namespace IsblCheck.BaseRules.Other
 
     #region Поля
 
-    private static Lazy<IRuleInfo> info = new Lazy<IRuleInfo>(() =>
+    private static readonly Lazy<IRuleInfo> info = new Lazy<IRuleInfo>(() =>
       new RuleInfo(typeof(TodoDoneCommentsRule).Name, Resources.TodoDoneCommentsRuleDescription), true);
 
     /// <summary>
     /// Инфо правила.
     /// </summary>
-    public static IRuleInfo Info { get { return info.Value; } }
+    public static IRuleInfo Info => info.Value;
 
     #endregion
 
@@ -70,7 +70,7 @@ namespace IsblCheck.BaseRules.Other
     {
       var allCommentsMatches = oneLineCommentRegex.Matches(document.Text).OfType<Match>()
         .Concat(multiLineCommentRegex.Matches(document.Text).OfType<Match>());
-      foreach (Match match in allCommentsMatches)
+      foreach (var match in allCommentsMatches)
       {
         var commentBody = match.Groups[1].Value;
         if (todoDoneCommentBodyRegex.IsMatch(commentBody))
@@ -89,12 +89,12 @@ namespace IsblCheck.BaseRules.Other
     /// <param name="text">Текст документа.</param>
     /// <param name="comment">Комментарий.</param>
     /// <returns>Позиция в тексте.</returns>
-    private TextPosition GetTextPosition(string text, Match comment)
+    private static TextPosition GetTextPosition(string text, Match comment)
     {
-      int index = comment.Index;
-      string substring = text.Substring(0, index);
-      int line = (substring.Length - substring.Replace(Environment.NewLine, "").Length) / Environment.NewLine.Length + 1;
-      int column = substring.Length - substring.LastIndexOf(Environment.NewLine) - 1;
+      var index = comment.Index;
+      var substring = text.Substring(0, index);
+      var line = (substring.Length - substring.Replace(Environment.NewLine, "").Length) / Environment.NewLine.Length + 1;
+      var column = substring.Length - substring.LastIndexOf(Environment.NewLine) - 1;
       if (line != 1)
         column--;
       return new TextPosition

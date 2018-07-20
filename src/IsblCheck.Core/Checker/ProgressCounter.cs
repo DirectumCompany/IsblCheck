@@ -10,17 +10,17 @@ namespace IsblCheck.Core.Checker
     /// <summary>
     /// Объект блокировки.
     /// </summary>
-    private object lockObj = new object();
+    private readonly object lockObj = new object();
 
     /// <summary>
     /// Счетчик.
     /// </summary>
-    private int counter = 0;
+    private int counter;
 
     /// <summary>
     /// Прогресс.
     /// </summary>
-    private IProgress<int> progress;
+    private readonly IProgress<int> progress;
 
     /// <summary>
     /// Увеличить счетчик.
@@ -30,8 +30,7 @@ namespace IsblCheck.Core.Checker
       lock(lockObj)
       {
         this.counter++;
-        if (this.progress != null)
-          this.progress.Report(this.counter);
+        this.progress?.Report(this.counter);
       }
     }
 

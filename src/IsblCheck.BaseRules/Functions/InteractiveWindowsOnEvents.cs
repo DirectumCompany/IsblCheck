@@ -1,4 +1,6 @@
-﻿using Antlr4.Runtime;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Antlr4.Runtime.Tree;
 using IsblCheck.BaseRules.Properties;
 using IsblCheck.Core.Checker;
@@ -7,9 +9,6 @@ using IsblCheck.Core.Context.Development;
 using IsblCheck.Core.Parser;
 using IsblCheck.Core.Reports;
 using IsblCheck.Core.Rules;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace IsblCheck.BaseRules.Functions
 {
@@ -105,13 +104,13 @@ namespace IsblCheck.BaseRules.Functions
 
     #region Поля
 
-    private static Lazy<IRuleInfo> info = new Lazy<IRuleInfo>(() =>
+    private static readonly Lazy<IRuleInfo> info = new Lazy<IRuleInfo>(() =>
       new RuleInfo(typeof(InteractiveWindowsOnEvents).Name, Resources.InteractiveWindowsOnEventsRuleDescription), true);
 
     /// <summary>
     /// Инфо правила.
     /// </summary>
-    public static IRuleInfo Info { get { return info.Value; } }
+    public static IRuleInfo Info => info.Value;
 
     /// <summary>
     /// События, проверяемые на наличие интерактивных функций.
@@ -133,10 +132,9 @@ namespace IsblCheck.BaseRules.Functions
     public override void Apply(IReport report, IDocument document, IContext context)
     {
       // TODO: Пока проверяются только справочники.
-      EventType eventType;
       if (document.ComponentType != ComponentType.ReferenceType ||
         !document.Path.StartsWith(DocumentPathPrefix, StringComparison.OrdinalIgnoreCase) ||
-        !Enum.TryParse(document.Path.Substring(DocumentPathPrefix.Length), out eventType) ||
+        !Enum.TryParse(document.Path.Substring(DocumentPathPrefix.Length), out EventType eventType) ||
         !CheckingEvents.ContainsKey(eventType))
       {
         return;

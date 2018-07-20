@@ -1,7 +1,7 @@
-﻿using IsblCheck.Core.Reports;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using IsblCheck.Core.Reports;
 
 namespace IsblCheck.BaseRules.Functions
 {
@@ -35,12 +35,12 @@ namespace IsblCheck.BaseRules.Functions
     private static readonly Regex FormatArgRegex =
       new Regex(@"(%%)|(?<item>%((?<index>\d+)\:)?-?(\d+)?(\.\d+)?[duefgnmpsx])", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-    private string templateString;
+    private readonly string templateString;
 
     /// <summary>
     /// Описателя форматной строки.
     /// </summary>
-    public List<FormatItem> FormatItems { get; private set; }
+    public List<FormatItem> FormatItems { get; }
 
     /// <summary>
     /// Распарсить строку.
@@ -48,11 +48,11 @@ namespace IsblCheck.BaseRules.Functions
     public void Parse()
     {
       var matches = FormatArgRegex.Matches(templateString);
-      int currentArgIndex = -1;
-      int currentLine = 0;
-      int lastNewLineCharPos = -1;
-      int lastMatchPos = 0;
-      for (int i = 0; i < matches.Count; i++)
+      var currentArgIndex = -1;
+      var currentLine = 0;
+      var lastNewLineCharPos = -1;
+      var lastMatchPos = 0;
+      for (var i = 0; i < matches.Count; i++)
       {
         var match = matches[i];
         if (match.Groups["item"].Value != string.Empty)
@@ -65,7 +65,7 @@ namespace IsblCheck.BaseRules.Functions
           {
             currentArgIndex++;
           }
-          for (int j = lastMatchPos; j < match.Index; j++)
+          for (var j = lastMatchPos; j < match.Index; j++)
           {
             if (templateString[j] == '\n')
             {
@@ -93,7 +93,7 @@ namespace IsblCheck.BaseRules.Functions
     public TemplateStringParser(string templateString)
     {
       if (templateString == null)
-        throw new ArgumentNullException("templateString");
+        throw new ArgumentNullException(nameof(templateString));
       this.templateString = templateString;
       this.FormatItems = new List<FormatItem>();
     }

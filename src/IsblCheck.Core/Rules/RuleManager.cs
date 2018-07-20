@@ -1,12 +1,12 @@
-﻿using Common.Logging;
-using IsblCheck.Core.Exceptions;
-using IsblCheck.Core.Properties;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.IO;
 using System.Reflection;
+using Common.Logging;
+using IsblCheck.Core.Exceptions;
+using IsblCheck.Core.Properties;
 
 namespace IsblCheck.Core.Rules
 {
@@ -20,7 +20,7 @@ namespace IsblCheck.Core.Rules
     /// <summary>
     /// Логгер.
     /// </summary>
-    private static ILog log = LogManager.GetLogger<RuleManager>();
+    private static readonly ILog log = LogManager.GetLogger<RuleManager>();
 
     /// <summary>
     /// Каталог со сборками правил.
@@ -93,7 +93,7 @@ namespace IsblCheck.Core.Rules
     public void LoadLibrary(Assembly assembly)
     {
       if (assembly == null)
-        throw new ArgumentNullException("assembly");
+        throw new ArgumentNullException(nameof(assembly));
 
       var assemblyCatalog = new AssemblyCatalog(assembly);
       this.rulesCatalog.Catalogs.Add(assemblyCatalog);
@@ -119,6 +119,30 @@ namespace IsblCheck.Core.Rules
 
     #endregion
 
+    #region IDisposable Support
+
+    private bool disposedValue;
+
+    protected virtual void Dispose(bool disposing)
+    {
+      if (!disposedValue)
+      {
+        if (disposing)
+        {
+          this.rulesContainer.Dispose();
+          this.rulesCatalog.Dispose();
+        }
+        disposedValue = true;
+      }
+    }
+
+    public void Dispose()
+    {
+      Dispose(true);
+    }
+
+    #endregion
+
     #region Методы
 
     /// <summary>
@@ -127,9 +151,8 @@ namespace IsblCheck.Core.Rules
     /// <param name="args">Аргументы события.</param>
     protected virtual void OnRuleCollectionChanged(EventArgs args)
     {
-      EventHandler handler = this.RuleCollectionChanged;
-      if (handler != null)
-        handler.Invoke(this, args);
+      var handler = this.RuleCollectionChanged;
+      handler?.Invoke(this, args);
     }
 
     /// <summary>

@@ -1,4 +1,6 @@
-﻿using Antlr4.Runtime;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
 using IsblCheck.BaseRules.Properties;
@@ -8,9 +10,6 @@ using IsblCheck.Core.Context.Development;
 using IsblCheck.Core.Parser;
 using IsblCheck.Core.Reports;
 using IsblCheck.Core.Rules;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace IsblCheck.BaseRules.Functions
 {
@@ -30,13 +29,13 @@ namespace IsblCheck.BaseRules.Functions
     /// <summary>
     /// Инфо правила.
     /// </summary>
-    private static Lazy<IRuleInfo> info = new Lazy<IRuleInfo>(() =>
+    private static readonly Lazy<IRuleInfo> info = new Lazy<IRuleInfo>(() =>
       new RuleInfo(typeof(IncorrectFunctionParamsCountRule).Name, Resources.IncorrectFunctionParamsCountRuleDescription), true);
 
     /// <summary>
     /// Инфо правила.
     /// </summary>
-    public static IRuleInfo Info { get { return info.Value; } }
+    public static IRuleInfo Info => info.Value;
 
     #endregion
 
@@ -53,8 +52,8 @@ namespace IsblCheck.BaseRules.Functions
         "СоздатьМассив"
       };
 
-      private IReadOnlyDictionary<string, Function> developerFunctions;
-      private IReadOnlyDictionary<string, Function> systemFunctions;
+      private readonly IReadOnlyDictionary<string, Function> developerFunctions;
+      private readonly IReadOnlyDictionary<string, Function> systemFunctions;
 
       public List<IsblParser.FunctionContext> FunctionCalls { get; } = new List<IsblParser.FunctionContext>();
 
@@ -65,8 +64,7 @@ namespace IsblCheck.BaseRules.Functions
         var functionName = context.identifier().GetText();
         if (RuleExceptions.Contains(functionName, StringComparer.OrdinalIgnoreCase))
           return;
-        Function function;
-        if (!this.developerFunctions.TryGetValue(functionName, out function) &&
+        if (!this.developerFunctions.TryGetValue(functionName, out Function function) &&
             !this.systemFunctions.TryGetValue(functionName, out function))
           return;
         var paramsParser = new ParameterListParser(context.parameterList());
@@ -112,7 +110,7 @@ namespace IsblCheck.BaseRules.Functions
       walker.Walk(listener, tree);
       foreach (var funcCall in listener.FunctionCalls)
       {
-        string description = Resources.WrongFunctionArgumentsCount;
+        var description = Resources.WrongFunctionArgumentsCount;
         report.AddError(Code, description, document, funcCall.identifier().GetTextPosition());
       }
     }

@@ -1,4 +1,6 @@
-﻿using Antlr4.Runtime;
+﻿using System;
+using System.Collections.Generic;
+using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
 using IsblCheck.BaseRules.Properties;
@@ -7,8 +9,6 @@ using IsblCheck.Core.Context;
 using IsblCheck.Core.Parser;
 using IsblCheck.Core.Reports;
 using IsblCheck.Core.Rules;
-using System;
-using System.Collections.Generic;
 
 namespace IsblCheck.BaseRules.LogicalExpressions
 {
@@ -31,13 +31,13 @@ namespace IsblCheck.BaseRules.LogicalExpressions
     /// <summary>
     /// Инфо правила.
     /// </summary>
-    private static Lazy<IRuleInfo> info = new Lazy<IRuleInfo>(() =>
+    private static readonly Lazy<IRuleInfo> info = new Lazy<IRuleInfo>(() =>
       new RuleInfo(typeof(UsingTrueFalseKeywordsRule).Name, Resources.UsingTrueFalseKeywordsRuleDescription), true);
 
     /// <summary>
     /// Инфо правила.
     /// </summary>
-    public static IRuleInfo Info { get { return info.Value; } }
+    public static IRuleInfo Info => info.Value;
 
     #endregion
 
@@ -63,7 +63,7 @@ namespace IsblCheck.BaseRules.LogicalExpressions
 
       #endregion
       
-      private bool IsTrueFalseConstant(string constName)
+      private static bool IsTrueFalseConstant(string constName)
       {
         return string.Equals(constName, TrueConstant, StringComparison.OrdinalIgnoreCase) ||
                string.Equals(constName, FalseConstant, StringComparison.OrdinalIgnoreCase);
@@ -73,7 +73,7 @@ namespace IsblCheck.BaseRules.LogicalExpressions
       /// Проверить, что переменная используется как аргумент в выражении.
       /// </summary>
       /// <param name="context">Контекст переменной.</param>
-      private bool IsVariableUsedAsArgument(IsblParser.VariableContext context)
+      private static bool IsVariableUsedAsArgument(IsblParser.VariableContext context)
       {
         // Считаем, что переменная используется в логическом выражении, если
         // она используется не только как операнд
@@ -81,8 +81,7 @@ namespace IsblCheck.BaseRules.LogicalExpressions
         var parent = context.Parent;
         while (parent != null)
         {
-          var expression = parent as IsblParser.ExpressionContext;
-          if (expression != null)
+          if (parent is IsblParser.ExpressionContext expression)
           {
             if (expression.ChildCount > 1)
             {

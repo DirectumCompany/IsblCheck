@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Runtime.InteropServices;
 
+// ReSharper disable InconsistentNaming
 namespace IsblCheck.Common.Native
 {
   /// <summary>
@@ -40,7 +41,7 @@ namespace IsblCheck.Common.Native
       get { return this.Left; }
       set
       {
-        this.Right -= (this.Left - value);
+        this.Right -= this.Left - value;
         this.Left = value;
       }
     }
@@ -53,7 +54,7 @@ namespace IsblCheck.Common.Native
       get { return Top; }
       set
       {
-        this.Bottom -= (this.Top - value);
+        this.Bottom -= this.Top - value;
         this.Top = value;
       }
     }

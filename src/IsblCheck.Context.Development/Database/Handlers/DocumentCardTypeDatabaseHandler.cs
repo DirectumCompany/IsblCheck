@@ -1,10 +1,9 @@
-﻿using IsblCheck.Context.Development.Utils;
-using IsblCheck.Core.Context.Development;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-using Action = IsblCheck.Core.Context.Development.Action;
+using IsblCheck.Context.Development.Utils;
+using IsblCheck.Core.Context.Development;
 
 namespace IsblCheck.Context.Development.Database.Handlers
 {
@@ -29,17 +28,17 @@ namespace IsblCheck.Context.Development.Database.Handlers
         {
           while (reader.Read())
           {
-            var documentCardType = new DocumentCardType();
-            documentCardType.Name = reader["Name"] as string;
-            documentCardType.Title = reader["Title"] as string;
+            var documentCardType = new DocumentCardType
+            {
+              Name = reader["Name"] as string,
+              Title = reader["Title"] as string
+            };
 
-            var stateValue = reader["State"] as string;
-            if (stateValue != null &&
+            if (reader["State"] is string stateValue &&
               StateValues.ContainsKey(stateValue))
               documentCardType.State = StateValues[stateValue];
 
-            var numerationMethodValue = reader["NumerationMethod"] as string;
-            if (numerationMethodValue != null &&
+            if (reader["NumerationMethod"] is string numerationMethodValue &&
               NumerationMethodValues.ContainsKey(numerationMethodValue))
               documentCardType.NumerationMethod = NumerationMethodValues[numerationMethodValue];
 
@@ -67,13 +66,14 @@ namespace IsblCheck.Context.Development.Database.Handlers
             while (reader.Read())
             {
               var documentCardTypeName = reader["DocumentCardTypeName"] as string;
-              DocumentCardType documentCardType;
-              if (!components.TryGetValue(documentCardTypeName, out documentCardType))
+              if (!components.TryGetValue(documentCardTypeName, out DocumentCardType documentCardType))
                 continue;
 
-              var method = new Method();
-              method.Name = reader["Name"] as string;
-              method.CalculationText = reader["CalculationText"] as string ?? string.Empty;
+              var method = new Method
+              {
+                Name = reader["Name"] as string,
+                CalculationText = reader["CalculationText"] as string ?? string.Empty
+              };
 
               documentCardType.Methods.Add(method);
             }
@@ -92,8 +92,7 @@ namespace IsblCheck.Context.Development.Database.Handlers
             while (reader.Read())
             {
               var documentCardTypeName = reader["DocumentCardTypeName"] as string;
-              DocumentCardType documentCardType;
-              if (!components.TryGetValue(documentCardTypeName, out documentCardType))
+              if (!components.TryGetValue(documentCardTypeName, out DocumentCardType documentCardType))
                 continue;
 
               var methodName = reader["MethodName"] as string;
@@ -102,13 +101,14 @@ namespace IsblCheck.Context.Development.Database.Handlers
               if (method == null)
                 continue;
 
-              var parameter = new MethodParam();
-              parameter.Number = (int)reader["Number"];
-              parameter.Name = reader["Name"] as string;
+              var parameter = new MethodParam
+              {
+                Number = (int)reader["Number"],
+                Name = reader["Name"] as string
+              };
 
               var typeValue = reader["Type"] as string;
-              MethodParamType methodParamType;
-              if (TypeValues.TryGetValue(typeValue, out methodParamType))
+              if (TypeValues.TryGetValue(typeValue, out MethodParamType methodParamType))
               {
                 parameter.Type = methodParamType;
               }
@@ -132,12 +132,10 @@ namespace IsblCheck.Context.Development.Database.Handlers
             while (reader.Read())
             {
               var documentCardTypeName = reader["DocumentCardTypeName"] as string;
-              DocumentCardType documentCardType;
-              if (!components.TryGetValue(documentCardTypeName, out documentCardType))
+              if (!components.TryGetValue(documentCardTypeName, out DocumentCardType documentCardType))
                 continue;
 
-              var action = new ActionWithHandler();
-              action.Name = reader["Name"] as string;
+              var action = new ActionWithHandler { Name = reader["Name"] as string };
 
               var calculationText = reader["CalculationText"] as string;
               var executionHandler = documentCardType.Methods
@@ -168,15 +166,12 @@ namespace IsblCheck.Context.Development.Database.Handlers
             while (reader.Read())
             {
               var documentCardTypeName = reader["DocumentCardTypeName"] as string;
-              DocumentCardType documentCardType;
-              if (!components.TryGetValue(documentCardTypeName, out documentCardType))
+              if (!components.TryGetValue(documentCardTypeName, out DocumentCardType documentCardType))
                 continue;
 
-              var cardRequisite = new CardRequisite();
-              cardRequisite.Number = (int)reader["Number"];
+              var cardRequisite = new CardRequisite { Number = (int)reader["Number"] };
 
-              var sectionValue = reader["Section"] as string;
-              if (sectionValue != null &&
+              if (reader["Section"] is string sectionValue &&
                 RequisiteSectionValues.ContainsKey(sectionValue))
                 cardRequisite.Section = RequisiteSectionValues[sectionValue];
 
@@ -187,9 +182,11 @@ namespace IsblCheck.Context.Development.Database.Handlers
               var changeEventValue = reader["ChangeEvent"] as string;
               if (!string.IsNullOrEmpty(changeEventValue))
               {
-                var @event = new Event();
-                @event.EventType = EventType.Change;
-                @event.CalculationText = changeEventValue;
+                var @event = new Event
+                {
+                  EventType = EventType.Change,
+                  CalculationText = changeEventValue
+                };
                 cardRequisite.Events.Add(@event);
               }
 
@@ -222,14 +219,15 @@ namespace IsblCheck.Context.Development.Database.Handlers
             while (reader.Read())
             {
               var documentCardTypeName = reader["DocumentCardTypeName"] as string;
-              DocumentCardType documentCardType;
-              if (!components.TryGetValue(documentCardTypeName, out documentCardType))
+              if (!components.TryGetValue(documentCardTypeName, out DocumentCardType documentCardType))
                 continue;
 
-              var view = new View();
-              view.Name = reader["Name"] as string;
-              view.IsMain = RuYesValue.Equals(reader["IsMain"] as string);
-              view.CardForm = reader["CardForm"] as string;
+              var view = new View
+              {
+                Name = reader["Name"] as string,
+                IsMain = RuYesValue.Equals(reader["IsMain"] as string),
+                CardForm = reader["CardForm"] as string
+              };
               documentCardType.Views.Add(view);
             }
           }
@@ -350,11 +348,6 @@ namespace IsblCheck.Context.Development.Database.Handlers
       ORDER BY
         [DocumentCardTypeName],
         [Name]";
-
-    /// <summary>
-    /// Значение да.
-    /// </summary>
-    private const string YesValue = "Y";
 
     /// <summary>
     /// Значение да.

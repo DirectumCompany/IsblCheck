@@ -1,6 +1,6 @@
-﻿using ICSharpCode.AvalonEdit.Document;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Media;
+using ICSharpCode.AvalonEdit.Document;
 
 namespace IsblCheck.UI.Editor
 {

@@ -1,6 +1,6 @@
-﻿using IsblCheck.Common.Localization;
-using System;
+﻿using System;
 using System.Windows.Data;
+using IsblCheck.Common.Localization;
 
 namespace IsblCheck.UI.Localization
 {
@@ -38,8 +38,7 @@ namespace IsblCheck.UI.Localization
     {
       try
       {
-        if (this.bindingExpression != null)
-          this.bindingExpression.UpdateTarget();
+        this.bindingExpression?.UpdateTarget();
       }
       catch
       {

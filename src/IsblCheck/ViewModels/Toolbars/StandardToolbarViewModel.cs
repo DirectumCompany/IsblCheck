@@ -1,12 +1,12 @@
-﻿using GalaSoft.MvvmLight;
+﻿using System;
+using System.Linq;
+using System.Windows;
+using System.Windows.Input;
+using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using IsblCheck.Common.Panels;
 using IsblCheck.Services;
 using IsblCheck.ViewModels.Panels;
-using System;
-using System.Linq;
-using System.Windows;
-using System.Windows.Input;
 
 namespace IsblCheck.ViewModels.Toolbars
 {
@@ -70,7 +70,7 @@ namespace IsblCheck.ViewModels.Toolbars
         .FirstOrDefault(dv => dv.IsActive);
 
       PanelManager.Instance.PanelContainer.ProgressMaximum = 1;
-      var progress = new Progress<int>((value) =>
+      var progress = new Progress<int>(value =>
       {
         Application.Current.Dispatcher.Invoke(() =>
         {
@@ -97,7 +97,7 @@ namespace IsblCheck.ViewModels.Toolbars
     /// <summary>
     /// Проверить возможность проверить активный документ.
     /// </summary>
-    private bool CanCheck()
+    private static bool CanCheck()
     {
       return PanelManager.Instance
         .GetPanels<DocumentViewerViewModel>()
@@ -116,7 +116,7 @@ namespace IsblCheck.ViewModels.Toolbars
         .ToList();
 
       PanelManager.Instance.PanelContainer.ProgressMaximum = openedDocuments.Count;
-      var progress = new Progress<int>((value) =>
+      var progress = new Progress<int>(value =>
       {
         Application.Current.Dispatcher.Invoke(() =>
         {
@@ -148,7 +148,7 @@ namespace IsblCheck.ViewModels.Toolbars
     /// <summary>
     /// Проверить возможность проверить все активные документы.
     /// </summary>
-    private bool CanCheckAll()
+    private static bool CanCheckAll()
     {
       return PanelManager.Instance
         .GetPanels<DocumentViewerViewModel>()
@@ -168,8 +168,8 @@ namespace IsblCheck.ViewModels.Toolbars
     {
       this.codeCheckerService = codeCheckerService;
       this.openCommandHandlers = new OpenCommandHandlers(viewService);
-      this.CheckCommand = new RelayCommand(this.Check, this.CanCheck);
-      this.CheckAllCommand = new RelayCommand(this.CheckAll, this.CanCheckAll);
+      this.CheckCommand = new RelayCommand(this.Check, CanCheck);
+      this.CheckAllCommand = new RelayCommand(this.CheckAll, CanCheckAll);
       this.OpenPackageCommand = new RelayCommand(this.openCommandHandlers.OpenPackage);
       this.OpenDatabaseCommand = new RelayCommand(this.openCommandHandlers.OpenDatabase);
       this.OpenFolderCommand = new RelayCommand(this.openCommandHandlers.OpenFolder);

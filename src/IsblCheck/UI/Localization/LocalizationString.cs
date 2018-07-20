@@ -1,6 +1,6 @@
-﻿using GalaSoft.MvvmLight;
+﻿using System;
+using GalaSoft.MvvmLight;
 using IsblCheck.Common.Localization;
-using System;
 
 namespace IsblCheck.UI.Localization
 {

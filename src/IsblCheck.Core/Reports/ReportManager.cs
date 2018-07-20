@@ -10,7 +10,7 @@ namespace IsblCheck.Core.Reports
     /// <summary>
     /// Список принтеров.
     /// </summary>
-    public IList<IReportPrinter> Printers { get; private set; }
+    public IList<IReportPrinter> Printers { get; }
 
     /// <summary>
     /// Создать отчет.

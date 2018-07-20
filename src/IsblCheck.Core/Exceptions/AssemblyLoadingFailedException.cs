@@ -1,5 +1,5 @@
-﻿using IsblCheck.Core.Properties;
-using System;
+﻿using System;
+using IsblCheck.Core.Properties;
 
 namespace IsblCheck.Core.Exceptions
 {

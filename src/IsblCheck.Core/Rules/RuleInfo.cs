@@ -10,12 +10,12 @@
     /// <summary>
     /// Код.
     /// </summary>
-    public string Name { get; private set; }
+    public string Name { get; }
 
     /// <summary>
     /// Описание.
     /// </summary>
-    public string Description { get; private set; }
+    public string Description { get; }
 
     #endregion
 

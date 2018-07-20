@@ -1,15 +1,14 @@
-﻿using Antlr4.Runtime.Misc;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
 using IsblCheck.BaseRules.Properties;
 using IsblCheck.Core.Checker;
 using IsblCheck.Core.Context;
-using IsblCheck.Core.Context.Development;
 using IsblCheck.Core.Parser;
 using IsblCheck.Core.Reports;
 using IsblCheck.Core.Rules;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace IsblCheck.BaseRules.Variables
 {
@@ -68,7 +67,7 @@ namespace IsblCheck.BaseRules.Variables
       /// <summary>
       /// Контекст объявленных переменных. 
       /// </summary>
-      public List<VariableDefinition> variableDefinitions = new List<VariableDefinition>();
+      public readonly List<VariableDefinition> variableDefinitions = new List<VariableDefinition>();
 
       /// <summary>
       /// Вход в предложение объявления переменной.
@@ -177,13 +176,13 @@ namespace IsblCheck.BaseRules.Variables
     /// <summary>
     /// Инфо правила.
     /// </summary>
-    private static Lazy<IRuleInfo> info = new Lazy<IRuleInfo>(() => 
+    private static readonly Lazy<IRuleInfo> info = new Lazy<IRuleInfo>(() => 
       new RuleInfo(typeof(NotUsedVarRule).Name, Resources.NotUsedVarRuleDescription), true);
 
     /// <summary>
     /// Инфо правила.
     /// </summary>
-    public static IRuleInfo Info { get { return info.Value; } }
+    public static IRuleInfo Info => info.Value;
 
     #endregion
 
@@ -194,7 +193,6 @@ namespace IsblCheck.BaseRules.Variables
     /// </summary>
     /// <param name="report">Отчет.</param>
     /// <param name="document">Документ.</param>
-    /// <param name="tree">Дерево исходного кода.</param>
     /// <param name="context">Контекст.</param>
     public override void Apply(IReport report, IDocument document, IContext context)
     {

@@ -1,9 +1,9 @@
-﻿using IsblCheck.Context.Development.Utils;
-using IsblCheck.Core.Context.Development;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Text;
+using IsblCheck.Context.Development.Utils;
+using IsblCheck.Core.Context.Development;
 
 namespace IsblCheck.Context.Development.Database.Handlers
 {
@@ -29,15 +29,16 @@ namespace IsblCheck.Context.Development.Database.Handlers
         {
           while (reader.Read())
           {
-            var wizard = new Wizard();
-            wizard.Name = (reader["Name"] as string).Trim();
-            wizard.Title = (reader["Title"] as string).Trim();
+            var wizard = new Wizard
+            {
+              Name = (reader["Name"] as string).Trim(),
+              Title = (reader["Title"] as string).Trim()
+            };
             if (ActiveValue.Equals(reader["State"] as string))
               wizard.State = ComponentState.Active;
             else
               wizard.State = ComponentState.Closed;
-            var wizardDfmRawData = reader["WizardDfm"] as byte[];
-            if (wizardDfmRawData != null)
+            if (reader["WizardDfm"] is byte[] wizardDfmRawData)
             {
               var wizardDfm = Encoding.GetEncoding(1251).GetString(wizardDfmRawData);
               if (!string.IsNullOrWhiteSpace(wizardDfm))

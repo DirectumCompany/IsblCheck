@@ -1,12 +1,12 @@
-﻿using Common.Logging;
-using IsblCheck.Context.Development.Package.Handlers;
-using IsblCheck.Context.Development.Package.Models;
-using IsblCheck.Core.Context.Development;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Common.Logging;
+using IsblCheck.Context.Development.Package.Handlers;
+using IsblCheck.Context.Development.Package.Models;
+using IsblCheck.Core.Context.Development;
 
 namespace IsblCheck.Context.Development.Folder.Handlers
 {
@@ -167,9 +167,9 @@ namespace IsblCheck.Context.Development.Folder.Handlers
 
     #region FolderHandlerBase
 
-    protected override string FolderName { get { return "DocumentCardTypes"; } }
+    protected override string FolderName => "DocumentCardTypes";
 
-    protected override string CardModelRootNode { get { return "DocumentCardType"; } }
+    protected override string CardModelRootNode => "DocumentCardType";
 
     protected override IEnumerable<DocumentCardType> ReadComponents(ComponentModel model, string componentFolderPath)
     {
@@ -198,12 +198,12 @@ namespace IsblCheck.Context.Development.Folder.Handlers
         }
       }
 
-      this.ReadMethods(model, entity, componentFolderPath);
-      this.ReadMethodsParameters(model, entity, componentFolderPath);
-      this.ReadActions(model, entity, componentFolderPath);
-      this.ReadEvents(model, entity, componentFolderPath);
-      this.ReadCardRequisites(model, entity, componentFolderPath);
-      this.ReadViews(model, entity, componentFolderPath);
+      ReadMethods(model, entity, componentFolderPath);
+      ReadMethodsParameters(model, entity);
+      ReadActions(model, entity, componentFolderPath);
+      ReadEvents(entity, componentFolderPath);
+      ReadCardRequisites(model, entity, componentFolderPath);
+      ReadViews(model, entity, componentFolderPath);
 
       yield return entity;
     }
@@ -212,9 +212,9 @@ namespace IsblCheck.Context.Development.Folder.Handlers
 
     #region Методы
 
-    private void ReadMethods(ComponentModel model, DocumentCardType entity, string componentFolderPath)
+    private static void ReadMethods(ComponentModel model, DocumentCardType entity, string componentFolderPath)
     {
-      if (model.DetailDataSets == null || model.DetailDataSets.DetailDataSet7 == null)
+      if (model.DetailDataSets?.DetailDataSet7 == null)
         return;
 
       foreach (var methodModel in model.DetailDataSets.DetailDataSet7.Rows)
@@ -241,9 +241,9 @@ namespace IsblCheck.Context.Development.Folder.Handlers
       }
     }
 
-    private void ReadMethodsParameters(ComponentModel model, DocumentCardType entity, string componentFolderPath)
+    private static void ReadMethodsParameters(ComponentModel model, DocumentCardType entity)
     {
-      if (model.DetailDataSets == null || model.DetailDataSets.DetailDataSet8 == null)
+      if (model.DetailDataSets?.DetailDataSet8 == null)
         return;
 
       foreach (var paramModel in model.DetailDataSets.DetailDataSet8.Rows)
@@ -309,9 +309,9 @@ namespace IsblCheck.Context.Development.Folder.Handlers
     }
 
 
-    private void ReadActions(ComponentModel model, DocumentCardType entity, string componentFolderPath)
+    private static void ReadActions(ComponentModel model, DocumentCardType entity, string componentFolderPath)
     {
-      if (model.DetailDataSets == null || model.DetailDataSets.DetailDataSet2 == null)
+      if (model.DetailDataSets?.DetailDataSet2 == null)
         return;
 
       foreach (var actionModel in model.DetailDataSets.DetailDataSet2.Rows)
@@ -363,12 +363,7 @@ namespace IsblCheck.Context.Development.Folder.Handlers
       }
     }
 
-    /// <summary>
-    /// Прочитать события.
-    /// </summary>
-    /// <param name="model">Модель.</param>
-    /// <param name="entity">Сущность.</param>
-    private void ReadEvents(ComponentModel model, DocumentCardType entity, string componentFolderPath)
+    private static void ReadEvents(DocumentCardType entity, string componentFolderPath)
     {
       var eventsTextsFolder = Path.Combine(componentFolderPath, "Events");
       if (!Directory.Exists(eventsTextsFolder))
@@ -387,14 +382,9 @@ namespace IsblCheck.Context.Development.Folder.Handlers
       }
     }
 
-    /// <summary>
-    /// Прочитать реквизиты карточки.
-    /// </summary>
-    /// <param name="model">Модель.</param>
-    /// <param name="entity">Сущность.</param>
-    private void ReadCardRequisites(ComponentModel model, DocumentCardType entity, string componentFolderPath)
+    private static void ReadCardRequisites(ComponentModel model, DocumentCardType entity, string componentFolderPath)
     {
-      if (model.DetailDataSets == null || model.DetailDataSets.DetailDataSet1 == null)
+      if (model.DetailDataSets?.DetailDataSet1 == null)
         return;
 
       foreach (var row in model.DetailDataSets.DetailDataSet1.Rows)
@@ -403,7 +393,7 @@ namespace IsblCheck.Context.Development.Folder.Handlers
 
         var numberReq = row.Requisites
           .FirstOrDefault(r => r.Code == ReqNumberReqName);
-        if (numberReq != null && !string.IsNullOrEmpty(numberReq.Value))
+        if (!string.IsNullOrEmpty(numberReq?.Value))
           cardRequisite.Number = int.Parse(numberReq.Value);
 
         var sectionReq = row.Requisites
@@ -446,14 +436,9 @@ namespace IsblCheck.Context.Development.Folder.Handlers
       }
     }
 
-    /// <summary>
-    /// Прочитать действия.
-    /// </summary>
-    /// <param name="model"></param>
-    /// <param name="entity"></param>
-    private void ReadViews(ComponentModel model, DocumentCardType entity, string componentFolderPath)
+    private static void ReadViews(ComponentModel model, DocumentCardType entity, string componentFolderPath)
     {
-      if (model.DetailDataSets == null || model.DetailDataSets.DetailDataSet3 == null)
+      if (model.DetailDataSets?.DetailDataSet3 == null)
         return;
 
       foreach (var row in model.DetailDataSets.DetailDataSet3.Rows)

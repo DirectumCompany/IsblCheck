@@ -1,4 +1,7 @@
-﻿using Antlr4.Runtime;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
 using IsblCheck.BaseRules.Properties;
@@ -7,9 +10,6 @@ using IsblCheck.Core.Context;
 using IsblCheck.Core.Parser;
 using IsblCheck.Core.Reports;
 using IsblCheck.Core.Rules;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace IsblCheck.BaseRules.ObjectModel
 {
@@ -63,7 +63,7 @@ namespace IsblCheck.BaseRules.ObjectModel
       /// <summary>
       /// Определения объектов с не восстановленным состоянием.
       /// </summary>
-      public List<ObjectStateDefinition> NotRestoredObjectDefinitions = new List<ObjectStateDefinition>();
+      public readonly List<ObjectStateDefinition> NotRestoredObjectDefinitions = new List<ObjectStateDefinition>();
 
       /// <summary>
       /// Вызываемые методы.
@@ -82,7 +82,7 @@ namespace IsblCheck.BaseRules.ObjectModel
       /// </summary>
       /// <param name="node">Узел правил.</param>
       /// <returns>Предложение означивания.</returns>
-      private IsblParser.AssignStatementContext GetParentAssignStatementContext(IRuleNode node)
+      private static IsblParser.AssignStatementContext GetParentAssignStatementContext(IRuleNode node)
       {
         var parent = node.Parent;
         while (parent != null)
@@ -119,11 +119,11 @@ namespace IsblCheck.BaseRules.ObjectModel
           var invokerName = operand.children
            .TakeWhile(ctx => ctx != context)
            .Select(ctx => ctx.GetText())
-           .Aggregate((accumulate, text) => accumulate += text);
+           .Aggregate((accumulate, text) => accumulate + text);
           // Удаляем последнюю точку.
           invokerName = invokerName.Remove(invokerName.Length - 1, 1);
 
-          var assingStatement = this.GetParentAssignStatementContext(context);
+          var assingStatement = GetParentAssignStatementContext(context);
           if (assingStatement == null)
             return;
 
@@ -151,7 +151,7 @@ namespace IsblCheck.BaseRules.ObjectModel
           var invokerName = invokeStatement.children
            .TakeWhile(ctx => ctx != context)
            .Select(ctx => ctx.GetText())
-           .Aggregate((accumulate, text) => accumulate += text);
+           .Aggregate((accumulate, text) => accumulate + text);
           // Удаляем последнюю точку.
           invokerName = invokerName.Remove(invokerName.Length - 1, 1);
 
@@ -188,12 +188,12 @@ namespace IsblCheck.BaseRules.ObjectModel
       /// <summary>
       /// Определения объектов с не восстановленным состоянием.
       /// </summary>
-      public List<ObjectStateDefinition> NotRestoredObjectDefinitions = new List<ObjectStateDefinition>();
+      public readonly List<ObjectStateDefinition> NotRestoredObjectDefinitions = new List<ObjectStateDefinition>();
 
       /// <summary>
       /// Список переменных, созданных через CreateCachedReference/СоздатьКэшированныйСправочник.
       /// </summary>
-      public ISet<string> cachedReferenceVariableNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+      private readonly ISet<string> cachedReferenceVariableNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
       /// <summary>
       /// Вызываемые парные методы.
@@ -232,9 +232,9 @@ namespace IsblCheck.BaseRules.ObjectModel
         }
       }
 
-      private bool IsAssignedFromCreateCachedReferenceFunctionCall(IsblParser.AssignStatementContext context)
+      private static bool IsAssignedFromCreateCachedReferenceFunctionCall(IsblParser.AssignStatementContext context)
       {
-        if (context.expression()?.operand().ChildCount != 1)
+        if (context.expression()?.operand()?.ChildCount != 1)
           return false;
 
         var function = context.expression().operand().GetChild(0) as IsblParser.FunctionContext;
@@ -268,7 +268,7 @@ namespace IsblCheck.BaseRules.ObjectModel
         var invokerName = invokeStatement.children
          .TakeWhile(ctx => ctx != context)
          .Select(ctx => ctx.GetText())
-         .Aggregate((accumulate, text) => accumulate += text);
+         .Aggregate((accumulate, text) => accumulate + text);
         // Удаляем последнюю точку.
         invokerName = invokerName.Remove(invokerName.Length - 1, 1);
 
@@ -286,7 +286,7 @@ namespace IsblCheck.BaseRules.ObjectModel
             this.NotRestoredObjectDefinitions.Add(objectStateDefinition);
           }
         }
-        else if (isCloseMethod)
+        else
         {
           var openMethodName = complementMethodNames
             .First(m => m.Value.Equals(callMethodName, StringComparison.OrdinalIgnoreCase))
@@ -309,13 +309,13 @@ namespace IsblCheck.BaseRules.ObjectModel
     /// <summary>
     /// Инфо правила.
     /// </summary>
-    private static Lazy<IRuleInfo> info = new Lazy<IRuleInfo>(() =>
+    private static readonly Lazy<IRuleInfo> info = new Lazy<IRuleInfo>(() =>
       new RuleInfo(typeof(RecoveryObjectStateRule).Name, Resources.RecoveryObjectStateRuleDescription), true);
 
     /// <summary>
     /// Инфо правила.
     /// </summary>
-    public static IRuleInfo Info { get { return info.Value; } }
+    public static IRuleInfo Info => info.Value;
 
     #endregion
 
@@ -326,7 +326,6 @@ namespace IsblCheck.BaseRules.ObjectModel
     /// </summary>
     /// <param name="report">Отчет.</param>
     /// <param name="document">Документ.</param>
-    /// <param name="tree">Дерево исходного кода.</param>
     /// <param name="context">Контекст.</param>
     public override void Apply(IReport report, IDocument document, IContext context)
     {

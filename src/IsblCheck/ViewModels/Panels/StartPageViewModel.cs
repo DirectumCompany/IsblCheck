@@ -1,17 +1,11 @@
-﻿using GalaSoft.MvvmLight.CommandWpf;
-using IsblCheck.Common.Dialogs;
-using IsblCheck.Common.Localization;
-using IsblCheck.Common.Panels;
-using IsblCheck.Common.Settings;
-using IsblCheck.Services;
-using IsblCheck.ViewModels.Dialogs;
-using Microsoft.WindowsAPICodePack.Dialogs;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Data;
 using System.Windows.Input;
+using GalaSoft.MvvmLight.CommandWpf;
+using IsblCheck.Common.Settings;
+using IsblCheck.Services;
 
 namespace IsblCheck.ViewModels.Panels
 {

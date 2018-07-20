@@ -1,4 +1,7 @@
-﻿using Antlr4.Runtime;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
 using IsblCheck.BaseRules.Properties;
 using IsblCheck.Core.Checker;
@@ -6,9 +9,6 @@ using IsblCheck.Core.Context;
 using IsblCheck.Core.Parser;
 using IsblCheck.Core.Reports;
 using IsblCheck.Core.Rules;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace IsblCheck.BaseRules.Functions
 {
@@ -71,17 +71,17 @@ namespace IsblCheck.BaseRules.Functions
       /// <summary>
       /// Главный контекст, из которого берутся справочники.
       /// </summary>
-      private IContext mainContext;
+      private readonly IContext mainContext;
 
       /// <summary>
       /// Найденные места использования несуществующих справочников.
       /// </summary>
-      public List<UsingReferenceEntry> UsingReferenceEntries = new List<UsingReferenceEntry>();
+      public readonly List<UsingReferenceEntry> UsingReferenceEntries = new List<UsingReferenceEntry>();
 
       /// <summary>
       /// Список доступных прикладных справочников. 
       /// </summary>
-      private HashSet<string> developmentReferenceNames;
+      private readonly HashSet<string> developmentReferenceNames;
 
       /// <summary>
       /// Конструктор.
@@ -117,7 +117,7 @@ namespace IsblCheck.BaseRules.Functions
 
             // Проверить, что обращение к справочнику - это первый вызов после переменной References.
             IsblParser.InvocationCallContext firstInvocationCall = null;
-            for (int i = 0; i < context.Parent.ChildCount; i++)
+            for (var i = 0; i < context.Parent.ChildCount; i++)
             {
               firstInvocationCall = context.Parent.GetChild(i) as IsblParser.InvocationCallContext;
               if (firstInvocationCall != null)
@@ -209,13 +209,13 @@ namespace IsblCheck.BaseRules.Functions
 
     #region Поля
 
-    private static Lazy<IRuleInfo> info = new Lazy<IRuleInfo>(() =>
+    private static readonly Lazy<IRuleInfo> info = new Lazy<IRuleInfo>(() =>
       new RuleInfo(typeof(UsingNotExistedReferenceRule).Name, Resources.UsingNotExistedReferenceRuleDescription), true);
 
     /// <summary>
     /// Инфо правила.
     /// </summary>
-    public static IRuleInfo Info { get { return info.Value; } }
+    public static IRuleInfo Info => info.Value;
 
     #endregion
 

@@ -1,10 +1,10 @@
-﻿using IsblCheck.Common.Localization;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Data;
+using IsblCheck.Common.Localization;
 
 namespace IsblCheck.UI.Localization
 {
@@ -32,7 +32,7 @@ namespace IsblCheck.UI.Localization
       if (args.Length == 1 && !(args[0] is string) && args[0] is IEnumerable)
         args = ((IEnumerable)args[0]).Cast<object>().ToArray();
       if (args.Any())
-        return string.Format(value.ToString(), args);
+        return string.Format(value, args);
       return value;
     }
 

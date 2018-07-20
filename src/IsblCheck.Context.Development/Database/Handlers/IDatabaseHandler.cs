@@ -1,14 +1,14 @@
-﻿using IsblCheck.Core.Context.Development;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using IsblCheck.Core.Context.Development;
 
 namespace IsblCheck.Context.Development.Database.Handlers
 {
   /// <summary>
   /// Интерфейс хендлера БД.
   /// </summary>
-  internal interface IDatabaseHandler<T> where T: Component
+  internal interface IDatabaseHandler<out T> where T: Component
   {
     /// <summary>
     /// Прочитать сущности заданного типа из БД.

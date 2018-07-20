@@ -105,7 +105,7 @@ namespace IsblCheck.UI.Localization
       // Если задан ключ, то используем LocalizationString
       if (!string.IsNullOrEmpty(this.Key))
       {
-        var args = this.Arguments == null ? null : this.Arguments.ToArray();
+        var args = this.Arguments?.ToArray();
         var listener = new LocalizationString(this.Key, args);
 
         // Если локализация навешана на DependencyProperty объекта DependencyObject или на Setter
@@ -121,9 +121,7 @@ namespace IsblCheck.UI.Localization
         }
 
         // Если локализация навешана на Binding, то возвращаем слушателя
-        var targetBinding = target.TargetObject as Binding;
-        if (targetBinding != null
-          && target.TargetProperty != null
+        if (target.TargetObject is Binding targetBinding && target.TargetProperty != null
           && target.TargetProperty.GetType().FullName == "System.Reflection.RuntimePropertyInfo"
           && target.TargetProperty.ToString() == "System.Object Source")
         {

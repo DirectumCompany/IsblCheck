@@ -46,8 +46,9 @@ Standalone-инсталлятор для агента IsblCheck. Пока без
 #### Установка необходимого ПО
 
 Для построения проекта необходимо:
-* Visual Studio 2015 и выше;
+* Visual Studio 2017
 * [Расширение Antlr](https://visualstudiogallery.msdn.microsoft.com/25b991db-befd-441b-b23b-bb5f8d07ee9f)
+* [Расширение SlowCheetah](https://github.com/Microsoft/slow-cheetah)
 * [JRE](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
 
 Для сборки инсталляторов дополнительно необходимо поставить:

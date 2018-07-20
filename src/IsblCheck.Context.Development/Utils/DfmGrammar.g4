@@ -17,12 +17,17 @@ propertyValue
   | number
   | set
   | itemList
+  | stringList
   | binaryData
   | positionData
   ;
 
 itemList 
   : LT item* GT
+  ;
+
+stringList
+  : L_PAREN ( string )* R_PAREN
   ;
 
 item 

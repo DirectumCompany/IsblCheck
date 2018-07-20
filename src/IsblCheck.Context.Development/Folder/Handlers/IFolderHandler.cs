@@ -1,13 +1,9 @@
-﻿using IsblCheck.Core.Context.Development;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using IsblCheck.Core.Context.Development;
 
 namespace IsblCheck.Context.Development.Folder.Handlers
 {
-  internal interface IFolderHandler<T> where T: Component
+  internal interface IFolderHandler<out T> where T: Component
   {
     IEnumerable<T> Read(string workspacePath);
   }

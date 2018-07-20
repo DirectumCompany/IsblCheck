@@ -1,4 +1,6 @@
-﻿using Antlr4.Runtime;
+﻿using System;
+using System.Collections.Generic;
+using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
 using IsblCheck.BaseRules.Properties;
@@ -7,8 +9,6 @@ using IsblCheck.Core.Context;
 using IsblCheck.Core.Parser;
 using IsblCheck.Core.Reports;
 using IsblCheck.Core.Rules;
-using System;
-using System.Collections.Generic;
 
 namespace IsblCheck.BaseRules.Functions
 {
@@ -31,13 +31,13 @@ namespace IsblCheck.BaseRules.Functions
     /// <summary>
     /// Инфо правила.
     /// </summary>
-    private static Lazy<IRuleInfo> info = new Lazy<IRuleInfo>(() =>
+    private static readonly Lazy<IRuleInfo> info = new Lazy<IRuleInfo>(() =>
       new RuleInfo(typeof(SingleFormatArgumentRule).Name, Resources.SingleFormatArgumentRuleDescription), true);
 
     /// <summary>
     /// Инфо правила.
     /// </summary>
-    public static IRuleInfo Info { get { return info.Value; } }
+    public static IRuleInfo Info => info.Value;
 
     #endregion
 
@@ -70,7 +70,7 @@ namespace IsblCheck.BaseRules.Functions
             return;
           argsListOperand = parameters[1].operand();
         }
-        if (argsListOperand == null || argsListOperand.function() == null)
+        if (argsListOperand?.function() == null)
           return;
         var argsListFunctionName = argsListOperand.function().identifier().GetText();
         if (!argsListFunctionName.Equals("ArrayOf", StringComparison.OrdinalIgnoreCase) &&
@@ -99,7 +99,7 @@ namespace IsblCheck.BaseRules.Functions
       walker.Walk(listener, tree);
       foreach (var argument in listener.SingleArgumentEntries)
       {
-        string description = Resources.SingleArgumentForFormatFunction;
+        var description = Resources.SingleArgumentForFormatFunction;
         report.AddInformation(Code, description, document, argument.GetTextPosition());
       }
     }

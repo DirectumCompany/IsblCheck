@@ -1,15 +1,15 @@
-﻿using Autofac;
-using IsblCheck.Common.Patterns;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Autofac;
+using IsblCheck.Common.Patterns;
 
 namespace IsblCheck.Common.Panels
 {
   /// <summary>
   /// Менеджер панелей.
   /// </summary>
-  public class PanelManager : Singleton<PanelManager>
+  public class PanelManager : Singleton<PanelManager>, IDisposable
   {
     #region Поля и свойства
 
@@ -23,13 +23,7 @@ namespace IsblCheck.Common.Panels
     /// <summary>
     /// Контейнер панелей.
     /// </summary>
-    public IPanelContainer PanelContainer
-    {
-      get
-      {
-        return this.container.Resolve<IPanelContainer>();
-      }
-    }
+    public IPanelContainer PanelContainer => this.container.Resolve<IPanelContainer>();
 
     #endregion
 
@@ -105,7 +99,7 @@ namespace IsblCheck.Common.Panels
     public IPanel CreateNamedPanel(string name, bool isAnchorable = false)
     {
       if (name == null)
-        throw new ArgumentNullException("name");
+        throw new ArgumentNullException(nameof(name));
 
       var panel = this.container.ResolveNamed<IPanel>(name);
       panel.ContentId = name;
@@ -126,9 +120,7 @@ namespace IsblCheck.Common.Panels
     public IPanel CreateNamedPanel(string name, bool isAnchorable = false, params object[] args)
     {
       if (name == null)
-        throw new ArgumentNullException("name");
-
-      var parameters = args.Select((value, index) => new PositionalParameter(index, value));
+        throw new ArgumentNullException(nameof(name));
       var panel = this.container.ResolveNamed<IPanel>(name);
       panel.ContentId = name;
       if (isAnchorable)
@@ -209,6 +201,29 @@ namespace IsblCheck.Common.Panels
         .OfType<TPanel>()
         .ToList();
     }
+
+    #region IDisposable Support
+
+    private bool disposedValue;
+
+    protected virtual void Dispose(bool disposing)
+    {
+      if (!disposedValue)
+      {
+        if (disposing)
+        {
+          this.container.Dispose();
+        }
+        disposedValue = true;
+      }
+    }
+    
+    public void Dispose()
+    {
+      Dispose(true);
+    }
+
+    #endregion
 
     #endregion
   }

@@ -1,13 +1,13 @@
-﻿using Common.Logging;
-using IsblCheck.Context.Development.Package.Handlers;
-using IsblCheck.Context.Development.Package.Models;
-using IsblCheck.Context.Development.Utils;
-using IsblCheck.Core.Context.Development;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Common.Logging;
+using IsblCheck.Context.Development.Package.Handlers;
+using IsblCheck.Context.Development.Package.Models;
+using IsblCheck.Context.Development.Utils;
+using IsblCheck.Core.Context.Development;
 
 namespace IsblCheck.Context.Development.Folder.Handlers
 {
@@ -32,11 +32,6 @@ namespace IsblCheck.Context.Development.Folder.Handlers
     /// Тип базового блока.
     /// </summary>
     private const string BaseBlockTypeReqName = "BaseBlockType";
-
-    /// <summary>
-    /// Свойства блока.
-    /// </summary>
-    private const string BlockPropertiesReqName = "Properties";
 
     #endregion
 
@@ -69,9 +64,9 @@ namespace IsblCheck.Context.Development.Folder.Handlers
 
     #region FolderHandlerBase
 
-    protected override string FolderName { get { return "RouteBlocks"; } }
+    protected override string FolderName => "RouteBlocks";
 
-    protected override string CardModelRootNode { get { return "RouteBlock"; } }
+    protected override string CardModelRootNode => "RouteBlock";
 
     protected override IEnumerable<RouteBlock> ReadComponents(ComponentModel model, string componentFolderPath)
     {
@@ -97,9 +92,9 @@ namespace IsblCheck.Context.Development.Folder.Handlers
         entity.WorkflowBlock = description.Blocks.FirstOrDefault();
         if (entity.WorkflowBlock != null)
         {
-          this.ReadActions(entity.WorkflowBlock, componentFolderPath);
-          this.ReadEvents(entity.WorkflowBlock, componentFolderPath);
-          this.ReadProperties(entity.WorkflowBlock, componentFolderPath);
+          ReadActions(entity.WorkflowBlock, componentFolderPath);
+          ReadEvents(entity.WorkflowBlock, componentFolderPath);
+          ReadProperties(entity.WorkflowBlock, componentFolderPath);
         }
         else
           log.Warn($"Cannot read properties for block {entity.Name}");
@@ -114,7 +109,7 @@ namespace IsblCheck.Context.Development.Folder.Handlers
 
     #region Методы
 
-    private void ReadActions(WorkflowBlock block, string componentFolderPath)
+    private static void ReadActions(WorkflowBlock block, string componentFolderPath)
     {
       foreach (var action in block.Actions)
       {
@@ -128,12 +123,11 @@ namespace IsblCheck.Context.Development.Folder.Handlers
       }
     }
 
-    private void ReadEvents(WorkflowBlock block, string componentFolderPath)
+    private static void ReadEvents(WorkflowBlock block, string componentFolderPath)
     {
       foreach(var @event in block.Events)
       {
-        string eventFileName;
-        if (eventFileNames.TryGetValue(@event.Name, out eventFileName))
+        if (eventFileNames.TryGetValue(@event.Name, out string eventFileName))
         {
           var eventFile = Path.Combine(componentFolderPath, "Events", eventFileName);
           if (File.Exists(eventFile))
@@ -148,12 +142,11 @@ namespace IsblCheck.Context.Development.Folder.Handlers
       }
     }
 
-    private void ReadProperties(WorkflowBlock block, string componentFolderPath)
+    private static void ReadProperties(WorkflowBlock block, string componentFolderPath)
     {
       foreach (var property in block.IsblProperties)
       {
-        string propertyFileName;
-        if (eventFileNames.TryGetValue(property.Name, out propertyFileName))
+        if (eventFileNames.TryGetValue(property.Name, out string propertyFileName))
         {
           var propertyCalculationFile = Path.Combine(componentFolderPath, "Events", propertyFileName);
           if (File.Exists(propertyCalculationFile))

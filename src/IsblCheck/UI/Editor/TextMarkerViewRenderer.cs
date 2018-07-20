@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows;
 using System.Windows.Media;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Rendering;
-using System.Collections.Generic;
-using System.Windows;
-using System.Linq;
 
 namespace IsblCheck.UI.Editor
 {
@@ -24,11 +24,11 @@ namespace IsblCheck.UI.Editor
       if (this.Markers == null)
         return;
 
-      int lineStart = line.Offset;
-      int lineEnd = lineStart + line.Length;
+      var lineStart = line.Offset;
+      var lineEnd = lineStart + line.Length;
 
       var lineMarkers = this.Markers.FindOverlappingSegments(lineStart, line.Length);
-      foreach (TextMarker marker in lineMarkers)
+      foreach (var marker in lineMarkers)
       {
         var startOffset = Math.Max(marker.StartOffset, lineStart);
         var endOffset = Math.Min(marker.EndOffset, lineEnd);
@@ -61,13 +61,7 @@ namespace IsblCheck.UI.Editor
     /// <summary>
     /// Слой, на котором будет выполняться отрисовка.
     /// </summary>
-    public KnownLayer Layer
-    {
-      get
-      {
-        return KnownLayer.Selection;
-      }
-    }
+    public KnownLayer Layer => KnownLayer.Selection;
 
     /// <summary>
     /// Нарисовать.
@@ -77,10 +71,10 @@ namespace IsblCheck.UI.Editor
     public void Draw(TextView textView, DrawingContext drawingContext)
     {
       if (textView == null)
-        throw new ArgumentNullException("textView");
+        throw new ArgumentNullException(nameof(textView));
 
       if (drawingContext == null)
-        throw new ArgumentNullException("drawingContext");
+        throw new ArgumentNullException(nameof(drawingContext));
 
       if (this.Markers == null || !textView.VisualLinesValid)
         return;
@@ -89,18 +83,20 @@ namespace IsblCheck.UI.Editor
       if (visualLines.Count == 0)
         return;
 
-      int viewStart = visualLines.First().FirstDocumentLine.Offset;
-      int viewEnd = visualLines.Last().LastDocumentLine.EndOffset;
+      var viewStart = visualLines.First().FirstDocumentLine.Offset;
+      var viewEnd = visualLines.Last().LastDocumentLine.EndOffset;
       var viewMarkers = this.Markers.FindOverlappingSegments(viewStart, viewEnd - viewStart);
 
-      foreach (TextMarker marker in viewMarkers)
+      foreach (var marker in viewMarkers)
       {
         // Отрисовка фона.
         if (marker.Background != null)
         {
-          var geometryBuilder = new BackgroundGeometryBuilder();
-          geometryBuilder.AlignToWholePixels = true;
-          geometryBuilder.CornerRadius = 3;
+          var geometryBuilder = new BackgroundGeometryBuilder
+          {
+            AlignToWholePixels = true,
+            CornerRadius = 3
+          };
           geometryBuilder.AddSegment(textView, marker);
 
           var geometry = geometryBuilder.CreateGeometry();
@@ -119,8 +115,8 @@ namespace IsblCheck.UI.Editor
           var segmentRects = BackgroundGeometryBuilder.GetRectsForSegment(textView, marker);
           foreach (var segmentRect in segmentRects)
           {
-            Point startPoint = segmentRect.BottomLeft;
-            Point endPoint = segmentRect.BottomRight;
+            var startPoint = segmentRect.BottomLeft;
+            var endPoint = segmentRect.BottomRight;
 
             Brush usedBrush = new SolidColorBrush(marker.MarkerColor);
             usedBrush.Freeze();
@@ -131,7 +127,7 @@ namespace IsblCheck.UI.Editor
               var usedPen = new Pen(usedBrush, 1);
               usedPen.Freeze();
 
-              var geometry = this.CreateSquigglyLine(startPoint, endPoint);
+              var geometry = CreateSquigglyLine(startPoint, endPoint);
               drawingContext.DrawGeometry(Brushes.Transparent, usedPen, geometry);
             }
 
@@ -147,8 +143,7 @@ namespace IsblCheck.UI.Editor
             // Подчеркивание точками.
             if ((marker.MarkerType & TextMarkerType.DottedUnderline) != 0)
             {
-              var usedPen = new Pen(usedBrush, 1);
-              usedPen.DashStyle = DashStyles.Dot;
+              var usedPen = new Pen(usedBrush, 1) { DashStyle = DashStyles.Dot };
               usedPen.Freeze();
 
               drawingContext.DrawLine(usedPen, startPoint, endPoint);
@@ -177,17 +172,17 @@ namespace IsblCheck.UI.Editor
     /// <param name="start">Начальная позиция.</param>
     /// <param name="end">Конечная позиция.</param>
     /// <returns>Геометрия волнистой линии.</returns>
-    private Geometry CreateSquigglyLine(Point start, Point end)
+    private static Geometry CreateSquigglyLine(Point start, Point end)
     {
       var offset = 2.5;
-      int count = Math.Max((int)((end.X - start.X) / offset) + 1, 4);
+      var count = Math.Max((int)((end.X - start.X) / offset) + 1, 4);
 
-      StreamGeometry geometry = new StreamGeometry();
-      using (StreamGeometryContext ctx = geometry.Open())
+      var geometry = new StreamGeometry();
+      using (var ctx = geometry.Open())
       {
         ctx.BeginFigure(start, false, false);
         var points = new List<Point>();
-        for (int i = 0; i < count; i++)
+        for (var i = 0; i < count; i++)
         {
           var point = new Point(start.X + i * offset, start.Y - ((i + 1) % 2 == 0 ? offset : 0));
           points.Add(point);

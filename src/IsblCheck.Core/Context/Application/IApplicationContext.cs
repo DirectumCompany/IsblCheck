@@ -1,5 +1,5 @@
-﻿using IsblCheck.Core.Context.Development;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using IsblCheck.Core.Context.Development;
 
 namespace IsblCheck.Core.Context.Application
 {
@@ -60,6 +60,7 @@ namespace IsblCheck.Core.Context.Application
     /// Проверить, существует ли такой системный справочнник.
     /// </summary>
     /// <param name="name">Название справочника.</param>
+    /// <param name="withOldReference">Учитывать также старые наименования справочников.</param>
     /// <returns>Возвращает false, если справочника не существует.</returns>
     bool IsExistsSysReference(string name, bool withOldReference);
   }

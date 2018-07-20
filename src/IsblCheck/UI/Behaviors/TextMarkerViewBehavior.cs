@@ -1,12 +1,12 @@
-﻿using ICSharpCode.AvalonEdit;
-using ICSharpCode.AvalonEdit.Document;
-using IsblCheck.UI.Editor;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Documents;
 using System.Windows.Interactivity;
 using System.Windows.Media;
+using ICSharpCode.AvalonEdit;
+using ICSharpCode.AvalonEdit.Document;
+using IsblCheck.UI.Editor;
 
 namespace IsblCheck.UI.Behaviors
 {
@@ -20,7 +20,7 @@ namespace IsblCheck.UI.Behaviors
     /// <summary>
     /// Рендерер маркеров.
     /// </summary>
-    private TextMarkerViewRenderer renderer = new TextMarkerViewRenderer();
+    private readonly TextMarkerViewRenderer renderer = new TextMarkerViewRenderer();
 
     /// <summary>
     /// Декоратор скролбара.
@@ -102,8 +102,7 @@ namespace IsblCheck.UI.Behaviors
       textEditor.TextArea.TextView.BackgroundRenderers.Add(this.renderer);
       textEditor.TextArea.TextView.LineTransformers.Add(this.renderer);
 
-      this.tooltipService = new TextMarkerTooltipService(this.AssociatedObject);
-      this.tooltipService.Markers = this.Markers;
+      this.tooltipService = new TextMarkerTooltipService(this.AssociatedObject) { Markers = this.Markers };
 
       textEditor.ApplyTemplate();
       var scrollViewer = (ScrollViewer)textEditor.Template.FindName("PART_ScrollViewer", textEditor);
@@ -127,8 +126,7 @@ namespace IsblCheck.UI.Behaviors
       if (layer == null)
         return;
 
-      this.trackAdorner = new TextMarkerTrackAdorner(grid, textEditor);
-      this.trackAdorner.Markers = this.Markers;
+      this.trackAdorner = new TextMarkerTrackAdorner(grid, textEditor) { Markers = this.Markers };
       layer.Add(this.trackAdorner);
     }
 

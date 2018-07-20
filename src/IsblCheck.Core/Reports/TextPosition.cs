@@ -28,12 +28,6 @@
     /// <summary>
     /// Длина.
     /// </summary>
-    public int Length
-    {
-      get
-      {
-        return this.EndIndex - this.StartIndex + 1;
-      }
-    }
+    public int Length => this.EndIndex - this.StartIndex + 1;
   }
 }

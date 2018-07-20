@@ -1,7 +1,7 @@
-﻿using IsblCheck.Core.Checker;
-using IsblCheck.Core.Context.Development;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using IsblCheck.Core.Checker;
+using IsblCheck.Core.Context.Development;
 
 namespace IsblCheck.Agent
 {
@@ -9,7 +9,7 @@ namespace IsblCheck.Agent
   {
     #region Поля и свойства
 
-    private IDevelopmentContext context; 
+    private readonly IDevelopmentContext context;
 
     #endregion
 
@@ -23,27 +23,30 @@ namespace IsblCheck.Agent
 
     private IEnumerable<IDocument> GetDocuments()
     {
-      return ParseCommonReports()
-        .Union(ParseDialogs())
-        .Union(ParseDocumentCardTypes())
-        .Union(ParseFunctions())
-        .Union(ParseIntegratedReports())
-        .Union(ParseReferenceTypes())
-        .Union(ParseScripts())
-        .Union(ParseRouteBlocks())
-        .Union(ParseStandardRoutes())
-        .Union(ParseWizards());
+      return this.ParseCommonReports()
+        .Union(this.ParseDialogs())
+        .Union(this.ParseDocumentCardTypes())
+        .Union(this.ParseFunctions())
+        .Union(this.ParseIntegratedReports())
+        .Union(this.ParseManagedFolders())
+        .Union(this.ParseReferenceTypes())
+        .Union(this.ParseScripts())
+        .Union(this.ParseRouteBlocks())
+        .Union(this.ParseStandardRoutes())
+        .Union(this.ParseWizards());
     }
 
     private IEnumerable<IDocument> ParseCommonReports()
     {
       foreach (var commonReport in this.context.CommonReports.Where(r => r.State == ComponentState.Active))
       {
-        var documentName = string.Format("Отчет {0}. Расчет", commonReport.Title);
-        var document = new Document(documentName, commonReport.CalculationText);
-        document.ComponentType = ComponentType.CommonReport;
-        document.ComponentName = commonReport.Name;
-        document.Path = "Calculation";
+        var documentName = $"Отчет {commonReport.Title}. Расчет";
+        var document = new Document(documentName, commonReport.CalculationText)
+        {
+          ComponentType = ComponentType.CommonReport,
+          ComponentName = commonReport.Name,
+          Path = "Calculation"
+        };
         yield return document;
       }
     }
@@ -56,42 +59,50 @@ namespace IsblCheck.Agent
         {
           if (action.ExecutionHandler != null)
             continue;
-          var documentName = string.Format("Диалог {0}. Действие {1}", dialog.Title, action.Name);
-          var document = new Document(documentName, action.CalculationText);
-          document.ComponentType = ComponentType.Dialog;
-          document.ComponentName = dialog.Name;
-          document.Path = string.Format("Actions.{0}", action.Name);
+          var documentName = $"Диалог {dialog.Title}. Действие {action.Name}";
+          var document = new Document(documentName, action.CalculationText)
+          {
+            ComponentType = ComponentType.Dialog,
+            ComponentName = dialog.Name,
+            Path = $"Actions.{action.Name}"
+          };
           yield return document;
         }
         foreach (var method in dialog.Methods)
         {
-          var documentName = string.Format("Диалог {0}. Метод {1}", dialog.Title, method.Name);
-          var document = new Document(documentName, method.CalculationText);
-          document.ComponentType = ComponentType.Dialog;
-          document.ComponentName = dialog.Name;
-          document.Path = string.Format("Methods.{0}", method.Name);
+          var documentName = $"Диалог {dialog.Title}. Метод {method.Name}";
+          var document = new Document(documentName, method.CalculationText)
+          {
+            ComponentType = ComponentType.Dialog,
+            ComponentName = dialog.Name,
+            Path = $"Methods.{method.Name}"
+          };
           document.ContextVariables.AddRange(method.Params.Select(p => p.Name.ToUpper()));
           document.ContextVariables.AddRange(method.Params.Select(p => "!" + p.Name.ToUpper()));
           yield return document;
         }
         foreach (var @event in dialog.Events)
         {
-          var documentName = string.Format("Диалог {0}. Событие {1}", dialog.Title, @event.EventType);
-          var document = new Document(documentName, @event.CalculationText);
-          document.ComponentType = ComponentType.Dialog;
-          document.ComponentName = dialog.Name;
-          document.Path = string.Format("Events.{0}", @event.EventType);
+          var documentName = $"Диалог {dialog.Title}. Событие {@event.EventType}";
+          var document = new Document(documentName, @event.CalculationText)
+          {
+            ComponentType = ComponentType.Dialog,
+            ComponentName = dialog.Name,
+            Path = $"Events.{@event.EventType}"
+          };
           yield return document;
         }
         foreach (var requisite in dialog.Requisites)
         {
           foreach (var @event in requisite.Events)
           {
-            var documentName = string.Format("Диалог {0}. Реквизит {1}. Событие {2}", dialog.Title, requisite.Name, @event.EventType);
-            var document = new Document(documentName, @event.CalculationText);
-            document.ComponentType = ComponentType.Dialog;
-            document.ComponentName = dialog.Name;
-            document.Path = string.Format("Requisites.{0}.Events.{1}", requisite.Name, @event.EventType);
+            var documentName = $"Диалог {dialog.Title}. Реквизит {requisite.Name}. Событие {@event.EventType}";
+            var document = new Document(documentName, @event.CalculationText)
+            {
+              ComponentType = ComponentType.Dialog,
+              ComponentName = dialog.Name,
+              Path = $"Requisites.{requisite.Name}.Events.{@event.EventType}"
+            };
             yield return document;
           }
         }
@@ -106,42 +117,50 @@ namespace IsblCheck.Agent
         {
           if (action.ExecutionHandler != null)
             continue;
-          var documentName = string.Format("Тип карточки электронного документа {0}. Действие {1}", documentCardType.Title, action.Name);
-          var document = new Document(documentName, action.CalculationText);
-          document.ComponentType = ComponentType.DocumentCardType;
-          document.ComponentName = documentCardType.Name;
-          document.Path = string.Format("Actions.{0}", action.Name);
+          var documentName = $"Тип карточки электронного документа {documentCardType.Title}. Действие {action.Name}";
+          var document = new Document(documentName, action.CalculationText)
+          {
+            ComponentType = ComponentType.DocumentCardType,
+            ComponentName = documentCardType.Name,
+            Path = $"Actions.{action.Name}"
+          };
           yield return document;
         }
         foreach (var method in documentCardType.Methods)
         {
-          var documentName = string.Format("Тип карточки электронного документа {0}. Метод {1}", documentCardType.Title, method.Name);
-          var document = new Document(documentName, method.CalculationText);
-          document.ComponentType = ComponentType.DocumentCardType;
-          document.ComponentName = documentCardType.Name;
-          document.Path = string.Format("Methods.{0}", method.Name);
+          var documentName = $"Тип карточки электронного документа {documentCardType.Title}. Метод {method.Name}";
+          var document = new Document(documentName, method.CalculationText)
+          {
+            ComponentType = ComponentType.DocumentCardType,
+            ComponentName = documentCardType.Name,
+            Path = $"Methods.{method.Name}"
+          };
           document.ContextVariables.AddRange(method.Params.Select(p => p.Name.ToUpper()));
           document.ContextVariables.AddRange(method.Params.Select(p => "!" + p.Name.ToUpper()));
           yield return document;
         }
         foreach (var @event in documentCardType.Events)
         {
-          var documentName = string.Format("Тип карточки электронного документа {0}. Событие {1}", documentCardType.Title, @event.EventType);
-          var document = new Document(documentName, @event.CalculationText);
-          document.ComponentType = ComponentType.DocumentCardType;
-          document.ComponentName = documentCardType.Name;
-          document.Path = string.Format("Events.{0}", @event.EventType);
+          var documentName = $"Тип карточки электронного документа {documentCardType.Title}. Событие {@event.EventType}";
+          var document = new Document(documentName, @event.CalculationText)
+          {
+            ComponentType = ComponentType.DocumentCardType,
+            ComponentName = documentCardType.Name,
+            Path = $"Events.{@event.EventType}"
+          };
           yield return document;
         }
         foreach (var requisite in documentCardType.Requisites)
         {
           foreach (var @event in requisite.Events)
           {
-            var documentName = string.Format("Тип карточки электронного документа {0}. Реквизит {1}. Событие {2}", documentCardType.Title, requisite.Name, @event.EventType);
-            var document = new Document(documentName, @event.CalculationText);
-            document.ComponentType = ComponentType.DocumentCardType;
-            document.ComponentName = documentCardType.Name;
-            document.Path = string.Format("Requisites.{0}.Events.{1}", requisite.Name, @event.EventType);
+            var documentName = $"Тип карточки электронного документа {documentCardType.Title}. Реквизит {requisite.Name}. Событие {@event.EventType}";
+            var document = new Document(documentName, @event.CalculationText)
+            {
+              ComponentType = ComponentType.DocumentCardType,
+              ComponentName = documentCardType.Name,
+              Path = $"Requisites.{requisite.Name}.Events.{@event.EventType}"
+            };
             yield return document;
           }
         }
@@ -152,11 +171,13 @@ namespace IsblCheck.Agent
     {
       foreach (var function in this.context.Functions)
       {
-        var documentName = string.Format("Функция {0}. Вычисление", function.Title);
-        var document = new Document(documentName, function.CalculationText);
-        document.ComponentType = ComponentType.Function;
-        document.ComponentName = function.Name;
-        document.Path = "Calculation";
+        var documentName = $"Функция {function.Title}. Вычисление";
+        var document = new Document(documentName, function.CalculationText)
+        {
+          ComponentType = ComponentType.Function,
+          ComponentName = function.Name,
+          Path = "Calculation"
+        };
         document.ContextVariables.AddRange(function.Arguments.Select(p => p.Name.ToUpper()));
         document.ContextVariables.AddRange(function.Arguments.Select(p => "!" + p.Name.ToUpper()));
         yield return document;
@@ -167,12 +188,58 @@ namespace IsblCheck.Agent
     {
       foreach (var integratedReport in this.context.IntegratedReports.Where(r => r.State == ComponentState.Active))
       {
-        var documentName = string.Format("Интегрированный отчет {0}. Расчет", integratedReport.Title);
-        var document = new Document(documentName, integratedReport.CalculationText);
-        document.ComponentType = ComponentType.IntegratedReport;
-        document.ComponentName = integratedReport.Name;
-        document.Path = "Calculation";
+        var documentName = $"Интегрированный отчет {integratedReport.Title}. Расчет";
+        var document = new Document(documentName, integratedReport.CalculationText)
+        {
+          ComponentType = ComponentType.IntegratedReport,
+          ComponentName = integratedReport.Name,
+          Path = "Calculation"
+        };
         yield return document;
+      }
+    }
+
+    private IEnumerable<IDocument> ParseManagedFolders()
+    {
+      foreach (var managedFolder in this.context.ManagedFolders.Where(r => r.State == ComponentState.Active))
+      {
+        foreach (var action in managedFolder.Actions)
+        {
+          if (action.ExecutionHandler != null)
+            continue;
+          var documentName = $"Управляемая папка {managedFolder.Title}. Действие {action.Name}";
+          var document = new Document(documentName, action.CalculationText)
+          {
+            ComponentType = ComponentType.ManagedFolder,
+            ComponentName = managedFolder.Name,
+            Path = $"Actions.{action.Name}"
+          };
+          yield return document;
+        }
+        foreach (var method in managedFolder.Methods)
+        {
+          var documentName = $"Управляемая папка {managedFolder.Title}. Метод {method.Name}";
+          var document = new Document(documentName, method.CalculationText)
+          {
+            ComponentType = ComponentType.ManagedFolder,
+            ComponentName = managedFolder.Name,
+            Path = $"Methods.{method.Name}"
+          };
+          document.ContextVariables.AddRange(method.Params.Select(p => p.Name.ToUpper()));
+          document.ContextVariables.AddRange(method.Params.Select(p => "!" + p.Name.ToUpper()));
+          yield return document;
+        }
+        if (managedFolder.SearchDescription != null)
+        {
+          var documentName = $"Управляемая папка {managedFolder.Title}. Событие \"До поиска\"";
+          var document = new Document(documentName, managedFolder.SearchDescription.BeforeSearchEventText)
+          {
+            ComponentType = ComponentType.ManagedFolder,
+            ComponentName = managedFolder.Name,
+            Path = $"Events.BeforeSearch"
+          };
+          yield return document;
+        }
       }
     }
 
@@ -184,42 +251,50 @@ namespace IsblCheck.Agent
         {
           if (action.ExecutionHandler != null)
             continue;
-          var documentName = string.Format("Тип справочника {0}. Действие {1}", referenceType.Title, action.Name);
-          var document = new Document(documentName, action.CalculationText);
-          document.ComponentType = ComponentType.ReferenceType;
-          document.ComponentName = referenceType.Name;
-          document.Path = string.Format("Actions.{0}", action.Name);
+          var documentName = $"Тип справочника {referenceType.Title}. Действие {action.Name}";
+          var document = new Document(documentName, action.CalculationText)
+          {
+            ComponentType = ComponentType.ReferenceType,
+            ComponentName = referenceType.Name,
+            Path = $"Actions.{action.Name}"
+          };
           yield return document;
         }
         foreach (var method in referenceType.Methods)
         {
-          var documentName = string.Format("Тип справочника {0}. Метод {1}", referenceType.Title, method.Name);
-          var document = new Document(documentName, method.CalculationText);
-          document.ComponentType = ComponentType.ReferenceType;
-          document.ComponentName = referenceType.Name;
-          document.Path = string.Format("Methods.{0}", method.Name);
+          var documentName = $"Тип справочника {referenceType.Title}. Метод {method.Name}";
+          var document = new Document(documentName, method.CalculationText)
+          {
+            ComponentType = ComponentType.ReferenceType,
+            ComponentName = referenceType.Name,
+            Path = $"Methods.{method.Name}"
+          };
           document.ContextVariables.AddRange(method.Params.Select(p => p.Name.ToUpper()));
           document.ContextVariables.AddRange(method.Params.Select(p => "!" + p.Name.ToUpper()));
           yield return document;
         }
         foreach (var @event in referenceType.Events)
         {
-          var documentName = string.Format("Тип справочника {0}. Событие {1}", referenceType.Title, @event.EventType);
-          var document = new Document(documentName, @event.CalculationText);
-          document.ComponentType = ComponentType.ReferenceType;
-          document.ComponentName = referenceType.Name;
-          document.Path = string.Format("Events.{0}", @event.EventType);
+          var documentName = $"Тип справочника {referenceType.Title}. Событие {@event.EventType}";
+          var document = new Document(documentName, @event.CalculationText)
+          {
+            ComponentType = ComponentType.ReferenceType,
+            ComponentName = referenceType.Name,
+            Path = $"Events.{@event.EventType}"
+          };
           yield return document;
         }
         foreach (var requisite in referenceType.Requisites)
         {
           foreach (var @event in requisite.Events)
           {
-            var documentName = string.Format("Тип справочника {0}. Реквизит {1}. Событие {2}", referenceType.Title, requisite.Name, @event.EventType);
-            var document = new Document(documentName, @event.CalculationText);
-            document.ComponentType = ComponentType.ReferenceType;
-            document.ComponentName = referenceType.Name;
-            document.Path = string.Format("Requisites.{0}.Events.{1}", requisite.Name, @event.EventType);
+            var documentName = $"Тип справочника {referenceType.Title}. Реквизит {requisite.Name}. Событие {@event.EventType}";
+            var document = new Document(documentName, @event.CalculationText)
+            {
+              ComponentType = ComponentType.ReferenceType,
+              ComponentName = referenceType.Name,
+              Path = $"Requisites.{requisite.Name}.Events.{@event.EventType}"
+            };
             yield return document;
           }
         }
@@ -230,11 +305,13 @@ namespace IsblCheck.Agent
     {
       foreach (var script in this.context.Scripts.Where(s => s.State == ComponentState.Active))
       {
-        var documentName = string.Format("Сценарий {0}. Вычисление", script.Title);
-        var document = new Document(documentName, script.CalculationText);
-        document.ComponentType = ComponentType.Script;
-        document.ComponentName = script.Name;
-        document.Path = "Calculation";
+        var documentName = $"Сценарий {script.Title}. Вычисление";
+        var document = new Document(documentName, script.CalculationText)
+        {
+          ComponentType = ComponentType.Script,
+          ComponentName = script.Name,
+          Path = "Calculation"
+        };
         yield return document;
       }
     }
@@ -248,30 +325,36 @@ namespace IsblCheck.Agent
         foreach (var @event in block.WorkflowBlock.Events.Where(e => !string.IsNullOrEmpty(e.CalculationText)))
         {
           var documentName = $"Блок {block.Name}. Событие \"{@event.Title}\"";
-          var document = new Document(documentName, @event.CalculationText);
-          document.ComponentType = ComponentType.RouteBlock;
-          document.ComponentName = block.Name;
-          document.Path = $"Events.{@event.Name}";
+          var document = new Document(documentName, @event.CalculationText)
+          {
+            ComponentType = ComponentType.RouteBlock,
+            ComponentName = block.Name,
+            Path = $"Events.{@event.Name}"
+          };
           yield return document;
         }
 
         foreach (var action in block.WorkflowBlock.Actions)
         {
           var documentName = $"Блок {block.Name}. Действие \"{action.Name}\"";
-          var document = new Document(documentName, action.CalculationText);
-          document.ComponentType = ComponentType.RouteBlock;
-          document.ComponentName = block.Name;
-          document.Path = $"Actions.{action.Name}";
+          var document = new Document(documentName, action.CalculationText)
+          {
+            ComponentType = ComponentType.RouteBlock,
+            ComponentName = block.Name,
+            Path = $"Actions.{action.Name}"
+          };
           yield return document;
         }
 
         foreach (var isblProp in block.WorkflowBlock.IsblProperties.Where(e => !string.IsNullOrEmpty(e.CalculationText)))
         {
           var documentName = $"Блок {block.Name}. Свойство \"{isblProp.Title}\"";
-          var document = new Document(documentName, isblProp.CalculationText);
-          document.ComponentType = ComponentType.RouteBlock;
-          document.ComponentName = block.Name;
-          document.Path = $"Properties.{isblProp.Name}";
+          var document = new Document(documentName, isblProp.CalculationText)
+          {
+            ComponentType = ComponentType.RouteBlock,
+            ComponentName = block.Name,
+            Path = $"Properties.{isblProp.Name}"
+          };
           yield return document;
         }
       }
@@ -284,14 +367,16 @@ namespace IsblCheck.Agent
         .Where(r => r.WorkflowDescription != null))
       {
         #region События ТМ
-        
+
         foreach (var @event in route.WorkflowDescription.Events.Where(e => !string.IsNullOrEmpty(e.CalculationText)))
         {
           var documentName = $"ТМ \"{route.Title}\". Событие \"{@event.Title}\"";
-          var document = new Document(documentName, @event.CalculationText);
-          document.ComponentType = ComponentType.StandardRoute;
-          document.ComponentName = route.Name;
-          document.Path = $"Events.{@event.Name}";
+          var document = new Document(documentName, @event.CalculationText)
+          {
+            ComponentType = ComponentType.StandardRoute,
+            ComponentName = route.Name,
+            Path = $"Events.{@event.Name}"
+          };
           yield return document;
         }
 
@@ -302,10 +387,12 @@ namespace IsblCheck.Agent
         foreach (var action in route.WorkflowDescription.Actions)
         {
           var documentName = $"ТМ \"{route.Title}\". Действие \"{action.Name}\"";
-          var document = new Document(documentName, action.CalculationText);
-          document.ComponentType = ComponentType.StandardRoute;
-          document.ComponentName = route.Name;
-          document.Path = $"Actions.{action.Name}";
+          var document = new Document(documentName, action.CalculationText)
+          {
+            ComponentType = ComponentType.StandardRoute,
+            ComponentName = route.Name,
+            Path = $"Actions.{action.Name}"
+          };
           yield return document;
         }
 
@@ -321,30 +408,36 @@ namespace IsblCheck.Agent
           foreach (var @event in block.Events.Where(e => !string.IsNullOrEmpty(e.CalculationText)))
           {
             var documentName = $"{fullBlockDescription}. Событие \"{@event.Title}\"";
-            var document = new Document(documentName, @event.CalculationText);
-            document.ComponentType = ComponentType.StandardRoute;
-            document.ComponentName = route.Name;
-            document.Path = $"Blocks.{block.Id}.Events.{@event.Name}";
+            var document = new Document(documentName, @event.CalculationText)
+            {
+              ComponentType = ComponentType.StandardRoute,
+              ComponentName = route.Name,
+              Path = $"Blocks.{block.Id}.Events.{@event.Name}"
+            };
             yield return document;
           }
 
           foreach (var action in block.Actions)
           {
             var documentName = $"{fullBlockDescription}. Действие \"{action.Name}\"";
-            var document = new Document(documentName, action.CalculationText);
-            document.ComponentType = ComponentType.StandardRoute;
-            document.ComponentName = route.Name;
-            document.Path = $"Blocks.{block.Id}.Actions.{action.Name}";
+            var document = new Document(documentName, action.CalculationText)
+            {
+              ComponentType = ComponentType.StandardRoute,
+              ComponentName = route.Name,
+              Path = $"Blocks.{block.Id}.Actions.{action.Name}"
+            };
             yield return document;
           }
 
           foreach (var isblProp in block.IsblProperties.Where(e => !string.IsNullOrEmpty(e.CalculationText)))
           {
             var documentName = $"{fullBlockDescription}. Свойство \"{isblProp.Title}\"";
-            var document = new Document(documentName, isblProp.CalculationText);
-            document.ComponentType = ComponentType.StandardRoute;
-            document.ComponentName = route.Name;
-            document.Path = $"Blocks.{block.Id}.Properties.{isblProp.Name}";
+            var document = new Document(documentName, isblProp.CalculationText)
+            {
+              ComponentType = ComponentType.StandardRoute,
+              ComponentName = route.Name,
+              Path = $"Blocks.{block.Id}.Properties.{isblProp.Name}"
+            };
             yield return document;
           }
         }
@@ -362,10 +455,12 @@ namespace IsblCheck.Agent
         foreach (var @event in wizard.Events)
         {
           var documentName = $"Мастер \"{wizard.Title}\". Событие \"{@event.Title}\"";
-          var document = new Document(documentName, @event.CalculationText);
-          document.ComponentType = ComponentType.Wizard;
-          document.ComponentName = wizard.Name;
-          document.Path = $"Events.{@event.Name}";
+          var document = new Document(documentName, @event.CalculationText)
+          {
+            ComponentType = ComponentType.Wizard,
+            ComponentName = wizard.Name,
+            Path = $"Events.{@event.Name}"
+          };
           yield return document;
         }
 
@@ -373,7 +468,7 @@ namespace IsblCheck.Agent
 
         #region Этапы мастера
 
-        for (int stepIndex = 0; stepIndex < wizard.Steps.Count; stepIndex++)
+        for (var stepIndex = 0; stepIndex < wizard.Steps.Count; stepIndex++)
         {
           var step = wizard.Steps[stepIndex];
 
@@ -383,20 +478,24 @@ namespace IsblCheck.Agent
           foreach (var @event in step.Events)
           {
             var documentName = $"{fullStepDescription}. Событие \"{@event.Title}\"";
-            var document = new Document(documentName, @event.CalculationText);
-            document.ComponentType = ComponentType.Wizard;
-            document.ComponentName = wizard.Name;
-            document.Path = $"Steps.{stepIndex}.Events.{@event.Name}";
+            var document = new Document(documentName, @event.CalculationText)
+            {
+              ComponentType = ComponentType.Wizard,
+              ComponentName = wizard.Name,
+              Path = $"Steps.{stepIndex}.Events.{@event.Name}"
+            };
             yield return document;
           }
 
           foreach (var action in step.Actions)
           {
             var documentName = $"{fullStepDescription}. Действие \"{action.Title}\"";
-            var document = new Document(documentName, action.CalculationText);
-            document.ComponentType = ComponentType.Wizard;
-            document.ComponentName = wizard.Name;
-            document.Path = $"Steps.{stepIndex}.Actions.{action.Name}";
+            var document = new Document(documentName, action.CalculationText)
+            {
+              ComponentType = ComponentType.Wizard,
+              ComponentName = wizard.Name,
+              Path = $"Steps.{stepIndex}.Actions.{action.Name}"
+            };
             yield return document;
           }
         }
@@ -412,7 +511,7 @@ namespace IsblCheck.Agent
     private CodeCheckerCalculationProvider(IDevelopmentContext context)
     {
       this.context = context;
-    } 
+    }
 
     #endregion
   }

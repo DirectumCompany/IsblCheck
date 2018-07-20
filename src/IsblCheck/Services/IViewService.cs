@@ -1,6 +1,6 @@
-﻿using IsblCheck.Common.Dialogs;
+﻿using System.Windows;
+using IsblCheck.Common.Dialogs;
 using IsblCheck.Common.Windows;
-using System.Windows;
 
 namespace IsblCheck.Services
 {

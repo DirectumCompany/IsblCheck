@@ -1,7 +1,7 @@
-﻿using IsblCheck.Core.Context.Development;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System;
+using IsblCheck.Core.Context.Development;
 
 namespace IsblCheck.Context.Development.Database.Handlers
 {
@@ -26,13 +26,14 @@ namespace IsblCheck.Context.Development.Database.Handlers
         {
           while (reader.Read())
           {
-            var viewer = new Viewer();
-            viewer.Name = reader["Name"] as string;
-            viewer.Title = reader["Title"] as string;
-            viewer.Extension = reader["Extension"] as string;
+            var viewer = new Viewer
+            {
+              Name = reader["Name"] as string,
+              Title = reader["Title"] as string,
+              Extension = reader["Extension"] as string
+            };
 
-            var viewerTypeValue = reader["ViewerType"] as string;
-            if (viewerTypeValue != null &&
+            if (reader["ViewerType"] is string viewerTypeValue &&
               ViewerTypeValues.ContainsKey(viewerTypeValue))
               viewer.ViewerType = ViewerTypeValues[viewerTypeValue];
 

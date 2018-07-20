@@ -1,13 +1,13 @@
-﻿using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.CommandWpf;
-using IsblCheck.Common.Dialogs;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.CommandWpf;
+using IsblCheck.Common.Dialogs;
 
 namespace IsblCheck.ViewModels.Dialogs
 {
@@ -26,19 +26,13 @@ namespace IsblCheck.ViewModels.Dialogs
     /// <summary>
     /// Наличие ошибок.
     /// </summary>
-    public bool HasErrors
-    {
-      get
-      {
-        return this.Errors.Count > 0;
-      }
-    }
+    public bool HasErrors => this.Errors.Count > 0;
 
     /// <summary>
     /// Получить список ошибок.
     /// </summary>
     /// <param name="propertyName">Имя свойства.</param>
-    /// <returns>Список ошибок.returns>
+    /// <returns>Список ошибок.</returns>
     public IEnumerable GetErrors(string propertyName)
     {
       if (this.Errors.ContainsKey(propertyName))

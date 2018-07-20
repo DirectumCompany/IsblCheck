@@ -1,11 +1,4 @@
-﻿using Common.Logging;
-using FluentValidation;
-using GalaSoft.MvvmLight.Command;
-using IsblCheck.Common.Localization;
-using IsblCheck.Properties;
-using IsblCheck.Services;
-using IsblCheck.ViewModels.Validation;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -18,6 +11,13 @@ using System.Security;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
+using Common.Logging;
+using FluentValidation;
+using GalaSoft.MvvmLight.Command;
+using IsblCheck.Common.Localization;
+using IsblCheck.Properties;
+using IsblCheck.Services;
+using IsblCheck.ViewModels.Validation;
 
 namespace IsblCheck.ViewModels.Dialogs
 {
@@ -61,22 +61,22 @@ namespace IsblCheck.ViewModels.Dialogs
     /// <summary>
     /// Признак заполнения источников баз данных.
     /// </summary>
-    private bool isDatabaseSourcesFetched = false;
+    private bool isDatabaseSourcesFetched;
 
     /// <summary>
     /// Признак заполнения базы данных.
     /// </summary>
-    private bool isDatabasesFetched = false;
+    private bool isDatabasesFetched;
 
     /// <summary>
     /// Представление источников баз данных.
     /// </summary>
-    public ICollectionView DatabaseSourcesView { get; private set; }
+    public ICollectionView DatabaseSourcesView { get; }
 
     /// <summary>
     /// Представление баз данных.
     /// </summary>
-    public ICollectionView DatabasesView { get; private set; }
+    public ICollectionView DatabasesView { get; }
 
     /// <summary>
     /// Источник баз данных.
@@ -337,7 +337,7 @@ namespace IsblCheck.ViewModels.Dialogs
     {
       this.databaseSources.Clear();
 
-      using (DataTable sqlSources = SqlDataSourceEnumerator.Instance.GetDataSources())
+      using (var sqlSources = SqlDataSourceEnumerator.Instance.GetDataSources())
       {
         foreach (DataRow source in sqlSources.Rows)
         {

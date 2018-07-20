@@ -1,8 +1,8 @@
-﻿using IsblCheck.Core.Context.Development;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using IsblCheck.Core.Context.Development;
 
 namespace IsblCheck.Context.Development.Utils
 {
@@ -114,7 +114,7 @@ namespace IsblCheck.Context.Development.Utils
     /// <summary>
     /// Имена событий.
     /// </summary>
-    private static Dictionary<string, EventType> eventNames = new Dictionary<string, EventType>();
+    private static readonly Dictionary<string, EventType> eventNames = new Dictionary<string, EventType>();
 
     #endregion
 
@@ -134,14 +134,13 @@ namespace IsblCheck.Context.Development.Utils
       using (var reader = new StringReader(source))
       {
         var newLine = reader.ReadLine();
-        var @event = new Event();
-        @event.EventType = EventType.Unknown;
+        var @event = new Event { EventType = EventType.Unknown };
         var eventText = new StringBuilder();
         if (eventNames.ContainsKey(newLine))
           @event.EventType = eventNames[newLine];
         else
           eventText.AppendFormat("{0}\r\n", newLine);
-        
+
         while (reader.Peek() != -1)
         {
           newLine = reader.ReadLine();
@@ -150,8 +149,7 @@ namespace IsblCheck.Context.Development.Utils
             @event.CalculationText = eventText.ToString();
             result.Add(@event);
 
-            @event = new Event();
-            @event.EventType = eventNames[newLine];
+            @event = new Event { EventType = eventNames[newLine] };
             eventText = eventText.Clear();
           }
           else

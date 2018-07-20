@@ -23,7 +23,7 @@ namespace IsblCheck.UI.Behaviors
     public static bool? GetIsFocused(DependencyObject element)
     {
       if (element == null)
-        throw new ArgumentNullException("element");
+        throw new ArgumentNullException(nameof(element));
 
       return (bool?)element.GetValue(IsFocusedProperty);
     }
@@ -36,7 +36,7 @@ namespace IsblCheck.UI.Behaviors
     public static void SetIsFocused(DependencyObject element, bool? value)
     {
       if (element == null)
-        throw new ArgumentNullException("element");
+        throw new ArgumentNullException(nameof(element));
 
       element.SetValue(IsFocusedProperty, value);
     }
@@ -57,7 +57,7 @@ namespace IsblCheck.UI.Behaviors
           new Action(() => Keyboard.Focus((UIElement)d)));
       }
 
-      return ((bool)baseValue);
+      return (bool)baseValue;
     }
   }
 }

@@ -5,6 +5,8 @@
  * ------------------------------------------------------------------------------------ 
  */
 
+// ReSharper disable InconsistentNaming
+
 namespace IsblCheck.Context.Application.Enums
 {
   internal enum TAccountType
@@ -292,7 +294,9 @@ namespace IsblCheck.Context.Application.Enums
     emLockForServer,
     emUnlockFromServer,
     emDelegateAccessRights,
-    emReEncode
+    emReEncode,
+    emAddTimestamp,
+    emAddValidationData
   }
 
   internal enum TEditorCloseObservType
@@ -419,6 +423,19 @@ namespace IsblCheck.Context.Application.Enums
     grhX3
   }
 
+  internal enum THashType
+  {
+    htUnknown,
+    htGost3411,
+    htGost3411_2012_256,
+    htGost3411_2012_512,
+    htSha1,
+    htSha256,
+    htSha384,
+    htSha512,
+    htMD5
+  }
+
   internal enum THyperlinkType
   {
     hltText,
@@ -510,7 +527,10 @@ namespace IsblCheck.Context.Application.Enums
     icReferenceMethod,
     icEDocMethod,
     icDialogMethod,
-    icProcessMessageHandler
+    icProcessMessageHandler,
+    icFolderActionHandler,
+    icFolderBeforeSearchEventHandler,
+    icFolderMethod
   }
 
   internal enum TItemShow
@@ -757,6 +777,20 @@ namespace IsblCheck.Context.Application.Enums
     btOr,
     btNotOr,
     btOnly
+  }
+
+  internal enum TVariableDataType
+  {
+    vdtUnknown,
+    vdtNull,
+    vdtInteger,
+    vdtFloat,
+    vdtDate,
+    vdtString,
+    vdtObject,
+    vdtBoolean,
+    vdtVariant,
+    vdtArray
   }
 
   internal enum TViewMode

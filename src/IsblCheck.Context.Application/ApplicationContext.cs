@@ -1,9 +1,9 @@
-﻿using IsblCheck.Core.Context.Application;
-using IsblCheck.Core.Context.Development;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using IsblCheck.Core.Context.Application;
+using IsblCheck.Core.Context.Development;
 
 namespace IsblCheck.Context.Application
 {
@@ -14,13 +14,13 @@ namespace IsblCheck.Context.Application
   {
     #region IApplicationContext
 
-    public IReadOnlyDictionary<string, object> Constants { get; private set; }
+    public IReadOnlyDictionary<string, object> Constants { get; }
 
-    public IReadOnlyDictionary<string, int> Enums { get; private set; }
+    public IReadOnlyDictionary<string, int> Enums { get; }
 
-    public IReadOnlyList<Function> Functions { get; private set; }
+    public IReadOnlyList<Function> Functions { get; }
 
-    public IReadOnlyList<string> PredefinedVariables { get { return predefindedVariable; } }
+    public IReadOnlyList<string> PredefinedVariables => predefindedVariable;
 
     #endregion
 
@@ -63,6 +63,7 @@ namespace IsblCheck.Context.Application
       "Scripts",
       "Searches",
       "SelectedAttachments",
+      "SelectedContents",
       "SelectedItems",
       "SelectMode",
       "Sender",
@@ -72,6 +73,7 @@ namespace IsblCheck.Context.Application
       "SubTask",
       "SystemDialogs",
       "Tasks",
+      "VisibleContents",
       "Wizard",
       "Wizards",
       "Work",
@@ -194,10 +196,12 @@ namespace IsblCheck.Context.Application
 
     private static Function ToFunction(MethodInfo methodInfo)
     {
-      var function = new Function();
-      function.Name = methodInfo.Name;
-      function.Title = methodInfo.Name;
-      function.IsSystem = true;
+      var function = new Function
+      {
+        Name = methodInfo.Name,
+        Title = methodInfo.Name,
+        IsSystem = true
+      };
       var arguments = methodInfo
         .GetParameters()
         .Select(p => new FunctionArgument
@@ -248,7 +252,7 @@ namespace IsblCheck.Context.Application
         .ToDictionary(k => k.ToString(), v => (int)v);
       this.Functions = typeof(Functions)
         .GetMethods()
-        .Select(m => ToFunction(m))
+        .Select(ToFunction)
         .ToList();
       this.systemReferenceNames = new HashSet<string>(
         Constants

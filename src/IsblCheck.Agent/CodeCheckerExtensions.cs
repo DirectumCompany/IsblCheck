@@ -1,4 +1,5 @@
-﻿using Common.Logging;
+﻿using System.Configuration;
+using Common.Logging;
 using IsblCheck.Agent.Configuration;
 using IsblCheck.Context.Application;
 using IsblCheck.Context.Development;
@@ -7,7 +8,6 @@ using IsblCheck.Context.Development.Folder;
 using IsblCheck.Context.Development.Package;
 using IsblCheck.Core.Checker;
 using IsblCheck.Reports.Printers;
-using System.Configuration;
 
 namespace IsblCheck.Agent
 {
@@ -16,7 +16,7 @@ namespace IsblCheck.Agent
   /// </summary>
   public static class CodeCheckerExtensions
   {
-    private static ILog log = LogManager.GetLogger(typeof(CodeCheckerExtensions));
+    private static readonly ILog log = LogManager.GetLogger(typeof(CodeCheckerExtensions));
 
     /// <summary>
     /// Сконфигурировать чекер.

@@ -1,6 +1,6 @@
-﻿using IsblCheck.Context.Development.Package.Models;
+﻿using System.Collections.Generic;
+using IsblCheck.Context.Development.Package.Models;
 using IsblCheck.Core.Context.Development;
-using System.Collections.Generic;
 
 namespace IsblCheck.Context.Development.Folder.Handlers
 {
@@ -11,9 +11,9 @@ namespace IsblCheck.Context.Development.Folder.Handlers
   {
     #region FolderHandlerBase
 
-    protected override string FolderName { get { return "IntegratedReports"; } }
+    protected override string FolderName => "IntegratedReports";
 
-    protected override string CardModelRootNode { get { return "IntegratedReport"; } } 
+    protected override string CardModelRootNode => "IntegratedReport";
 
     #endregion
 

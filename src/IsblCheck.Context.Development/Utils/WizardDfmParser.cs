@@ -1,13 +1,13 @@
-﻿using Antlr4.Runtime;
-using Antlr4.Runtime.Misc;
-using Antlr4.Runtime.Tree;
-using Common.Logging;
-using IsblCheck.Core.Context.Development;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using Antlr4.Runtime;
+using Antlr4.Runtime.Misc;
+using Antlr4.Runtime.Tree;
+using Common.Logging;
+using IsblCheck.Core.Context.Development;
 
 namespace IsblCheck.Context.Development.Utils
 {
@@ -32,13 +32,11 @@ namespace IsblCheck.Context.Development.Utils
     /// <summary>
     /// Слушатель для dfm.
     /// </summary>
-    private abstract class WizardDfmListener : DfmGrammarBaseListener
+    private class WizardDfmListener : DfmGrammarBaseListener, IListenerWithResult<Wizard>
     {
       private Wizard wizard;
       private WizardStep step;
       private WizardStepAction action;
-
-      public Wizard Wizard { get { return wizard; } }
 
       public override void EnterObject([NotNull] DfmGrammarParser.ObjectContext context)
       {
@@ -52,13 +50,13 @@ namespace IsblCheck.Context.Development.Utils
 
           var nameProp = GetPropertyByName(context, "Code");
           if (nameProp != null)
-            this.wizard.Name = GetTextPropValue(nameProp) ?? string.Empty;
+            this.wizard.Name = DfmParseUtils.GetTextPropValue(nameProp) ?? string.Empty;
           else
             this.wizard.Name = string.Empty;
 
           var titleProp = GetPropertyByName(context, "Title");
           if (titleProp != null)
-            this.wizard.Title = GetTextPropValue(titleProp) ?? string.Empty;
+            this.wizard.Title = DfmParseUtils.GetTextPropValue(titleProp) ?? string.Empty;
           else
             this.wizard.Title = string.Empty;
         }
@@ -68,13 +66,13 @@ namespace IsblCheck.Context.Development.Utils
 
           var nameProp = GetPropertyByName(context, "StepName");
           if (nameProp != null)
-            this.step.Name = GetTextPropValue(nameProp) ?? string.Empty;
+            this.step.Name = DfmParseUtils.GetTextPropValue(nameProp) ?? string.Empty;
           else
             this.step.Name = string.Empty;
 
           var titleProp = GetPropertyByName(context, "Title");
           if (titleProp != null)
-            this.step.Title = GetTextPropValue(titleProp) ?? string.Empty;
+            this.step.Title = DfmParseUtils.GetTextPropValue(titleProp) ?? string.Empty;
           else
             this.step.Title = string.Empty;
         }
@@ -84,13 +82,13 @@ namespace IsblCheck.Context.Development.Utils
 
           var nameProp = GetPropertyByName(context, "ActionName");
           if (nameProp != null)
-            this.action.Name = GetTextPropValue(nameProp) ?? string.Empty;
+            this.action.Name = DfmParseUtils.GetTextPropValue(nameProp) ?? string.Empty;
           else
             this.action.Name = string.Empty;
 
           var titleProp = GetPropertyByName(context, "Title");
           if (titleProp != null)
-            this.action.Title = GetTextPropValue(titleProp) ?? string.Empty;
+            this.action.Title = DfmParseUtils.GetTextPropValue(titleProp) ?? string.Empty;
           else
             this.action.Title = string.Empty;
         }
@@ -110,7 +108,7 @@ namespace IsblCheck.Context.Development.Utils
         }
         else if (objectType == "TSBWizardAction")
         {
-          if(this.step != null && this.action != null && !string.IsNullOrEmpty(this.action.CalculationText))
+          if(this.step != null && !string.IsNullOrEmpty(this.action?.CalculationText))
             this.step.Actions.Add(this.action);
           this.action = null;
         }
@@ -126,7 +124,7 @@ namespace IsblCheck.Context.Development.Utils
             if (textProp == null)
               continue;
 
-            var text = GetTextPropValue(textProp);
+            var text = DfmParseUtils.GetTextPropValue(textProp);
 
             if (this.action != null)
             {
@@ -137,8 +135,7 @@ namespace IsblCheck.Context.Development.Utils
               var typeProp = GetPropertyByName(item, "EventType");
               var name = typeProp?.propertyValue().GetText() ?? string.Empty;
 
-              string title;
-              if(!EventTitles.TryGetValue(name, out title))
+              if (!EventTitles.TryGetValue(name, out string title))
                 title = name;
 
               var wizardEvent = new WizardEvent
@@ -167,78 +164,7 @@ namespace IsblCheck.Context.Development.Utils
         return item.property().FirstOrDefault(p => string.Equals(p.qualifiedIdent().GetText(), propertyName, StringComparison.OrdinalIgnoreCase));
       }
 
-      /// <summary>
-      /// Получить значение строкового свойства.
-      /// </summary>
-      /// <param name="context">Контекст свойства объекта из dfm.</param>
-      /// <returns>Значение стровокого свойства.</returns>
-      protected abstract string GetTextPropValue(DfmGrammarParser.PropertyContext context);
-    }
-
-    private class WizardEncodedDfmListener : WizardDfmListener
-    {
-      private static readonly Regex StringLiteralRegex = new Regex(@"#(\d+)|'([^']*)'", RegexOptions.Compiled);
-
-      protected override string GetTextPropValue(DfmGrammarParser.PropertyContext context)
-      {
-        var sb = new StringBuilder();
-        foreach (var line in context.propertyValue().@string().STRING_LITERAL())
-        {
-          foreach (Match m in StringLiteralRegex.Matches(line.GetText()))
-          {
-            if (m.Groups[1].Success)
-            {
-              sb.Append((char)int.Parse(m.Groups[1].Value));
-            }
-            else if (m.Groups[2].Success)
-            {
-              sb.Append(m.Groups[2].Value);
-            }
-          }
-        }
-        return sb.ToString();
-      }
-    }
-
-    private class WizardDecodedDfmListener : WizardDfmListener
-    {
-      private static readonly Regex DecodedTextPropertyValueRegex = new Regex(@"'((''|[^'])*)'", RegexOptions.Compiled);
-
-      private static readonly ILog log = LogManager.GetLogger<WizardDecodedDfmListener>();
-
-      protected override string GetTextPropValue(DfmGrammarParser.PropertyContext context)
-      {
-        var stringLiterals = context.propertyValue()?.@string()?.STRING_LITERAL();
-        if (stringLiterals != null && stringLiterals.Length == 1)
-        {
-          var valueMatch = DecodedTextPropertyValueRegex.Match(stringLiterals[0].GetText());
-          if (valueMatch.Success)
-          {
-            var value = valueMatch.Groups[1].Value;
-            return value.Replace("''", "'");
-          }
-        }
-        var propertyName = context.qualifiedIdent().GetText();
-        log.Warn($"Ошибка чтения dfm мастера действий {this.Wizard?.Name}: Некорректное значение строкового свойства {propertyName}");
-        return string.Empty;
-      }
-    }
-
-    private static Wizard InternalParse<TListener>(string wizardDfm) where TListener : WizardDfmListener, new()
-    {
-      var inputStream = new AntlrInputStream(wizardDfm);
-      var lexer = new DfmGrammarLexer(inputStream);
-      // TODO: Нужно как-то обрабатывать ошибки парсера.
-      lexer.RemoveErrorListeners();
-      var commonTokenStream = new CommonTokenStream(lexer);
-      var parser = new DfmGrammarParser(commonTokenStream);
-      // TODO: Нужно как-то обрабатывать ошибки парсера.
-      parser.RemoveErrorListeners();
-      var tree = parser.@object();
-      var listener = new TListener();
-      var walker = new ParseTreeWalker();
-      walker.Walk(listener, tree);
-      return listener.Wizard;
+      public Wizard GetResult() => this.wizard;
     }
 
     /// <summary>
@@ -249,18 +175,7 @@ namespace IsblCheck.Context.Development.Utils
     /// Может быть null, если не удалось распарсить dfm.</returns>
     public static Wizard Parse(string wizardDfm)
     {
-      return InternalParse<WizardEncodedDfmListener>(wizardDfm);
-    }
-
-    /// <summary>
-    /// Распарсить преобразованную dfm мастера (в которой строковые свойства раскодированы).
-    /// </summary>
-    /// <param name="wizardDfm">Dfm мастера действий.</param>
-    /// <returns>Объект мастера. Может быть не полным (считываются только события и этапы). 
-    /// Может быть null, если не удалось распарсить dfm.</returns>
-    public static Wizard ParseDecoded(string wizardDfm)
-    {
-      return InternalParse<WizardDecodedDfmListener>(wizardDfm);
+      return AntlrUtils.Parse<Wizard, DfmGrammarParser, WizardDfmListener>(wizardDfm, p => p.@object());
     }
   }
 }

@@ -5,6 +5,8 @@
  * ------------------------------------------------------------------------------------ 
  */
 
+// ReSharper disable InconsistentNaming
+
 using IsblCheck.Context.Application.Enums;
 using System;
 
@@ -66,7 +68,7 @@ namespace IsblCheck.Context.Application.Interfaces
     bool Visible { get; set; }
     string DisabledHint { get; set; }
     string Name { get; }
-    string Title { get; }
+    string Title { get; set; }
     TActionEnabledMode EnabledMode { get; set; }
     IEnabledMode EnabledWhen { get; }
     bool Execute();
@@ -75,6 +77,13 @@ namespace IsblCheck.Context.Application.Interfaces
   internal interface IActionList : IList
   {
     IAction FindAction(string Name);
+  }
+
+  internal interface IAddValidationDataOperationResult
+  {
+    string ErrorMessage { get; }
+    DateTime NextTryMinDate { get; }
+    bool IsSuccess { get; }
   }
 
   internal interface IAdministrationHistoryDescription : IReferenceHistoryDescription
@@ -174,6 +183,13 @@ namespace IsblCheck.Context.Application.Interfaces
     void ReleaseCheckPoint();
   }
 
+  internal interface IColor
+  {
+    int Value { get; set; }
+    bool IsDefault { get; }
+    void Reset();
+  }
+
   internal interface IColumn
   {
     IRequisite Requisite { get; }
@@ -198,6 +214,7 @@ namespace IsblCheck.Context.Application.Interfaces
     int RecordCount { get; }
     bool RecordOpened { get; }
     int ActualRecordCount { get; }
+    void Close();
     void Insert();
     void Append();
     void OpenRecord();
@@ -209,7 +226,6 @@ namespace IsblCheck.Context.Application.Interfaces
     bool Locate(object KeyNames, object KeyValues);
     void Delete();
     void Open();
-    void Close();
   }
 
   internal interface IComponentDescription : IObjectDescription
@@ -312,6 +328,8 @@ namespace IsblCheck.Context.Application.Interfaces
     string Title { get; set; }
     IForm Form { get; }
     IAnchors Anchors { get; }
+    IColor Color { get; }
+    IColor TextColor { get; }
     object CheckSpelling(IConnection Connection);
   }
 
@@ -406,17 +424,18 @@ namespace IsblCheck.Context.Application.Interfaces
     IList WorkflowProperties { get; }
     IExternalEvents ExternalEvents { get; set; }
     IActionList Actions { get; }
+    IList GetSignatures(bool IsForAllTaskObjects);
     bool GetSigned(bool IsForAllTaskObjects);
     void Sign(object Certificate);
     void VerifySignatures(IUser User);
     bool CheckAndSetAttachmentRights(bool IsForFamilyTask, TDeaAccessRights SetRigths, out string ErrorMessage);
     IList GetTreeRootNodes(bool UseCache = true);
+    bool AddTimestampToSignature(ISignature Signature);
     IAttachmentList GetAttachments(bool IsForFamilyTask);
     string GetFullText(bool IsForFamilyTask);
     string GetText(TWorkTextBuildingMode BuildingMode);
     void SaveWorkflowAsImage(string FileName, TImageType ImageType);
     string GetTree();
-    IList GetSignatures(bool IsForAllTaskObjects);
   }
 
   internal interface ICustomWorkInfo : IEdmsObjectInfo
@@ -493,8 +512,14 @@ namespace IsblCheck.Context.Application.Interfaces
     IStringList AdditionalInfo { get; set; }
     TSignerContentType ContentType { get; set; }
     object ContentStream { get; set; }
+    string PluginTitle { get; set; }
+    IETimestamp Timestamp { get; }
+    IList ArchiveTimestampsVerificationInfo { get; }
     bool VerifySignature(out string VerifyMsg);
     bool CreateSignature(out string CreateMsg, out DateTime CreateDateTime);
+    bool AddTimestamp();
+    IAddValidationDataOperationResult AddValidationData(bool OcspResponsesRequired);
+    IETimestamp AddArchiveTimestamp();
   }
 
   internal interface IDateCriterion : ISimpleCriterion
@@ -723,6 +748,7 @@ namespace IsblCheck.Context.Application.Interfaces
     ILifeCycleStage LifeCycleStage { get; }
     string LockedForServer { get; }
     IActionList Actions { get; }
+    void SaveShadowCopyToFile(Int64 HistoryRecordID, string FileName);
     void DeleteShadowCopies(int VersionNumber = -1);
     IList GetAccessibleLifeCycleStages();
     void SaveLifeCycleAsImage(string FileName, TImageType ImageType);
@@ -745,7 +771,6 @@ namespace IsblCheck.Context.Application.Interfaces
     void ExportInExtendedFormat(int VersionNumber, string FileName, bool NeedLock = true, bool NeedCompress = true, TExportedSignaturesType SignaturesType = default(TExportedSignaturesType));
     bool ImportInExtendedFormat(int VersionNumber, string FileName, bool NeedUnlock, string EditorCode = "");
     void SetLifeCycleStageByName(string Value, bool NeedLock = true);
-    void SaveShadowCopyToFile(int HistoryRecordID, string FileName);
   }
 
   internal interface IEDocumentAccessRights : IDeaAccessRights
@@ -757,6 +782,10 @@ namespace IsblCheck.Context.Application.Interfaces
     void CheckSign();
     void ChangePasswordTo(string NewPassword);
     void ReEncode();
+  }
+
+  internal interface IEDocumentCriterion : IIntegerCriterion
+  {
   }
 
   internal interface IEDocumentDescription : IEdmsObjectDescription
@@ -881,6 +910,8 @@ namespace IsblCheck.Context.Application.Interfaces
     void ImportFromFile(string FileName, bool NeedUnlock = true, string EditorCode = "", bool FromExtendedFormat = true, TEditMode EditMode = default(TEditMode), bool NeedCheckDocumentSize = true);
     void LockForServer(string ServerCode);
     void UnlockFromServer();
+    bool AddTimestampToSignature(ISignature Signature);
+    IAddValidationDataOperationResult AddValidationDataToSignature(ISignature Signature, bool OcspResponsesRequired);
   }
 
   internal interface IEDocumentVersionListDialog : ISelectDialog
@@ -942,6 +973,19 @@ namespace IsblCheck.Context.Application.Interfaces
     string PluginVersion { get; set; }
     void Encrypt();
     void Decrypt();
+  }
+
+  internal interface IETimestamp
+  {
+    IECertificate Certificate { get; }
+    DateTime Time { get; }
+  }
+
+  internal interface IETimestampVerificationInfo
+  {
+    IETimestamp Timestamp { get; }
+    bool IsValid { get; }
+    string VerificationMessage { get; }
   }
 
   internal interface IEvent
@@ -1012,6 +1056,7 @@ namespace IsblCheck.Context.Application.Interfaces
 
   internal interface IFolder : IEdmsObject
   {
+    IActionList Actions { get; }
   }
 
   internal interface IFolderDescription : IEdmsObjectDescription
@@ -1136,7 +1181,10 @@ namespace IsblCheck.Context.Application.Interfaces
     string Hash { get; }
     string PluginName { get; set; }
     string PluginVersion { get; set; }
+    object ContentStream { get; set; }
+    TSignerContentType ContentType { get; set; }
     void HashData();
+    void HashDataByType(THashType HashType);
   }
 
   internal interface IHistoryDescription : IObjectDescription
@@ -1433,6 +1481,7 @@ namespace IsblCheck.Context.Application.Interfaces
     string Hyperlink { get; }
     IList SQLParams { get; }
     IArchiveInfo ArchiveInfo { get; }
+    Int64 LargeID { get; }
     IView CreateView(string ViewCode);
     void ReleaseView();
     void Finalize();
@@ -1883,6 +1932,7 @@ namespace IsblCheck.Context.Application.Interfaces
   {
     object ExecuteByName(string Name);
     IObject GetObjectByName(string Name);
+    IScript FindByName(string Name);
   }
 
   internal interface ISearchCriteria : IForEach
@@ -2028,7 +2078,7 @@ namespace IsblCheck.Context.Application.Interfaces
     IUser GetUserByCode(string UserCode);
     IServiceDialog GetCreateEDocumentVersionDialog(object EDocument, int VersionNumber, string NewVersionNote, bool NeedOpenNewVersion, string VersionStateCode = "", bool NeedCreateVersionHidden = true);
     IUserList GetRoleMembers(IUser Role, IObject Sender);
-    DateTime GetRelativeDate(DateTime StartDate, int Number, TDateOffsetType NumberType);
+    DateTime GetRelativeDate(DateTime StartDate, int Number, TDateOffsetType NumberType, int UserID = 0);
     IUserList GetGroupMembers(IUser AGroup);
     IUser GetGroupByCode(string Code);
     IUser GetRoleByName(string RoleName);
@@ -2056,6 +2106,8 @@ namespace IsblCheck.Context.Application.Interfaces
     void PlayVideo(string VideoName);
     IIntegerList GetIntegerList();
     IObserver CreateObserver();
+    int GetCalendarID(DateTime Date, IUser User);
+    object GetFileStream(string FileName);
   }
 
   internal interface ISignature
@@ -2064,6 +2116,8 @@ namespace IsblCheck.Context.Application.Interfaces
     DateTime Date { get; }
     IUser Author { get; }
     IStringList AdditionalInfo { get; }
+    IETimestamp Timestamp { get; }
+    int ID { get; }
     void CheckValidity();
     bool IsValid();
   }
@@ -2241,6 +2295,7 @@ namespace IsblCheck.Context.Application.Interfaces
     int LeaderJobID { get; }
     ITask Task { get; }
     bool UserHasInitiatorRights { get; }
+    bool TaskAbortDisabled { get; }
   }
 
   internal interface ITaskRoute : IForEach
@@ -2344,6 +2399,7 @@ namespace IsblCheck.Context.Application.Interfaces
     bool NativeMode { get; set; }
     object Document { get; }
     object Application { get; }
+    string URL { get; }
     void Navigate(string URL);
     void Refresh();
   }

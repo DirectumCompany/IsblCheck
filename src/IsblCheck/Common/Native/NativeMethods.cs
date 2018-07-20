@@ -2,12 +2,13 @@
 using System.Runtime.InteropServices;
 using System.Text;
 
+// ReSharper disable InconsistentNaming
 namespace IsblCheck.Common.Native
 {
   /// <summary>
   /// Нативные методы.
   /// </summary>
-  public static class NativeMethods
+  internal static class NativeMethods
   {
     /// <summary>
     /// Показать окно.

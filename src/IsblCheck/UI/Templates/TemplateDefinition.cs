@@ -12,7 +12,7 @@ namespace IsblCheck.UI.Templates
     /// Тип элемента.
     /// </summary>
     public static readonly DependencyProperty TypeProperty =
-      DependencyProperty.Register("ItemType", typeof(Type), typeof(TemplateDefinition));
+      DependencyProperty.Register("Type", typeof(Type), typeof(TemplateDefinition));
 
     /// <summary>
     /// Выбирать по типу контейнера

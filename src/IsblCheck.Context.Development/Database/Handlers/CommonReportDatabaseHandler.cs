@@ -1,8 +1,8 @@
-﻿using IsblCheck.Core.Context.Development;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Text;
-using System;
+using IsblCheck.Core.Context.Development;
 
 namespace IsblCheck.Context.Development.Database.Handlers
 {
@@ -27,10 +27,12 @@ namespace IsblCheck.Context.Development.Database.Handlers
         {
           while (reader.Read())
           {
-            var commonReport = new CommonReport();
-            commonReport.Name = reader["Name"] as string;
-            commonReport.Title = reader["Title"] as string;
-            commonReport.Viewer = reader["Viewer"] as string;
+            var commonReport = new CommonReport
+            {
+              Name = reader["Name"] as string,
+              Title = reader["Title"] as string,
+              Viewer = reader["Viewer"] as string
+            };
             if (ActiveValue.Equals(reader["State"] as string))
               commonReport.State = ComponentState.Active;
             else
@@ -40,8 +42,7 @@ namespace IsblCheck.Context.Development.Database.Handlers
             if (commonReport.CalculationText == null)
               commonReport.CalculationText = string.Empty;
 
-            var templateValue = reader["TemplateText"] as byte[];
-            if (templateValue != null)
+            if (reader["TemplateText"] is byte[] templateValue)
               commonReport.TemplateText = Encoding.GetEncoding(1251).GetString(templateValue);
             else
               commonReport.TemplateText = string.Empty;

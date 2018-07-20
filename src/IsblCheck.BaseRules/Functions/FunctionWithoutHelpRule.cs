@@ -1,10 +1,10 @@
-﻿using IsblCheck.BaseRules.Properties;
+﻿using System;
+using System.Linq;
+using IsblCheck.BaseRules.Properties;
 using IsblCheck.Core.Checker;
 using IsblCheck.Core.Context;
 using IsblCheck.Core.Reports;
 using IsblCheck.Core.Rules;
-using System;
-using System.Linq;
 
 namespace IsblCheck.BaseRules.Functions
 {
@@ -28,13 +28,13 @@ namespace IsblCheck.BaseRules.Functions
     /// <summary>
     /// Инфо правила.
     /// </summary>
-    private static Lazy<IRuleInfo> info = new Lazy<IRuleInfo>(() =>
+    private static readonly Lazy<IRuleInfo> info = new Lazy<IRuleInfo>(() =>
       new RuleInfo(typeof(FunctionWithoutHelpRule).Name, Resources.FunctionWithoutHelpRuleDescription), true);
 
     /// <summary>
     /// Инфо правила.
     /// </summary>
-    public static IRuleInfo Info { get { return info.Value; } }
+    public static IRuleInfo Info => info.Value;
 
     #endregion
 

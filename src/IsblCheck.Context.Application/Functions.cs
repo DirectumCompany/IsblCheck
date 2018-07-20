@@ -5,6 +5,8 @@
  * ------------------------------------------------------------------------------------ 
  */
 
+// ReSharper disable InconsistentNaming
+
 using System;
 
 namespace IsblCheck.Context.Application
@@ -33,6 +35,7 @@ namespace IsblCheck.Context.Application
     object CDataSetRequisite(object DataSet, bool ShowProgress);
     object ChangeDate(string Part, DateTime Date, int Value);
     object ChangeReferenceDataset(string AddSelect, string AddFrom, string AddWhere, string AddJoin);
+    object ChangeTime(string TimePart, float Number, DateTime Date);
     object Char(int SymbolCode);
     object CharPos(string SubString, string String);
     object CheckParam(string ParamName, string ParamValue, string ParamType, string Required, string Delimiter);
@@ -41,6 +44,7 @@ namespace IsblCheck.Context.Application
     object ConstantExists(string ConstantName);
     object ControlState();
     object ConvertDateStr(string Date, int FromDateFormatType, int ToDateFormatType, int FromCultureType, int ToCultureType);
+    object ConvertTimeBetweenTimeZones(DateTime DateTime, string SourceTimeZoneID, string TargetTimeZoneID, bool NeedChangeEmptyTime);
     object Copy(string String, int Index, int Length);
     object CopyFile(string FromFileName, string ToFileName);
     object CreateArray(int Bounds);
@@ -69,7 +73,7 @@ namespace IsblCheck.Context.Application
     object CreateStringList();
     object CreateTreeListSelectDialog(string WindowTitle);
     object CSelectSQL(string WindowTitle, string Query, string RowDelimiter, string DefaultValue);
-    object CSQL(string Query, string Alias, string RowDelimiter, object Connection, bool IsIndicatorShow, object ConnectionIntent);
+    object CSQL(string Query, string Alias, string RowDelimiter, object Connection, bool IsIndicatorShow, object ConnectionIntent, string SourceTimeZoneID, string TargetTimeZoneID, object IgnoreConversionOnEmptyTimeFieldNames);
     object CSubString(string String, string Delimiter);
     object CurrentUserID(string System);
     object CurrentUserName(string System);
@@ -92,6 +96,16 @@ namespace IsblCheck.Context.Application
     object EnableMassTaskSendingRestrictions(object Task);
     object EndOfMonth(int Step, DateTime Date);
     object EndOfPeriod(string PeriodType);
+    object EscapeJSONSpecialCharacters(string String);
+    object ESCheckPlayMode();
+    object ESDetectShortLang(string AText);
+    object ESDocumentToJSON(object Doc, string AdditionalFields);
+    object ESDocumentVersionAsBase64(object Version);
+    object ESExecuteRequest(string Method, string Path, string API, string Params, string Body);
+    object ESRequisiteToJSON(object Req);
+    object ESTaskToJSON(object Task, int JobID);
+    object ESTaskToJSONBulk(string IndexName, object Task, string PipelineName);
+    object ESVersionToJSON(object Version, string AdditionalFields);
     object ExceptionExists();
     object ExceptionsOff();
     object ExceptionsOn();
@@ -132,6 +146,7 @@ namespace IsblCheck.Context.Application
     object IsFileLocked(string FileName);
     object IsGraphicFile(string FileName);
     object IsNumeric(object Variable);
+    object JSONToObject(string JSON);
     object Length(string String);
     object LoadString(string Name, string GroupCode, string LanguageCode);
     object LoadStringFmt(string Name, string GroupCode, object Args, string LanguageCode);
@@ -143,10 +158,12 @@ namespace IsblCheck.Context.Application
     object MimeDecodeBinary(string EncodedData);
     object MimeDecodeString(string EncodedString);
     object MimeEncodeBinary(object SourceData);
+    object MimeEncodeFile(string FileName);
     object MimeEncodeString(string SourceString);
     object Min(float Value1, float Value2);
     object MoneyInWords(float Sum);
     object MoveFile(string FromFileName, string ToFileName);
+    object NeedSoftResetServerEvent(object Parameters, int Times);
     object NewID();
     object Now(int TimeType);
     object OpenFile(string FileName, string Mode, string Wait, int WaitMode);
@@ -164,20 +181,22 @@ namespace IsblCheck.Context.Application
     object RegionTimeSettings(int Setting);
     object RegRead(string Key, string Section, bool Exception);
     object RegWrite(string Key, string Section, string Value);
+    object RemoveControlCharacters(string String);
     object RenameFile(string OldFileName, string NewFileName);
     object Replace(string Text, string FromText, string ToText);
+    object RGB(int Red, int Green, int Blue);
     object Round(float Value, int Precision);
     object SelectServerCode(object CurrentSelectMode, object ServerCodeRequisite, string InputValue);
     object SelectSQL(string WindowTitle, string ColumnNames, string Query, string Sort, string RowSeparator, string ColumnSeparator, string CallID, string DefaultVisibleColumns, string ReturnedColumns, int SelectionMode, string KeyFields, string MarkedRecords);
     object ServerDateTime(int CultureType);
     object SetConstant(string ConstantName, string NewValue, string Organization);
-    object SetManagedFolderFieldsState();
+    object SetFolderRefreshInfo(object Folder, object UpdatedContents, object DeletedContents, bool FullRefresh);
     object ShowConstantsInputDialog(string ConstantNames, string ConstantCaptions, string ConstantTypes, string FormCaption);
     object ShowMessage(string Message);
     object Sleep(float Seconds);
     object Split(string String, int Length, int Index);
-    object SQL(string Query, string Alias, string RowDelimiter, string ColumnDelimiter, object Connection, object ConnectionIntent);
-    object SQL2XLSTAB(string Query, string ColumnNames, string RowDelimiter, string ColumnDelimiter, object Connection, object ConnectionIntent);
+    object SQL(string Query, string Alias, string RowDelimiter, string ColumnDelimiter, object Connection, object ConnectionIntent, string SourceTimeZoneID, string TargetTimeZoneID, object IgnoreConversionOnEmptyTimeFieldNames);
+    object SQL2XLSTAB(string Query, string ColumnNames, string RowDelimiter, string ColumnDelimiter, object Connection, object ConnectionIntent, string SourceTimeZoneID, string TargetTimeZoneID, object IgnoreConversionOnEmptyTimeFieldNames);
     object SQLProfilingSendReport(string Subject, string Text, object ReportFiles, string Recipients, int SQLProfilingAnalyzeSettingsID);
     object StrToDate(string Date, int DateFormatType, int CultureType);
     object SubString(string String, string Delimiter, int Index);
@@ -186,7 +205,7 @@ namespace IsblCheck.Context.Application
     object Time();
     object TimeDiff(string Part, string Time1, string Time2);
     object Today();
-    object Transliterate(string String, bool SkipSpecialChars);
+    object Transliterate(string String, bool SkipSpecialChars, int TransliterationStandard);
     object Trim(string String);
     object UpperCase(string String);
     object UserStatus(string UserID);
@@ -195,7 +214,8 @@ namespace IsblCheck.Context.Application
     object VarIsClear(object Variant);
     object VarIsEmpty(object Variant);
     object VarIsNull(object Variant);
-    object WorkTimeDiff(DateTime StartTime, DateTime EndTime);
+    object VarType(object Variable);
+    object WorkTimeDiff(DateTime StartTime, DateTime EndTime, object User, string UnitMeasure);
     object WriteFile(string FileName, string Mode, string Data);
     object WriteFileEx(string FileName, string Mode, string Data, int WaitTimeout);
     object WriteObjectHistory(int ComponentType, int ObjectID, string DetailInfo);
@@ -313,7 +333,7 @@ namespace IsblCheck.Context.Application
     object РазнВремя(string Часть, string Время1, string Время2);
     object РазнДат(string Часть, DateTime Дата1, DateTime Дата2);
     object РазнДатаВремя(string Часть, DateTime ДатаВремя1, DateTime ДатаВремя2);
-    object РазнРабВремя(DateTime ВремяНачало, DateTime ВремяКонец);
+    object РазнРабВремя(DateTime ВремяНачало, DateTime ВремяКонец, object Пользователь, string ЕдиницаИзмерения);
     object РегУстВрем(int Уст);
     object РегУстДат(int Уст);
     object РегУстЧсл(int Уст);
@@ -408,7 +428,7 @@ namespace IsblCheck.Context.Application
     object ТекОрг(string Организация, bool ВосстановитьОрг);
     object Точн(int Точность);
     object Тран(int ИДСоединения);
-    object Транслитерация(string Строка, bool ПропускатьСпецСимволы);
+    object Транслитерация(string Строка, bool ПропускатьСпецСимволы, int СтандартТранслитерации);
     object УдалитьТаблицу(string Имя);
     object УдалитьФайл(string FileName);
     object УдСпр(string Вид_Аналитики, string Код_Аналитики);

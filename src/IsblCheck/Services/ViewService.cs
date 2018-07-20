@@ -1,9 +1,9 @@
-﻿using IsblCheck.Common.Dialogs;
-using IsblCheck.Common.Native;
-using IsblCheck.Common.Windows;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Interop;
+using IsblCheck.Common.Dialogs;
+using IsblCheck.Common.Native;
+using IsblCheck.Common.Windows;
 
 namespace IsblCheck.Services
 {
@@ -19,11 +19,10 @@ namespace IsblCheck.Services
     public void CloseWindow(IWindow viewModel)
     {
       if (viewModel == null)
-        throw new ArgumentNullException("viewModel");
+        throw new ArgumentNullException(nameof(viewModel));
 
       var window = WindowManager.Instance.FindWindowByViewModel(viewModel);
-      if (window != null)
-        window.Close();
+      window?.Close();
     }
 
     /// <summary>
@@ -33,7 +32,7 @@ namespace IsblCheck.Services
     public void Show(IWindow viewModel)
     {
       if (viewModel == null)
-        throw new ArgumentNullException("viewModel");
+        throw new ArgumentNullException(nameof(viewModel));
 
       var window = WindowManager.Instance.FindWindowByViewModel(viewModel);
       if (window == null)
@@ -60,10 +59,10 @@ namespace IsblCheck.Services
     public void Show(IWindow ownerViewModel, IWindow viewModel)
     {
       if (ownerViewModel == null)
-        throw new ArgumentNullException("ownerViewModel");
+        throw new ArgumentNullException(nameof(ownerViewModel));
 
       if (viewModel == null)
-        throw new ArgumentNullException("viewModel");
+        throw new ArgumentNullException(nameof(viewModel));
 
       var window = WindowManager.Instance.FindWindowByViewModel(viewModel);
       if (window == null)
@@ -90,7 +89,7 @@ namespace IsblCheck.Services
     public bool? ShowDialog(IDialog viewModel)
     {
       if (viewModel == null)
-        throw new ArgumentNullException("viewModel");
+        throw new ArgumentNullException(nameof(viewModel));
 
       var window = WindowManager.Instance.FindWindowByViewModel(viewModel);
       if (window != null)
@@ -109,10 +108,10 @@ namespace IsblCheck.Services
     public bool? ShowDialog(IWindow ownerViewModel, IDialog viewModel)
     {
       if (ownerViewModel == null)
-        throw new ArgumentNullException("ownerViewModel");
+        throw new ArgumentNullException(nameof(ownerViewModel));
 
       if (viewModel == null)
-        throw new ArgumentNullException("viewModel");
+        throw new ArgumentNullException(nameof(viewModel));
 
       var window = WindowManager.Instance.FindWindowByViewModel(viewModel);
       if (window != null)
@@ -136,7 +135,7 @@ namespace IsblCheck.Services
       MessageBoxResult defaultResult = MessageBoxResult.None)
     {
       if (message == null)
-        throw new ArgumentNullException("message");
+        throw new ArgumentNullException(nameof(message));
 
       return MessageBox.Show(message, caption, button, icon, defaultResult);
     }
@@ -156,14 +155,14 @@ namespace IsblCheck.Services
       MessageBoxResult defaultResult = MessageBoxResult.None)
     {
       if (ownerViewModel == null)
-        throw new ArgumentNullException("ownerViewModel");
+        throw new ArgumentNullException(nameof(ownerViewModel));
 
       if (message == null)
-        throw new ArgumentNullException("message");
+        throw new ArgumentNullException(nameof(message));
 
       var ownerWindow = WindowManager.Instance.FindWindowByViewModel(ownerViewModel);
       if (ownerWindow == null)
-        throw new ArgumentException("Could not found window associated with current view model", "ownerViewModel");
+        throw new ArgumentException("Could not found window associated with current view model", nameof(ownerViewModel));
 
       return MessageBox.Show(ownerWindow, message, caption, button, icon, defaultResult);
     }
@@ -177,14 +176,14 @@ namespace IsblCheck.Services
     public bool? ShowOpenFileDialog(IWindow ownerViewModel, OpenFileDialogSettings settings)
     {
       if (ownerViewModel == null)
-        throw new ArgumentNullException("ownerViewModel");
+        throw new ArgumentNullException(nameof(ownerViewModel));
 
       if (settings == null)
-        throw new ArgumentNullException("settings");
+        throw new ArgumentNullException(nameof(settings));
 
       var ownerWindow = WindowManager.Instance.FindWindowByViewModel(ownerViewModel);
       if (ownerWindow == null)
-        throw new ArgumentException("Could not found window associated with current view model", "ownerViewModel");
+        throw new ArgumentException("Could not found window associated with current view model", nameof(ownerViewModel));
 
       var wrapper = new OpenFileDialogWrapper(settings);
       return wrapper.ShowDialog(ownerWindow);
@@ -199,14 +198,14 @@ namespace IsblCheck.Services
     public bool? ShowSaveFileDialog(IWindow ownerViewModel, SaveFileDialogSettings settings)
     {
       if (ownerViewModel == null)
-        throw new ArgumentNullException("ownerViewModel");
+        throw new ArgumentNullException(nameof(ownerViewModel));
 
       if (settings == null)
-        throw new ArgumentNullException("settings");
+        throw new ArgumentNullException(nameof(settings));
 
       var ownerWindow = WindowManager.Instance.FindWindowByViewModel(ownerViewModel);
       if (ownerWindow == null)
-        throw new ArgumentException("Could not found window associated with current view model", "ownerViewModel");
+        throw new ArgumentException("Could not found window associated with current view model", nameof(ownerViewModel));
 
       var wrapper = new SaveFileDialogWrapper(settings);
       return wrapper.ShowDialog(ownerWindow);

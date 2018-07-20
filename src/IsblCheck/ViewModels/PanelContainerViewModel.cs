@@ -1,12 +1,4 @@
-﻿using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.CommandWpf;
-using IsblCheck.Common.Dialogs;
-using IsblCheck.Common.Panels;
-using IsblCheck.Services;
-using IsblCheck.ViewModels.Dialogs;
-using IsblCheck.ViewModels.Panels;
-using IsblCheck.ViewModels.Toolbars;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -14,6 +6,14 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
+using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.CommandWpf;
+using IsblCheck.Common.Dialogs;
+using IsblCheck.Common.Panels;
+using IsblCheck.Services;
+using IsblCheck.ViewModels.Dialogs;
+using IsblCheck.ViewModels.Panels;
+using IsblCheck.ViewModels.Toolbars;
 
 namespace IsblCheck.ViewModels.Containers
 {
@@ -35,19 +35,14 @@ namespace IsblCheck.ViewModels.Containers
     private readonly OpenCommandHandlers openCommandHandlers;
 
     /// <summary>
-    /// Сервис проверки кода.
-    /// </summary>
-    private readonly ICodeCheckerService codeCheckerService;
-
-    /// <summary>
     /// Панели.
     /// </summary>
-    public ObservableCollection<IPanel> Panels { get; private set; }
+    public ObservableCollection<IPanel> Panels { get; }
 
     /// <summary>
     /// Закрепляемые панели.
     /// </summary>
-    public ObservableCollection<IPanel> AnchorablePanels { get; private set; }
+    public ObservableCollection<IPanel> AnchorablePanels { get; }
 
     /// <summary>
     /// Представление панелей.
@@ -213,7 +208,7 @@ namespace IsblCheck.ViewModels.Containers
     /// <summary>
     /// Выйти из приложения.
     /// </summary>
-    private void Exit()
+    private static void Exit()
     {
       Application.Current.Shutdown();
     }
@@ -221,7 +216,7 @@ namespace IsblCheck.ViewModels.Containers
     /// <summary>
     /// Показать проводник исходных данных.
     /// </summary>
-    private void ShowSourceExplorer()
+    private static void ShowSourceExplorer()
     {
       var sourceExplorer = PanelManager.Instance.GetPanel<SourceExplorerViewModel>();
       if (sourceExplorer == null)
@@ -233,7 +228,7 @@ namespace IsblCheck.ViewModels.Containers
     /// <summary>
     /// Показать список ошибок.
     /// </summary>
-    private void ShowReportViewer()
+    private static void ShowReportViewer()
     {
       var reportViewer = PanelManager.Instance.GetPanel<ReportViewerViewModel>();
       if (reportViewer == null)
@@ -245,7 +240,7 @@ namespace IsblCheck.ViewModels.Containers
     /// <summary>
     /// Показать стартовую страницу.
     /// </summary>
-    private void ShowStartPage()
+    private static void ShowStartPage()
     {
       var startPage = PanelManager.Instance.GetPanel<StartPageViewModel>();
       if (startPage == null)
@@ -315,7 +310,6 @@ namespace IsblCheck.ViewModels.Containers
     public PanelContainerViewModel(ICodeCheckerService codeCheckerService, IViewService viewService)
     {
       this.viewService = viewService;
-      this.codeCheckerService = codeCheckerService;
       this.openCommandHandlers = new OpenCommandHandlers(viewService);
       this.OpenPackageCommand = new RelayCommand(this.openCommandHandlers.OpenPackage);
       this.OpenDatabaseCommand = new RelayCommand(this.openCommandHandlers.OpenDatabase);
@@ -332,10 +326,10 @@ namespace IsblCheck.ViewModels.Containers
       // TODO: Панельки должны добавляться в лист.
       this.StandardToolbar = new StandardToolbarViewModel(codeCheckerService, viewService);
 
-      this.ExitCommand = new RelayCommand(this.Exit);
-      this.ShowSourceExplorerCommand = new RelayCommand(this.ShowSourceExplorer);
-      this.ShowReportViewerCommand = new RelayCommand(this.ShowReportViewer);
-      this.ShowStartPageCommand = new RelayCommand(this.ShowStartPage);
+      this.ExitCommand = new RelayCommand(Exit);
+      this.ShowSourceExplorerCommand = new RelayCommand(ShowSourceExplorer);
+      this.ShowReportViewerCommand = new RelayCommand(ShowReportViewer);
+      this.ShowStartPageCommand = new RelayCommand(ShowStartPage);
       this.ShowAboutCommand = new RelayCommand(this.ShowAbout);
     }
 

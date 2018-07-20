@@ -1,9 +1,9 @@
-﻿using IsblCheck.Core.Context.Development;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
+using IsblCheck.Core.Context.Development;
 
 namespace IsblCheck.Context.Development.Utils
 {
@@ -167,8 +167,7 @@ namespace IsblCheck.Context.Development.Utils
         foreach (var p in events)
         {
           var name = p.Name.LocalName;
-          string title;
-          if (!RouteEventTitles.TryGetValue(name, out title))
+          if (!RouteEventTitles.TryGetValue(name, out string title))
             title = name;
           var calculationText = GetTextValue(p.Value) ?? string.Empty;
           yield return new WorkflowEvent
@@ -195,12 +194,9 @@ namespace IsblCheck.Context.Development.Utils
 
     private static WorkflowBlock ParseBlock(XElement blockElement)
     {
-      var block = new WorkflowBlock();
+      var block = new WorkflowBlock { Id = blockElement.Attribute("ID")?.Value ?? string.Empty };
 
-      block.Id = blockElement.Attribute("ID")?.Value ?? string.Empty;
-
-      RouteBlockType baseBlockType;
-      if (!Enum.TryParse(blockElement.Attribute("SystemType")?.Value, out baseBlockType))
+      if (!Enum.TryParse(blockElement.Attribute("SystemType")?.Value, out RouteBlockType baseBlockType))
         baseBlockType = RouteBlockType.Unknown;
       block.BaseBlockType = baseBlockType;
 
@@ -253,8 +249,7 @@ namespace IsblCheck.Context.Development.Utils
 
     private static bool IsBlockEvent(string propertyName, RouteBlockType blockType)
     {
-      string[] eventNames;
-      if (BlockEventNames.TryGetValue(blockType, out eventNames))
+      if (BlockEventNames.TryGetValue(blockType, out string[] eventNames))
         return eventNames.Contains(propertyName, StringComparer.OrdinalIgnoreCase);
       return false;
     }

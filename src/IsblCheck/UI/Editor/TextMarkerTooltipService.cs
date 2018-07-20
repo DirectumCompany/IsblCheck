@@ -1,7 +1,7 @@
-﻿using ICSharpCode.AvalonEdit;
-using ICSharpCode.AvalonEdit.Document;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 using System.Windows.Input;
+using ICSharpCode.AvalonEdit;
+using ICSharpCode.AvalonEdit.Document;
 
 namespace IsblCheck.UI.Editor
 {
@@ -38,11 +38,11 @@ namespace IsblCheck.UI.Editor
 
       var point = Mouse.GetPosition(this.editor);
       var position = this.editor.GetPositionFromPoint(point);
-      if (position == null && !position.HasValue)
+      if (position == null)
         return;
       var offset = this.editor.Document.GetOffset(position.Value.Location);
       var marker = this.Markers.FindFirstSegmentWithStartAfter(offset);
-      if (marker != null && marker.ToolTip != null)
+      if (marker?.ToolTip != null)
         this.editor.TextArea.ToolTip = marker.ToolTip;
       else
         e.Handled = true;
@@ -55,20 +55,12 @@ namespace IsblCheck.UI.Editor
     /// <summary>
     /// Конструктор.
     /// </summary>
-    /// <param name="adornedElement">Декорируемый элемент.</param>
     /// <param name="editor">Редактор.</param>
     public TextMarkerTooltipService(TextEditor editor)
     {
       this.editor = editor;
       this.editor.TextArea.ToolTip = string.Empty;
       this.editor.TextArea.ToolTipOpening += this.EditorToolTipOpeningHandler;
-    }
-
-    /// <summary>
-    /// Деструктор.
-    /// </summary>
-    ~TextMarkerTooltipService()
-    {
     }
 
     #endregion

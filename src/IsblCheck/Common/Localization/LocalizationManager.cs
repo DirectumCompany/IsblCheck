@@ -1,9 +1,9 @@
-﻿using IsblCheck.Common.Patterns;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
+using IsblCheck.Common.Patterns;
 
 namespace IsblCheck.Common.Localization
 {
@@ -39,7 +39,7 @@ namespace IsblCheck.Common.Localization
     {
       get
       {
-        if (this.LocalizationProvider == null || this.LocalizationProvider.Cultures == null)
+        if (this.LocalizationProvider?.Cultures == null)
           return Enumerable.Empty<CultureInfo>();
 
         return this.LocalizationProvider.Cultures;
@@ -65,9 +65,8 @@ namespace IsblCheck.Common.Localization
     /// </summary>
     private void OnCultureChanged()
     {
-      EventHandler handler = this.CultureChanged;
-      if (handler != null)
-        handler.Invoke(this, EventArgs.Empty);
+      var handler = this.CultureChanged;
+      handler?.Invoke(this, EventArgs.Empty);
     }
 
     #endregion
@@ -92,17 +91,6 @@ namespace IsblCheck.Common.Localization
         return string.Format("[{0}]", key);
 
       return localizedValue;
-    }
-
-    #endregion
-
-    #region Конструкторы
-
-    /// <summary>
-    /// Конструктор.
-    /// </summary>
-    protected LocalizationManager()
-    {
     }
 
     #endregion

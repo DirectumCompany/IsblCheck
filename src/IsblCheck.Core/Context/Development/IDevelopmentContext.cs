@@ -53,6 +53,11 @@ namespace IsblCheck.Core.Context.Development
     IList<LocalizationString> LocalizationStrings { get; }
 
     /// <summary>
+    /// Список управляемых папок.
+    /// </summary>
+    IList<ManagedFolder> ManagedFolders { get; }
+
+    /// <summary>
     /// Список реквизитов справочников.
     /// </summary>
     IList<ReferenceRequisite> ReferenceRequisites { get; }

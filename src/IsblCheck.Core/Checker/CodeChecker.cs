@@ -1,10 +1,10 @@
-﻿using Common.Logging;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Common.Logging;
 using IsblCheck.Core.Context;
 using IsblCheck.Core.Reports;
 using IsblCheck.Core.Rules;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace IsblCheck.Core.Checker
 {
@@ -20,6 +20,10 @@ namespace IsblCheck.Core.Checker
     /// </summary>
     private static readonly ILog log = LogManager.GetLogger<ContextManager>();
 
+    private readonly ContextManager contextManager = new ContextManager();
+    private readonly RuleManager ruleManager = new RuleManager();
+    private readonly ReportManager reportManager = new ReportManager();
+
     #endregion
 
     #region ICodeChecker
@@ -27,17 +31,17 @@ namespace IsblCheck.Core.Checker
     /// <summary>
     /// Менеджер контекста.
     /// </summary>
-    public IContextManager ContextManager { get; protected set; }
+    public IContextManager ContextManager => this.contextManager;
 
     /// <summary>
     /// Менеджер правил.
     /// </summary>
-    public IRuleManager RuleManager { get; protected set; }
+    public IRuleManager RuleManager => this.ruleManager;
 
     /// <summary>
     /// Менеджер отчетов.
     /// </summary>
-    public IReportManager ReportManager { get; protected set; }
+    public IReportManager ReportManager => this.reportManager;
 
     /// <summary>
     /// Выполнить проверку.
@@ -64,7 +68,7 @@ namespace IsblCheck.Core.Checker
 
       return Task.Run(() =>
       {
-        Parallel.ForEach(documents, (document) =>
+        Parallel.ForEach(documents, document =>
         {
           foreach (var rule in rules)
           {
@@ -85,16 +89,25 @@ namespace IsblCheck.Core.Checker
 
     #endregion
 
-    #region Конструкторы
+    #region IDisposable Support
 
-    /// <summary>
-    /// Конструктор.
-    /// </summary>
-    public CodeChecker()
+    private bool disposedValue;
+
+    protected virtual void Dispose(bool disposing)
     {
-      this.ContextManager = new ContextManager();
-      this.RuleManager = new RuleManager();
-      this.ReportManager = new ReportManager();
+      if (!disposedValue)
+      {
+        if (disposing)
+        {
+          this.ruleManager.Dispose();
+        }
+        disposedValue = true;
+      }
+    }
+
+    public void Dispose()
+    {
+      Dispose(true);
     }
 
     #endregion

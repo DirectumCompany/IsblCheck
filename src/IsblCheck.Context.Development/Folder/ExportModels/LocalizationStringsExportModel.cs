@@ -1,6 +1,6 @@
-﻿using IsblCheck.Context.Development.Package.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Xml.Serialization;
+using IsblCheck.Context.Development.Package.Models;
 
 namespace IsblCheck.Context.Development.Folder.ExportModels
 {

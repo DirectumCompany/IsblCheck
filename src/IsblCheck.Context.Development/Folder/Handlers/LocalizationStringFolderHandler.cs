@@ -1,8 +1,8 @@
-﻿using IsblCheck.Context.Development.Folder.ExportModels;
+﻿using System.Collections.Generic;
+using System.Linq;
+using IsblCheck.Context.Development.Folder.ExportModels;
 using IsblCheck.Context.Development.Package.Handlers;
 using IsblCheck.Core.Context.Development;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace IsblCheck.Context.Development.Folder.Handlers
 {
@@ -29,9 +29,9 @@ namespace IsblCheck.Context.Development.Folder.Handlers
 
     #region FolderHandlerBase
 
-    protected override string FolderName { get { return "LocalizationStrings"; } }
+    protected override string FolderName => "LocalizationStrings";
 
-    protected override string CardModelRootNode { get { return "LocalizationStrings"; } }
+    protected override string CardModelRootNode => "LocalizationStrings";
 
     protected override IEnumerable<LocalizationString> ReadComponents(LocalizationStringsExportModel model, string componentFolderPath)
     {
@@ -39,8 +39,7 @@ namespace IsblCheck.Context.Development.Folder.Handlers
       {
         var entity = PackageHandlerUtils.CreateEntity<LocalizationString>(localizationStringModel);
 
-        if (localizationStringModel.DetailDataSets != null &&
-            localizationStringModel.DetailDataSets.DetailDataSet1 != null)
+        if (localizationStringModel.DetailDataSets?.DetailDataSet1 != null)
         {
           var stringModels = localizationStringModel.DetailDataSets.DetailDataSet1.Rows;
           foreach (var stringModel in stringModels)

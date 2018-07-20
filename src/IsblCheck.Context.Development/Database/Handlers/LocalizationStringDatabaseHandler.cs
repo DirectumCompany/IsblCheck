@@ -1,8 +1,8 @@
-﻿using IsblCheck.Core.Context.Development;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-using System;
+using IsblCheck.Core.Context.Development;
 
 namespace IsblCheck.Context.Development.Database.Handlers
 {
@@ -27,10 +27,12 @@ namespace IsblCheck.Context.Development.Database.Handlers
         {
           while (reader.Read())
           {
-            var localizationString = new LocalizationString();
-            localizationString.Name = reader["Name"] as string;
-            localizationString.Title = reader["Title"] as string;
-            localizationString.Group = reader["Group"] as string;
+            var localizationString = new LocalizationString
+            {
+              Name = reader["Name"] as string,
+              Title = reader["Title"] as string,
+              Group = reader["Group"] as string
+            };
 
             components.Add(localizationString.Name, localizationString);
           }
@@ -52,9 +54,11 @@ namespace IsblCheck.Context.Development.Database.Handlers
                 continue;
               var localizationString = components[localizationStringName];
 
-              var localizationValue = new LocalizationValue();
-              localizationValue.Language = reader["Language"] as string;
-              localizationValue.Value = reader["Value"] as string;
+              var localizationValue = new LocalizationValue
+              {
+                Language = reader["Language"] as string,
+                Value = reader["Value"] as string
+              };
 
               localizationString.Values.Add(localizationValue);
             }
@@ -95,11 +99,6 @@ namespace IsblCheck.Context.Development.Database.Handlers
       ORDER BY
         [LocalizationStringName],
         [Language]";
-
-    /// <summary>
-    /// Значение да.
-    /// </summary>
-    private const string IsSystemValue = "S";
 
     #endregion
 

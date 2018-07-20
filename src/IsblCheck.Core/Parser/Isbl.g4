@@ -1,12 +1,12 @@
-grammar Isbl;
+п»їgrammar Isbl;
 
 @parser::header {#pragma warning disable 3021}
 @lexer::header {#pragma warning disable 3021}
 
 /*******************************************************************************
-*********************************Правила лексера********************************
+*********************************РџСЂР°РІРёР»Р° Р»РµРєСЃРµСЂР°********************************
 *******************************************************************************/
-// Английские регистронезависимые символы.
+// РђРЅРіР»РёР№СЃРєРёРµ СЂРµРіРёСЃС‚СЂРѕРЅРµР·Р°РІРёСЃРёРјС‹Рµ СЃРёРјРІРѕР»С‹.
 fragment A:('a'|'A');
 fragment B:('b'|'B');
 fragment C:('c'|'C');
@@ -34,68 +34,68 @@ fragment X:('x'|'X');
 fragment Y:('y'|'Y');
 fragment Z:('z'|'Z');
 
-// Русские регистронезависимые символы.
-fragment А:('а'|'А');
-fragment Б:('б'|'Б');
-fragment В:('в'|'В');
-fragment Г:('г'|'Г');
-fragment Д:('д'|'Д');
-fragment Е:('е'|'Е');
-fragment Ё:('ё'|'Ё');
-fragment Ж:('ж'|'Ж');
-fragment З:('з'|'З');
-fragment И:('и'|'И');
-fragment Й:('й'|'Й');
-fragment К:('к'|'К');
-fragment Л:('л'|'Л');
-fragment М:('м'|'М');
-fragment Н:('н'|'Н');
-fragment О:('о'|'О');
-fragment П:('п'|'П');
-fragment Р:('р'|'Р');
-fragment С:('с'|'С');
-fragment Т:('т'|'Т');
-fragment У:('у'|'У');
-fragment Ф:('ф'|'Ф');
-fragment Х:('х'|'Х');
-fragment Ц:('ц'|'Ц');
-fragment Ч:('ч'|'Ч');
-fragment Ш:('ш'|'Ш');
-fragment Щ:('щ'|'Щ');
-fragment Ъ:('ъ'|'Ъ');
-fragment Ы:('ы'|'Ы');
-fragment Ь:('ь'|'Ь');
-fragment Э:('э'|'Э');
-fragment Ю:('ю'|'Ю');
-fragment Я:('я'|'Я');
+// Р СѓСЃСЃРєРёРµ СЂРµРіРёСЃС‚СЂРѕРЅРµР·Р°РІРёСЃРёРјС‹Рµ СЃРёРјРІРѕР»С‹.
+fragment Рђ:('Р°'|'Рђ');
+fragment Р‘:('Р±'|'Р‘');
+fragment Р’:('РІ'|'Р’');
+fragment Р“:('Рі'|'Р“');
+fragment Р”:('Рґ'|'Р”');
+fragment Р•:('Рµ'|'Р•');
+fragment РЃ:('С‘'|'РЃ');
+fragment Р–:('Р¶'|'Р–');
+fragment Р—:('Р·'|'Р—');
+fragment Р:('Рё'|'Р');
+fragment Р™:('Р№'|'Р™');
+fragment Рљ:('Рє'|'Рљ');
+fragment Р›:('Р»'|'Р›');
+fragment Рњ:('Рј'|'Рњ');
+fragment Рќ:('РЅ'|'Рќ');
+fragment Рћ:('Рѕ'|'Рћ');
+fragment Рџ:('Рї'|'Рџ');
+fragment Р :('СЂ'|'Р ');
+fragment РЎ:('СЃ'|'РЎ');
+fragment Рў:('С‚'|'Рў');
+fragment РЈ:('Сѓ'|'РЈ');
+fragment Р¤:('С„'|'Р¤');
+fragment РҐ:('С…'|'РҐ');
+fragment Р¦:('С†'|'Р¦');
+fragment Р§:('С‡'|'Р§');
+fragment РЁ:('С€'|'РЁ');
+fragment Р©:('С‰'|'Р©');
+fragment РЄ:('СЉ'|'РЄ');
+fragment Р«:('С‹'|'Р«');
+fragment Р¬:('СЊ'|'Р¬');
+fragment Р­:('СЌ'|'Р­');
+fragment Р®:('СЋ'|'Р®');
+fragment РЇ:('СЏ'|'РЇ');
 
-// Разделитель.
+// Р Р°Р·РґРµР»РёС‚РµР»СЊ.
 WS: [ \t\r\n]+->skip;
 
-// Комментарии.
+// РљРѕРјРјРµРЅС‚Р°СЂРёРё.
 BLOCK_COMMENT: '/*' .*? '*/'->skip;
 LINE_COMMENT: '//' ~[\r\n]*->skip;
 
-// Ключевые слова.
-AND: A N D | И;
-ELSE: E L S E | И Н А Ч Е;
+// РљР»СЋС‡РµРІС‹Рµ СЃР»РѕРІР°.
+AND: A N D | Р;
+ELSE: E L S E | Р Рќ Рђ Р§ Р•;
 ENDEXCEPT: E N D E X C E P T;
 ENDFINALLY: E N D F I N A L L Y;
-ENDFOREACH: E N D F O R E A C H | К О Н Е Ц В С Е;
-ENDIF: E N D I F | К О Н Е Ц Е С Л И;
-ENDWHILE: E N D W H I L E | К О Н Е Ц П О К А;
+ENDFOREACH: E N D F O R E A C H | Рљ Рћ Рќ Р• Р¦ Р’ РЎ Р•;
+ENDIF: E N D I F | Рљ Рћ Рќ Р• Р¦ Р• РЎ Р› Р;
+ENDWHILE: E N D W H I L E | Рљ Рћ Рќ Р• Р¦ Рџ Рћ Рљ Рђ;
 EXCEPT: E X C E P T;
 EXITFOR: E X I T F O R;
 FINALLY: F I N A L L Y;
-FOREACH: F O R E A C H | В С Е;
-IF: I F | Е С Л И;
-IN: I N | В;
-NOT: N O T | Н Е;
-OR: O R | И Л И;
+FOREACH: F O R E A C H | Р’ РЎ Р•;
+IF: I F | Р• РЎ Р› Р;
+IN: I N | Р’;
+NOT: N O T | Рќ Р•;
+OR: O R | Р Р› Р;
 TRY: T R Y;
-WHILE: W H I L E | П О К А;
+WHILE: W H I L E | Рџ Рћ Рљ Рђ;
 
-// Операторы.
+// РћРїРµСЂР°С‚РѕСЂС‹.
 EQ: '=';
 NEQ: '<>';
 GT: '>';
@@ -122,15 +122,15 @@ COLON : ':';
 COMMA: ';';
 DOT: '.';
 
-// Литералы.
+// Р›РёС‚РµСЂР°Р»С‹.
 STRINGLITERAL: '"' ~["]* '"' | '\'' ~[\']* '\'';
-NUMBERLITERAL: [0-9]+ ([\.] [0-9]+ )?;
-IDENTLITERAL : ('a'..'z' | 'A'..'Z' | 'а'..'я' | 'ё' | 'А'..'Я' | 'Ё' | '!') ('a'..'z' | 'A'..'Z' | 'а'..'я' | 'ё' | 'А'..'Я' | 'Ё' | '0'..'9'| '_')*;
+NUMBERLITERAL: [0-9]+ ([.] [0-9]+ )?;
+IDENTLITERAL : ('a'..'z' | 'A'..'Z' | 'Р°'..'СЏ' | 'С‘' | 'Рђ'..'РЇ' | 'РЃ' | '!') ('a'..'z' | 'A'..'Z' | 'Р°'..'СЏ' | 'С‘' | 'Рђ'..'РЇ' | 'РЃ' | '0'..'9'| '_')*;
 
 /*******************************************************************************
-*********************************Правила парсера********************************
+*********************************РџСЂР°РІРёР»Р° РїР°СЂСЃРµСЂР°********************************
 *******************************************************************************/
-// Блок предложений.
+// Р‘Р»РѕРє РїСЂРµРґР»РѕР¶РµРЅРёР№.
 statementBlock
     : ( declareVariableStatement 
       | assignStatement
@@ -143,45 +143,45 @@ statementBlock
       )*
     ;
 
-// Объявление переменной.
+// РћР±СЉСЏРІР»РµРЅРёРµ РїРµСЂРµРјРµРЅРЅРѕР№.
 declareVariableStatement
     : variable COLON typedefinition
     ;
-// Означивание.
+// РћР·РЅР°С‡РёРІР°РЅРёРµ.
 assignStatement
     : ( variable COLON typedefinition
       | variable indexer? (DOT invocationCall)*
       | function (DOT invocationCall)+
       ) EQ expression
     ;
-// Вызов метода.
+// Р’С‹Р·РѕРІ РјРµС‚РѕРґР°.
 invokeStatement
     : variable indexer? (DOT invocationCall)+
     | function (DOT invocationCall)*
     ;
-// Условие.
+// РЈСЃР»РѕРІРёРµ.
 ifStatement
     : IF expression statementBlock (ELSE statementBlock)? ENDIF
     ;
-// Совместный цикл.
+// РЎРѕРІРјРµСЃС‚РЅС‹Р№ С†РёРєР».
 foreachStatement
     : FOREACH variable (IN | EQ) expression statementBlock ENDFOREACH
     ;
-// Цикл с предусловием.
+// Р¦РёРєР» СЃ РїСЂРµРґСѓСЃР»РѕРІРёРµРј.
 whileStatement
     : WHILE expression statementBlock ENDWHILE
     ;
-// Обработка исключений.
+// РћР±СЂР°Р±РѕС‚РєР° РёСЃРєР»СЋС‡РµРЅРёР№.
 tryStatement
     : TRY statementBlock ( EXCEPT statementBlock ENDEXCEPT 
                          | FINALLY statementBlock ENDFINALLY
                          )
     ;
-// Выход из цикла.
+// Р’С‹С…РѕРґ РёР· С†РёРєР»Р°.
 exitforStatement
     : EXITFOR
     ;
-// Выражение.
+// Р’С‹СЂР°Р¶РµРЅРёРµ.
 expression
     : operand
     | (PLUS | MINUS) expression
@@ -192,7 +192,7 @@ expression
     | expression AND expression
     | expression OR expression
     ;
-// Операнд.
+// РћРїРµСЂР°РЅРґ.
 operand
     : unsignedNumber
     | string
@@ -200,48 +200,48 @@ operand
     | variable POINTER
     | function (DOT invocationCall)*
     | L_PAREN expression R_PAREN;
-// Функция.
+// Р¤СѓРЅРєС†РёСЏ.
 function
     : identifier L_PAREN parameterList R_PAREN
     ;
-// COM вызов.
+// COM РІС‹Р·РѕРІ.
 invocationCall
     : identifier (L_PAREN parameterList R_PAREN)?
     ;
-// Индексатор.
+// РРЅРґРµРєСЃР°С‚РѕСЂ.
 indexer
     : L_BRACKET parameterList R_BRACKET
     ;
-// Типизатор.
+// РўРёРїРёР·Р°С‚РѕСЂ.
 typedefinition
     : type (DOT subtype)?
     ;
-// Список параметров.
+// РЎРїРёСЃРѕРє РїР°СЂР°РјРµС‚СЂРѕРІ.
 parameterList
     : expression? (COMMA expression?)*
     ;
-// Идентификатор. Есть функция IN, включаем её, для учета.
+// РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ. Р•СЃС‚СЊ С„СѓРЅРєС†РёСЏ IN, РІРєР»СЋС‡Р°РµРј РµС‘, РґР»СЏ СѓС‡РµС‚Р°.
 identifier
     : IDENTLITERAL
     | IN
     ;
-// Переменная.
+// РџРµСЂРµРјРµРЅРЅР°СЏ.
 variable
     : IDENTLITERAL
     ;
-// Тип.
+// РўРёРї.
 type
     : IDENTLITERAL
     ;
-// Суб-тип.
+// РЎСѓР±-С‚РёРї.
 subtype
     : IDENTLITERAL
     ;
-// Безнаковое число.
+// Р‘РµР·РЅР°РєРѕРІРѕРµ С‡РёСЃР»Рѕ.
 unsignedNumber
     : NUMBERLITERAL
     ;
-// Строка.
+// РЎС‚СЂРѕРєР°.
 string
     : STRINGLITERAL
     ;

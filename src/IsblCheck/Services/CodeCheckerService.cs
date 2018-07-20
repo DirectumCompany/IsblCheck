@@ -1,13 +1,12 @@
-﻿using IsblCheck.Context.Application;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using IsblCheck.Context.Application;
 using IsblCheck.Context.Development;
-using IsblCheck.Context.Development.Package;
 using IsblCheck.Core.Checker;
 using IsblCheck.Core.Context.Application;
 using IsblCheck.Core.Context.Development;
 using IsblCheck.Core.Reports;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace IsblCheck.Services
 {
@@ -19,25 +18,21 @@ namespace IsblCheck.Services
     /// <summary>
     /// Чекер.
     /// </summary>
-    private ICodeChecker codeChecker = new CodeChecker();
+    private readonly ICodeChecker codeChecker = new CodeChecker();
 
     /// <summary>
     /// Фабрика контекста приложения.
     /// </summary>
-    private IApplicationContextFactory applicationContextFactory = new ApplicationContextFactory();
+    private readonly IApplicationContextFactory applicationContextFactory = new ApplicationContextFactory();
 
     /// <summary>
     /// Фабрика контекста разработки.
     /// </summary>
-    private IDevelopmentContextFactory developmentContextFactory = new DevelopmentContextFactory();
+    private readonly IDevelopmentContextFactory developmentContextFactory = new DevelopmentContextFactory();
 
-    public ICodeChecker CodeChecker
-    {
-      get
-      {
-        return codeChecker;
-      }
-    }
+    #region ICodeCheckerService
+
+    public ICodeChecker CodeChecker => this.codeChecker;
 
     /// <summary>
     /// Очистить провайдеры разработки.
@@ -77,7 +72,32 @@ namespace IsblCheck.Services
     public Task<IReport> Check(IEnumerable<IDocument> documents, IProgress<int> progress)
     {
       return this.codeChecker.Check(documents, progress);
+    } 
+
+    #endregion
+
+    #region IDisposable Support
+
+    private bool disposedValue;
+
+    protected virtual void Dispose(bool disposing)
+    {
+      if (!disposedValue)
+      {
+        if (disposing)
+        {
+          this.codeChecker.Dispose();
+        }
+        disposedValue = true;
+      }
     }
+
+    public void Dispose()
+    {
+      Dispose(true);
+    }
+
+    #endregion
 
     /// <summary>
     /// Конструктор.

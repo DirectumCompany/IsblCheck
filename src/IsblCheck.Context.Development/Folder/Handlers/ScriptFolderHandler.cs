@@ -1,11 +1,11 @@
-﻿using Common.Logging;
-using IsblCheck.Context.Development.Package.Handlers;
-using IsblCheck.Context.Development.Package.Models;
-using IsblCheck.Core.Context.Development;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Common.Logging;
+using IsblCheck.Context.Development.Package.Handlers;
+using IsblCheck.Context.Development.Package.Models;
+using IsblCheck.Core.Context.Development;
 
 namespace IsblCheck.Context.Development.Folder.Handlers
 {
@@ -36,9 +36,9 @@ namespace IsblCheck.Context.Development.Folder.Handlers
 
     #region FolderHandlerBase
 
-    protected override string FolderName { get { return "Scripts"; } }
+    protected override string FolderName => "Scripts";
 
-    protected override string CardModelRootNode { get { return "Script"; } }
+    protected override string CardModelRootNode => "Script";
 
     protected override IEnumerable<Script> ReadComponents(ComponentModel model, string componentFolderPath)
     {

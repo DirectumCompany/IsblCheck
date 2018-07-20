@@ -1,16 +1,16 @@
-﻿using IsblCheck.Core.Context;
-using IsblCheck.Core.Reports;
-using IsblCheck.Core.Rules;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using IsblCheck.Core.Context;
+using IsblCheck.Core.Reports;
+using IsblCheck.Core.Rules;
 
 namespace IsblCheck.Core.Checker
 {
   /// <summary>
   /// Интерфейс Контролера проверки исходного кода.
   /// </summary>
-  public interface ICodeChecker
+  public interface ICodeChecker : IDisposable
   {
     /// <summary>
     /// Менеджер контекста.

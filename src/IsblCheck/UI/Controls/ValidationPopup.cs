@@ -1,10 +1,10 @@
-﻿using IsblCheck.Common.Native;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Interop;
+using IsblCheck.Common.Native;
 
 namespace IsblCheck.UI.Controls
 {
@@ -99,13 +99,12 @@ namespace IsblCheck.UI.Controls
       if (this.Child == null)
         return;
 
-      var hwndSource = (PresentationSource.FromVisual(this.Child)) as HwndSource;
+      var hwndSource = PresentationSource.FromVisual(this.Child) as HwndSource;
       if (hwndSource == null)
         return;
       var hwnd = hwndSource.Handle;
 
-      RECT rect;
-      if (!NativeMethods.GetWindowRect(hwnd, out rect))
+      if (!NativeMethods.GetWindowRect(hwnd, out RECT rect))
         return;
 
       var left = rect.Left;
@@ -146,8 +145,8 @@ namespace IsblCheck.UI.Controls
       if (this.hostWindow != null && this.hostWindow.WindowState != WindowState.Minimized)
       {
         var target = this.PlacementTarget as FrameworkElement;
-        var holder = target != null ? target.DataContext as AdornedElementPlaceholder : null;
-        if (holder != null && holder.AdornedElement != null)
+        var holder = target?.DataContext as AdornedElementPlaceholder;
+        if (holder?.AdornedElement != null)
         {
           this.PopupAnimation = PopupAnimation.None;
           this.IsOpen = false;
@@ -217,8 +216,7 @@ namespace IsblCheck.UI.Controls
     /// <param name="e">Аргументы события.</param>
     private void ValidationPopupUnloadedHandler(object sender, RoutedEventArgs e)
     {
-      var target = this.PlacementTarget as FrameworkElement;
-      if (target != null)
+      if (this.PlacementTarget is FrameworkElement target)
         target.SizeChanged -= this.HostWindowSizeOrLocationChangedHandler;
 
       if (this.hostWindow != null)

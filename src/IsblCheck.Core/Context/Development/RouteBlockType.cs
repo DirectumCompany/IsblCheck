@@ -2,7 +2,7 @@
 {
   /// <summary>
   /// Тип блока типового маршрута.
-  /// </summary
+  /// </summary>
   public enum RouteBlockType
   {
     /// <summary>

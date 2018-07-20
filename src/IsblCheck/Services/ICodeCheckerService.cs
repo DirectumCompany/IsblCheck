@@ -1,16 +1,16 @@
-﻿using IsblCheck.Core.Checker;
-using IsblCheck.Core.Context.Development;
-using IsblCheck.Core.Reports;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using IsblCheck.Core.Checker;
+using IsblCheck.Core.Context.Development;
+using IsblCheck.Core.Reports;
 
 namespace IsblCheck.Services
 {
   /// <summary>
   /// Интерфейс сервиса проверки кода.
   /// </summary>
-  public interface ICodeCheckerService
+  public interface ICodeCheckerService : IDisposable
   {
     /// <summary>
     /// Очистить провайдеры разработки.

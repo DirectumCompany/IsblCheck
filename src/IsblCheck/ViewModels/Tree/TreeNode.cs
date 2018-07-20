@@ -1,6 +1,6 @@
-﻿using GalaSoft.MvvmLight;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Windows.Media;
+using GalaSoft.MvvmLight;
 
 namespace IsblCheck.ViewModels.Tree
 {
@@ -45,7 +45,7 @@ namespace IsblCheck.ViewModels.Tree
     /// <summary>
     /// Есть строка локализации для заголовка.
     /// </summary>
-    public bool HasTitleLocalization { get { return !string.IsNullOrEmpty(this.TitleLocalizationKey); } }
+    public bool HasTitleLocalization => !string.IsNullOrEmpty(this.TitleLocalizationKey);
 
     /// <summary>
     /// Иконка.
@@ -67,7 +67,7 @@ namespace IsblCheck.ViewModels.Tree
     /// <summary>
     /// Есть иконка.
     /// </summary>
-    public bool HasIconSource { get { return this.IconSource != null; } }
+    public bool HasIconSource => this.IconSource != null;
 
     /// <summary>
     /// Признак выделения.

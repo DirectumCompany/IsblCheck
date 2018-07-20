@@ -71,7 +71,7 @@ namespace IsblCheck.UI.Behaviors
     /// <param name="e">Аргументы события.</param>
     private static void CommandChangedHandler(DependencyObject target, DependencyPropertyChangedEventArgs e)
     {
-      Control control = target as Control;
+      var control = target as Control;
       if (control == null)
         return;
 
@@ -95,9 +95,9 @@ namespace IsblCheck.UI.Behaviors
       if (e.Key != Key.Enter)
         return;
 
-      Control control = sender as Control;
-      ICommand command = (ICommand)control.GetValue(CommandProperty);
-      object commandParameter = control.GetValue(CommandParameterProperty);
+      var control = sender as Control;
+      var command = (ICommand)control.GetValue(CommandProperty);
+      var commandParameter = control.GetValue(CommandParameterProperty);
       if (command.CanExecute(commandParameter))
       {
         var action = new Action<object>(command.Execute);

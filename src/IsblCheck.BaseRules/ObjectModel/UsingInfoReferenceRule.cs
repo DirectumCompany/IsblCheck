@@ -1,4 +1,5 @@
-﻿using Antlr4.Runtime;
+﻿using System;
+using System.Collections.Generic;
 using Antlr4.Runtime.Tree;
 using IsblCheck.BaseRules.Properties;
 using IsblCheck.Core.Checker;
@@ -6,9 +7,6 @@ using IsblCheck.Core.Context;
 using IsblCheck.Core.Parser;
 using IsblCheck.Core.Reports;
 using IsblCheck.Core.Rules;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace IsblCheck.BaseRules.ObjectModel
 {
@@ -59,13 +57,13 @@ namespace IsblCheck.BaseRules.ObjectModel
 
     #region Поля
 
-    private static Lazy<IRuleInfo> info = new Lazy<IRuleInfo>(() =>
+    private static readonly Lazy<IRuleInfo> info = new Lazy<IRuleInfo>(() =>
       new RuleInfo(typeof(UsingInfoReferenceRule).Name, Resources.UsingInfoReferenceDescription), true);
 
     /// <summary>
     /// Инфо правила.
     /// </summary>
-    public static IRuleInfo Info { get { return info.Value; } }
+    public static IRuleInfo Info => info.Value;
 
     #endregion
 
@@ -76,7 +74,6 @@ namespace IsblCheck.BaseRules.ObjectModel
     /// </summary>
     /// <param name="report">Отчет.</param>
     /// <param name="document">Документ.</param>
-    /// <param name="tree">Дерево исходного кода.</param>
     /// <param name="context">Контекст.</param>
     public override void Apply(IReport report, IDocument document, IContext context)
     {

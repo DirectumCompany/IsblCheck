@@ -1,8 +1,8 @@
-﻿using IsblCheck.Context.Development.Package.Handlers;
+﻿using System.Collections.Generic;
+using System.Linq;
+using IsblCheck.Context.Development.Package.Handlers;
 using IsblCheck.Context.Development.Package.Models;
 using IsblCheck.Core.Context.Development;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace IsblCheck.Context.Development.Folder.Handlers
 {
@@ -82,9 +82,9 @@ namespace IsblCheck.Context.Development.Folder.Handlers
 
     #region FolderHandlerBase
 
-    protected override string FolderName { get { return "ReferenceRequisites"; } }
+    protected override string FolderName => "ReferenceRequisites";
 
-    protected override string CardModelRootNode { get { return "ReferenceRequisite"; } }
+    protected override string CardModelRootNode => "ReferenceRequisite";
 
     protected override IEnumerable<ReferenceRequisite> ReadComponents(ComponentModel model, string componentFolderPath)
     {
@@ -112,12 +112,12 @@ namespace IsblCheck.Context.Development.Folder.Handlers
 
       var lengthReq = model.Card.Requisites
         .FirstOrDefault(r => r.Code == LengthReqName);
-      if (lengthReq != null && !string.IsNullOrEmpty(lengthReq.Value))
+      if (!string.IsNullOrEmpty(lengthReq?.Value))
         entity.Length = int.Parse(lengthReq.Value);
 
       var precissionReq = model.Card.Requisites
         .FirstOrDefault(r => r.Code == PrecissionReqName);
-      if (precissionReq != null && !string.IsNullOrEmpty(precissionReq.Value))
+      if (!string.IsNullOrEmpty(precissionReq?.Value))
         entity.Precission = int.Parse(precissionReq.Value);
 
       var referenceTypeReq = model.Card.Requisites
@@ -132,15 +132,17 @@ namespace IsblCheck.Context.Development.Folder.Handlers
 
       var pickValuesReq = model.Card.Requisites
         .FirstOrDefault(r => r.Code == PickValuesReqName);
-      if (pickValuesReq != null && !string.IsNullOrEmpty(pickValuesReq.Value))
+      if (!string.IsNullOrEmpty(pickValuesReq?.Value))
       {
         var pickValues = pickValuesReq.Value.Split(';');
         foreach (var pickValue in pickValues)
         {
           var pickValueParts = pickValue.Split('=', '|');
-          var reqPickValue = new RequisitePickValue();
-          reqPickValue.Id = pickValueParts[0][0];
-          reqPickValue.Value = pickValueParts[1];
+          var reqPickValue = new RequisitePickValue
+          {
+            Id = pickValueParts[0][0],
+            Value = pickValueParts[1]
+          };
           entity.PickValues.Add(reqPickValue);
         }
       }

@@ -1,5 +1,5 @@
-﻿using Antlr4.Runtime.Tree;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Antlr4.Runtime.Tree;
 
 namespace IsblCheck.Core.Checker
 {

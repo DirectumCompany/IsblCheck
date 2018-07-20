@@ -1,8 +1,8 @@
-﻿using IsblCheck.Core.Context.Development;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-using System;
+using IsblCheck.Core.Context.Development;
 
 namespace IsblCheck.Context.Development.Database.Handlers
 {
@@ -27,14 +27,16 @@ namespace IsblCheck.Context.Development.Database.Handlers
         {
           while (reader.Read())
           {
-            var function = new Function();
-            function.Name = reader["Name"] as string;
-            function.Title = reader["Title"] as string;
-            function.IsSystem = IsSystemValue.Equals(reader["IsSystem"] as string);
-            function.Help = reader["Help"] as string;
-            function.Comment = reader["Comment"] as string;
+            var function = new Function
+            {
+              Name = reader["Name"] as string,
+              Title = reader["Title"] as string,
+              IsSystem = IsSystemValue.Equals(reader["IsSystem"] as string),
+              Help = reader["Help"] as string,
+              Comment = reader["Comment"] as string,
+              CalculationText = reader["CalculationText"] as string
+            };
 
-            function.CalculationText = reader["CalculationText"] as string;
             if (function.CalculationText == null)
               function.CalculationText = string.Empty;
 
@@ -58,12 +60,13 @@ namespace IsblCheck.Context.Development.Database.Handlers
                 continue;
               var function = components[functionName];
 
-              var argument = new FunctionArgument();
-              argument.Number = (int)reader["Number"];
-              argument.Name = reader["Name"] as string;
+              var argument = new FunctionArgument
+              {
+                Number = (int) reader["Number"],
+                Name = reader["Name"] as string
+              };
 
-              var typeValue = reader["Type"] as string;
-              if (typeValue != null &&
+              if (reader["Type"] is string typeValue &&
                 TypeValues.ContainsKey(typeValue))
                 argument.Type = TypeValues[typeValue];
               argument.DefaultValue = reader["DefaultValue"] as string;

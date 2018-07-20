@@ -1,4 +1,7 @@
-﻿using Antlr4.Runtime;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
 using IsblCheck.BaseRules.Properties;
@@ -8,9 +11,6 @@ using IsblCheck.Core.Context.Development;
 using IsblCheck.Core.Parser;
 using IsblCheck.Core.Reports;
 using IsblCheck.Core.Rules;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace IsblCheck.BaseRules.Functions
 {
@@ -49,13 +49,13 @@ namespace IsblCheck.BaseRules.Functions
     /// <summary>
     /// Инфо правила.
     /// </summary>
-    private static Lazy<IRuleInfo> info = new Lazy<IRuleInfo>(() =>
+    private static readonly Lazy<IRuleInfo> info = new Lazy<IRuleInfo>(() =>
       new RuleInfo(typeof(IncorrectFormatStringRule).Name, Resources.IncorrectFormatStringRuleDescription), true);
 
     /// <summary>
     /// Инфо правила.
     /// </summary>
-    public static IRuleInfo Info { get { return info.Value; } }
+    public static IRuleInfo Info => info.Value;
 
     #endregion
 
@@ -133,7 +133,7 @@ namespace IsblCheck.BaseRules.Functions
         if (parameters[2].ChildCount != 1)
           return;
         var argsListOperand = parameters[2].operand();
-        if (argsListOperand == null || argsListOperand.function() == null)
+        if (argsListOperand?.function() == null)
           return;
         var argsListFunctionName = argsListOperand.function().identifier().GetText();
         if (!argsListFunctionName.Equals("ArrayOf", StringComparison.OrdinalIgnoreCase) &&
@@ -164,7 +164,7 @@ namespace IsblCheck.BaseRules.Functions
         if (parameters[1].ChildCount != 1)
           return;
         var argsListOperand = parameters[1].operand();
-        if (argsListOperand == null || argsListOperand.function() == null)
+        if (argsListOperand?.function() == null)
           return;
         var argsListFunctionName = argsListOperand.function().identifier().GetText();
         if (!argsListFunctionName.Equals("ArrayOf", StringComparison.OrdinalIgnoreCase) &&
@@ -296,7 +296,7 @@ namespace IsblCheck.BaseRules.Functions
       walker.Walk(listener, tree);
       foreach (var entry in listener.FormatItemsWithoutArguments)
       {
-        string description = string.Format(Resources.ArgumentForTemplateNotFound, 
+        var description = string.Format(Resources.ArgumentForTemplateNotFound, 
           entry.Data.Text, entry.Data.Index, entry.TemplateString);
         var position = entry.Context.GetTextPosition();
         if(entry.TemplateStringSource == IncorrectFormatStringListener.TemplateStringSource.StringConstant)
@@ -312,7 +312,7 @@ namespace IsblCheck.BaseRules.Functions
       }
       foreach (var entry in listener.FormatItemsWithEmptyArguments)
       {
-        string description = string.Format(Resources.EmptyFormatArgument,
+        var description = string.Format(Resources.EmptyFormatArgument,
           entry.Data.Text, entry.Data.Index, entry.TemplateString);
         var position = entry.Context.GetTextPosition();
         if (entry.TemplateStringSource == IncorrectFormatStringListener.TemplateStringSource.StringConstant)
@@ -328,7 +328,7 @@ namespace IsblCheck.BaseRules.Functions
       }
       foreach (var incorrectFormatEntry in listener.ArgumentsWithoutFormatItems)
       {
-        string description = string.Format(Resources.RedutantFormatArgument,
+        var description = string.Format(Resources.RedutantFormatArgument,
           incorrectFormatEntry.Data.Text, incorrectFormatEntry.Data.Index, incorrectFormatEntry.TemplateString);
         report.AddWarning(ArgumentForFormatItemNotFound, description, document, incorrectFormatEntry.Context.GetTextPosition());
       }

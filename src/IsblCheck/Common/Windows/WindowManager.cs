@@ -1,9 +1,8 @@
-﻿using IsblCheck.Common.Patterns;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Windows;
+using IsblCheck.Common.Patterns;
 
 namespace IsblCheck.Common.Windows
 {
@@ -15,7 +14,7 @@ namespace IsblCheck.Common.Windows
     /// <summary>
     /// Зарегистрированные окна.
     /// </summary>
-    private Dictionary<Type, Type> registeredWindows = new Dictionary<Type, Type>();
+    private readonly Dictionary<Type, Type> registeredWindows = new Dictionary<Type, Type>();
 
     /// <summary>
     /// Зарегистрировать тип окна с моделью.
@@ -45,7 +44,7 @@ namespace IsblCheck.Common.Windows
     public Window CreateWindow(IWindow viewModel)
     {
       if (viewModel == null)
-        throw new ArgumentNullException("viewModel");
+        throw new ArgumentNullException(nameof(viewModel));
 
       var viewModelType = viewModel.GetType();
       if (!this.registeredWindows.ContainsKey(viewModelType))
@@ -70,14 +69,14 @@ namespace IsblCheck.Common.Windows
     public Window CreateWindow(IWindow ownerViewModel, IWindow viewModel)
     {
       if (ownerViewModel == null)
-        throw new ArgumentNullException("ownerViewModel");
+        throw new ArgumentNullException(nameof(ownerViewModel));
 
       if (viewModel == null)
-        throw new ArgumentNullException("viewModel");
+        throw new ArgumentNullException(nameof(viewModel));
 
       var ownerWindow = this.FindWindowByViewModel(ownerViewModel);
       if (ownerWindow == null)
-        throw new ArgumentException("Could not found window associated with current view model", "ownerViewModel");
+        throw new ArgumentException("Could not found window associated with current view model", nameof(ownerViewModel));
 
       var viewModelType = viewModel.GetType();
       if (!this.registeredWindows.ContainsKey(viewModelType))

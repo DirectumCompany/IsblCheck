@@ -1,10 +1,10 @@
-﻿using Common.Logging;
-using IsblCheck.Context.Development.Folder.Handlers;
-using IsblCheck.Core.Context.Development;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Common.Logging;
+using IsblCheck.Context.Development.Folder.Handlers;
+using IsblCheck.Core.Context.Development;
 
 namespace IsblCheck.Context.Development.Folder
 {
@@ -40,13 +40,10 @@ namespace IsblCheck.Context.Development.Folder
       this.workspacePath = workspacePath;
     }
 
-    private Type ResolveComponentHandler<T>() where T : Component
+    private static Type ResolveComponentHandler<T>() where T : Component
     {
       return Assembly.GetExecutingAssembly().DefinedTypes
-        .Where(t => t.IsClass)
-        .Where(t => !t.IsAbstract)
-        .Where(t => t.ImplementedInterfaces.Contains(typeof(IFolderHandler<T>)))
-        .FirstOrDefault();
+        .FirstOrDefault(t => t.IsClass && !t.IsAbstract && t.ImplementedInterfaces.Contains(typeof(IFolderHandler<T>)));
     }
   }
 }

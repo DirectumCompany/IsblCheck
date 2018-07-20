@@ -1,8 +1,8 @@
-﻿using ICSharpCode.AvalonEdit;
-using ICSharpCode.AvalonEdit.Editing;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Interactivity;
+using ICSharpCode.AvalonEdit;
+using ICSharpCode.AvalonEdit.Editing;
 
 namespace IsblCheck.UI.Behaviors
 {
@@ -45,10 +45,8 @@ namespace IsblCheck.UI.Behaviors
     private static void CaretOffsetPropertyChangedHandler(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
       var behavior = d as CaretOffsetBehavior;
-      if (behavior == null)
-        return;
 
-      if (behavior.caret == null)
+      if (behavior?.caret == null)
         return;
 
       if (behavior.isSourceChanging)

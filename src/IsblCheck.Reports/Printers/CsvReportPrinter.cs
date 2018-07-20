@@ -1,9 +1,9 @@
-﻿using IsblCheck.Core.Reports;
-using IsblCheck.Reports.Properties;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using IsblCheck.Core.Reports;
+using IsblCheck.Reports.Properties;
 
 namespace IsblCheck.Reports.Printers
 {
@@ -30,7 +30,7 @@ namespace IsblCheck.Reports.Printers
     /// <summary>
     /// Путь к сохраняемому файлу.
     /// </summary>
-    public string FilePath { get; private set; }
+    public string FilePath { get; }
 
     /// <summary>
     /// Разделитель колонок.
@@ -88,8 +88,7 @@ namespace IsblCheck.Reports.Printers
       }
       finally
       {
-        if (stream != null)
-          stream.Dispose();
+        stream?.Dispose();
       }
     }
 
@@ -116,13 +115,13 @@ namespace IsblCheck.Reports.Printers
       var stringBuilder = new StringBuilder();
       var isFirstColumn = true;
 
-      foreach (string currentColumn in columns)
+      foreach (var currentColumn in columns)
       {
         if (!isFirstColumn)
           stringBuilder.Append(this.Delimiter);
         isFirstColumn = false;
 
-        var currentColumnQuoting = false;
+        bool currentColumnQuoting;
         switch (this.Quoting)
         {
           case CsvQuotingMode.All:
@@ -159,13 +158,13 @@ namespace IsblCheck.Reports.Printers
       var stringBuilder = new StringBuilder();
       var isFirstColumn = true;
 
-      foreach (string currentColumn in columnHeaders)
+      foreach (var currentColumn in columnHeaders)
       {
         if (!isFirstColumn)
           stringBuilder.Append(this.Delimiter);
         isFirstColumn = false;
 
-        var currentColumnQuoting = false;
+        bool currentColumnQuoting;
         switch (this.Quoting)
         {
           case CsvQuotingMode.All:

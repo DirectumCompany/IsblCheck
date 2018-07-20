@@ -1,6 +1,6 @@
-﻿using IsblCheck.Core.Context.Development;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using IsblCheck.Core.Context.Development;
 
 namespace IsblCheck.Context.Development
 {
@@ -14,7 +14,7 @@ namespace IsblCheck.Context.Development
     /// <summary>
     /// Список провайдеров.
     /// </summary>
-    public IList<IDevelopmentContextProvider> Providers { get; private set; }
+    public IList<IDevelopmentContextProvider> Providers { get; }
 
     /// <summary>
     /// Создать контекст разработки.
@@ -33,6 +33,7 @@ namespace IsblCheck.Context.Development
         Functions = this.ReadComponents<Function>(),
         IntegratedReports = this.ReadComponents<IntegratedReport>(),
         LocalizationStrings = this.ReadComponents<LocalizationString>(),
+        ManagedFolders = this.ReadComponents<ManagedFolder>(),
         ReferenceRequisites = this.ReadComponents<ReferenceRequisite>(),
         ReferenceTypes = this.ReadComponents<ReferenceType>(),
         RouteBlocks = this.ReadComponents<RouteBlock>(),

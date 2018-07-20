@@ -1,11 +1,11 @@
-﻿using ICSharpCode.AvalonEdit;
-using ICSharpCode.AvalonEdit.Document;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using ICSharpCode.AvalonEdit;
+using ICSharpCode.AvalonEdit.Document;
 
 namespace IsblCheck.UI.Editor
 {
@@ -45,7 +45,7 @@ namespace IsblCheck.UI.Editor
       using (var ctx = geometry.Open())
       {
         const double triangleSize = 6.5;
-        const double right = (triangleSize * 0.866) / 2;
+        const double right = triangleSize * 0.866 / 2;
         const double left = -right;
         ctx.BeginFigure(new Point(left, triangleSize / 2), true, true);
         ctx.LineTo(new Point(left, -triangleSize / 2), true, false);
@@ -204,7 +204,7 @@ namespace IsblCheck.UI.Editor
       base.OnToolTipOpening(e);
 
       var marker = this.FindNextMarker(Mouse.GetPosition(this));
-      if (marker != null && marker.ToolTip != null)
+      if (marker?.ToolTip != null)
         this.ToolTip = marker.ToolTip;
       else
         e.Handled = true;

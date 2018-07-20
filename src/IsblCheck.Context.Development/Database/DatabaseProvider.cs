@@ -1,11 +1,11 @@
-﻿using Common.Logging;
-using IsblCheck.Context.Development.Database.Handlers;
-using IsblCheck.Core.Context.Development;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
+using Common.Logging;
+using IsblCheck.Context.Development.Database.Handlers;
+using IsblCheck.Core.Context.Development;
 
 namespace IsblCheck.Context.Development.Database
 {
@@ -26,7 +26,7 @@ namespace IsblCheck.Context.Development.Database
         return Enumerable.Empty<T>();
       var handler = (IDatabaseHandler<T>)Activator.CreateInstance(handlerType);
 
-      using (SqlConnection connection = new SqlConnection(this.connectionString, this.credential))
+      using (var connection = new SqlConnection(this.connectionString, this.credential))
       {
         try
         {
@@ -36,7 +36,7 @@ namespace IsblCheck.Context.Development.Database
         catch (SqlException ex)
         {
           log.Error("Database connection error.", ex);
-          throw ex;
+          throw;
         }
       }
     }
@@ -97,7 +97,7 @@ namespace IsblCheck.Context.Development.Database
     /// <returns>Версия платформы.</returns>
     private Version ReadPlatformVersion()
     {
-      using (SqlConnection connection = new SqlConnection(this.connectionString, this.credential))
+      using (var connection = new SqlConnection(this.connectionString, this.credential))
       {
         try
         {
@@ -113,17 +113,15 @@ namespace IsblCheck.Context.Development.Database
         catch (SqlException ex)
         {
           log.Error("Database connection error.", ex);
-          throw ex;
+          throw;
         }
       }
     }
 
-    private Type ResolveComponentHandler<T>() where T : Component
+    private static Type ResolveComponentHandler<T>() where T : Component
     {
       return Assembly.GetExecutingAssembly().DefinedTypes
-        .Where(t => t.IsClass)
-        .Where(t => t.ImplementedInterfaces.Contains(typeof(IDatabaseHandler<T>)))
-        .FirstOrDefault();
+        .FirstOrDefault(t => t.IsClass && t.ImplementedInterfaces.Contains(typeof(IDatabaseHandler<T>)));
     }
 
     #endregion

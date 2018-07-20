@@ -1,8 +1,8 @@
-﻿using IsblCheck.Core.Context.Development;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Text;
-using System;
+using IsblCheck.Core.Context.Development;
 
 namespace IsblCheck.Context.Development.Database.Handlers
 {
@@ -27,15 +27,16 @@ namespace IsblCheck.Context.Development.Database.Handlers
         {
           while (reader.Read())
           {
-            var script = new Script();
-            script.Name = reader["Name"] as string;
-            script.Title = reader["Title"] as string;
+            var script = new Script
+            {
+              Name = reader["Name"] as string,
+              Title = reader["Title"] as string
+            };
             if (ActiveValue.Equals(reader["State"] as string))
               script.State = ComponentState.Active;
             else
               script.State = ComponentState.Closed;
-            var calculationValue = reader["CalculationText"] as byte[];
-            if (calculationValue != null)
+            if (reader["CalculationText"] is byte[] calculationValue)
               script.CalculationText = Encoding.GetEncoding(1251).GetString(calculationValue);
             else
               script.CalculationText = string.Empty;

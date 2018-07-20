@@ -1,8 +1,7 @@
-﻿using Antlr4.Runtime.Tree;
+﻿using System.Collections.Generic;
 using Antlr4.Runtime;
+using Antlr4.Runtime.Tree;
 using IsblCheck.Core.Parser;
-using System;
-using System.Collections.Generic;
 
 namespace IsblCheck.Core.Checker
 {
@@ -13,15 +12,15 @@ namespace IsblCheck.Core.Checker
   {
     #region Поля и свойства
 
-    private IParseTree syntaxTree = null;
+    private IParseTree syntaxTree;
 
     #endregion
 
     #region IDocument
 
-    public string Name { get; private set; }
+    public string Name { get; }
 
-    public string Text { get; private set; }
+    public string Text { get; }
 
     public ComponentType ComponentType { get; set; }
 
@@ -29,7 +28,7 @@ namespace IsblCheck.Core.Checker
 
     public string Path { get; set; }
 
-    public List<string> ContextVariables { get; private set; }
+    public List<string> ContextVariables { get; }
 
     public IParseTree GetSyntaxTree()
     {

@@ -1,4 +1,14 @@
-﻿using GalaSoft.MvvmLight.CommandWpf;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Data;
+using System.Windows.Input;
+using GalaSoft.MvvmLight.CommandWpf;
 using IsblCheck.Common.Localization;
 using IsblCheck.Common.Panels;
 using IsblCheck.Common.Settings;
@@ -9,18 +19,6 @@ using IsblCheck.Core.Checker;
 using IsblCheck.Core.Context.Development;
 using IsblCheck.Services;
 using IsblCheck.ViewModels.Tree;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Data.SqlClient;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Data;
-using System.Windows.Input;
-using System.Windows.Threading;
 
 namespace IsblCheck.ViewModels.Panels
 {
@@ -135,7 +133,7 @@ namespace IsblCheck.ViewModels.Panels
         var message = LocalizationManager.Instance.LocalizeString("ERROR_PACKAGE_READ");
         this.viewService.ShowMessageBox(message, icon: MessageBoxImage.Error);
       }
-      this.SaveLastOpenedPackage(fileName);
+      SaveLastOpenedPackage(fileName);
     }
 
     /// <summary>
@@ -169,10 +167,10 @@ namespace IsblCheck.ViewModels.Panels
         var message = LocalizationManager.Instance.LocalizeString("ERROR_FOLDER_READ");
         this.viewService.ShowMessageBox(message, icon: MessageBoxImage.Error);
       }
-      this.SaveLastOpenedFolder(workspacePath);
+      SaveLastOpenedFolder(workspacePath);
     }
 
-    private void SaveLastOpenedPackage(string fileName)
+    private static void SaveLastOpenedPackage(string fileName)
     {
       var lastOpenedPackages = SettingsManager.Instance.GetValue<List<string>>(LastOpenedPackagesSettingsKey);
       if (lastOpenedPackages == null)
@@ -190,7 +188,7 @@ namespace IsblCheck.ViewModels.Panels
       SettingsManager.Instance.SetValue(LastOpenedPackagesSettingsKey, lastOpenedPackages);
     }
 
-    private void SaveLastOpenedFolder(string folderName)
+    private static void SaveLastOpenedFolder(string folderName)
     {
       var lastOpenedFolders = SettingsManager.Instance.GetValue<List<string>>(LastOpenedFoldersSettingsKey);
       if (lastOpenedFolders == null)
@@ -247,7 +245,7 @@ namespace IsblCheck.ViewModels.Panels
     /// </summary>
     /// <param name="node">Узел.</param>
     /// <returns>true, если проверку можно выполнить.</returns>
-    private bool CanCheckDocuments(TreeNode node)
+    private static bool CanCheckDocuments(TreeNode node)
     {
       return node != null;
     }
@@ -257,7 +255,7 @@ namespace IsblCheck.ViewModels.Panels
     /// </summary>
     /// <param name="document">Документ.</param>
     /// <returns>true, если открытие возможно.</returns>
-    private bool CanOpenDocument(IDocument document)
+    private static bool CanOpenDocument(IDocument document)
     {
       return document != null;
     }
@@ -269,10 +267,10 @@ namespace IsblCheck.ViewModels.Panels
     {
       var documents = new List<IDocument>();
       foreach (var componentType in this.componentTypes)
-        documents.AddRange(this.GetDocuments(componentType));
+        documents.AddRange(GetDocuments(componentType));
 
-      PanelManager.Instance.PanelContainer.ProgressMaximum = documents.Count();
-      var progress = new Progress<int>((value) =>
+      PanelManager.Instance.PanelContainer.ProgressMaximum = documents.Count;
+      var progress = new Progress<int>(value =>
       {
         Application.Current.Dispatcher.Invoke(() =>
         {
@@ -312,12 +310,12 @@ namespace IsblCheck.ViewModels.Panels
     private async void CheckDocuments(TreeNode node)
     {
       if (node == null)
-        throw new ArgumentNullException("node");
+        throw new ArgumentNullException(nameof(node));
 
-      var documents = this.GetDocuments(node);
+      var documents = GetDocuments(node);
 
       PanelManager.Instance.PanelContainer.ProgressMaximum = documents.Count();
-      var progress = new Progress<int>((value) =>
+      var progress = new Progress<int>(value =>
       {
         Application.Current.Dispatcher.Invoke(() =>
         {
@@ -355,7 +353,7 @@ namespace IsblCheck.ViewModels.Panels
     /// </summary>
     /// <param name="rootNode">Узел.</param>
     /// <returns>Документы.</returns>
-    private IEnumerable<IDocument> GetDocuments(TreeNode rootNode)
+    private static IEnumerable<IDocument> GetDocuments(TreeNode rootNode)
     {
       var result = new List<IDocument>();
 
@@ -415,7 +413,7 @@ namespace IsblCheck.ViewModels.Panels
     private void OpenDocument(IDocument document)
     {
       if (document == null)
-        throw new ArgumentNullException("document");
+        throw new ArgumentNullException(nameof(document));
 
       var documentViewer = PanelManager.Instance
         .GetPanels<DocumentViewerViewModel>()
@@ -445,9 +443,9 @@ namespace IsblCheck.ViewModels.Panels
       this.ComponentTypesView = CollectionViewSource.GetDefaultView(this.componentTypes);
 
       this.FiltrateComponentsCommand = new RelayCommand(this.FiltrateComponents);
-      this.OpenDocumentCommand = new RelayCommand<IDocument>(this.OpenDocument, this.CanOpenDocument);
+      this.OpenDocumentCommand = new RelayCommand<IDocument>(this.OpenDocument, CanOpenDocument);
       this.CheckAllCommand = new RelayCommand(this.CheckAll, this.CanCheckAll);
-      this.CheckDocumentsCommand = new RelayCommand<TreeNode>(this.CheckDocuments, this.CanCheckDocuments);
+      this.CheckDocumentsCommand = new RelayCommand<TreeNode>(this.CheckDocuments, CanCheckDocuments);
     }
 
     #endregion

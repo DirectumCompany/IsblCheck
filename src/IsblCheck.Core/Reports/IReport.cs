@@ -1,5 +1,5 @@
-﻿using IsblCheck.Core.Checker;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using IsblCheck.Core.Checker;
 
 namespace IsblCheck.Core.Reports
 {

@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using IsblCheck.Core.Context;
 using IsblCheck.Core.Checker;
+using IsblCheck.Core.Context;
 
 namespace IsblCheck.BaseRules
 {

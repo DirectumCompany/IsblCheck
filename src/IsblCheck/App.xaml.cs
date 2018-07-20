@@ -1,4 +1,8 @@
-﻿using Common.Logging;
+﻿using System;
+using System.Reflection;
+using System.Windows;
+using System.Windows.Threading;
+using Common.Logging;
 using IsblCheck.Common.Dialogs;
 using IsblCheck.Common.Localization;
 using IsblCheck.Common.Panels;
@@ -10,10 +14,6 @@ using IsblCheck.ViewModels.Dialogs;
 using IsblCheck.ViewModels.Panels;
 using IsblCheck.Views;
 using IsblCheck.Views.Dialogs;
-using System;
-using System.Reflection;
-using System.Windows;
-using System.Windows.Threading;
 
 namespace IsblCheck
 {
@@ -30,7 +30,7 @@ namespace IsblCheck
     /// <summary>
     /// Сервис представлений.
     /// </summary>
-    private IViewService viewService = new ViewService();
+    private readonly IViewService viewService = new ViewService();
 
     /// <summary>
     /// Обработчик события старта приложения.
@@ -123,10 +123,10 @@ namespace IsblCheck
     /// <param name="exception">Исключение.</param>
     private void HandleUnhandledException(Exception exception)
     {
-      string message = string.Empty;
+      var message = string.Empty;
       try
       {
-        AssemblyName assemblyName = Assembly.GetExecutingAssembly().GetName();
+        var assemblyName = Assembly.GetExecutingAssembly().GetName();
         message = string.Format("Unhandled exception in {0}. {1}", assemblyName, exception.Message);
         this.viewService.ShowMessageBox(message, icon: MessageBoxImage.Error);
       }

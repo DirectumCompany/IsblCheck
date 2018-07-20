@@ -1,8 +1,8 @@
-﻿using Antlr4.Runtime;
+﻿using System;
+using System.Collections.Generic;
+using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
 using IsblCheck.Core.Parser;
-using System;
-using System.Collections.Generic;
 
 namespace IsblCheck.BaseRules.Functions
 {
@@ -22,30 +22,31 @@ namespace IsblCheck.BaseRules.Functions
     /// <summary>
     /// Признак того, что параметр пустой.
     /// </summary>
-    public bool IsEmpty { get { return Context == null; } }
+    public bool IsEmpty => this.Context == null;
+
     /// <summary>
     /// Текст параметра.
     /// </summary>
-    public string Text { get { return Context == null ? string.Empty : Context.GetText(); } }
+    public string Text => this.Context == null ? string.Empty : this.Context.GetText();
   }
 
   public class ParameterListParser
   {    
-    private IsblParser.ParameterListContext parameterList;
+    private readonly IsblParser.ParameterListContext parameterList;
 
     /// <summary>
     /// Список параметров.
     /// </summary>
-    public List<ParameterValue> ParameterValues { get; private set; }
+    public List<ParameterValue> ParameterValues { get; }
 
     /// <summary>
     /// Распарсить список параметров.
     /// </summary>
     public void Parse()
     {
-      int currentIndex = 0;
-      bool isEmpty = true;
-      for (int i = 0; i < this.parameterList.ChildCount; i++)
+      var currentIndex = 0;
+      var isEmpty = true;
+      for (var i = 0; i < this.parameterList.ChildCount; i++)
       {
         if (IsComma(this.parameterList.GetChild(i)))
         {
@@ -82,7 +83,7 @@ namespace IsblCheck.BaseRules.Functions
     public ParameterListParser(IsblParser.ParameterListContext parameters)
     {
       if (parameters == null)
-        throw new ArgumentNullException("parameters");
+        throw new ArgumentNullException(nameof(parameters));
       this.parameterList = parameters;
       this.ParameterValues = new List<ParameterValue>();
     }

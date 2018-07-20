@@ -1,9 +1,9 @@
-﻿using IsblCheck.Context.Development.Package.Models;
-using IsblCheck.Context.Development.Utils;
-using IsblCheck.Core.Context.Development;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using IsblCheck.Context.Development.Package.Models;
+using IsblCheck.Context.Development.Utils;
+using IsblCheck.Core.Context.Development;
 
 namespace IsblCheck.Context.Development.Package.Handlers
 {
@@ -223,9 +223,9 @@ namespace IsblCheck.Context.Development.Package.Handlers
 
     #region Методы
 
-    private void ReadMethods(ComponentModel model, ReferenceType entity)
+    private static void ReadMethods(ComponentModel model, ReferenceType entity)
     {
-      if (model.DetailDataSets == null || model.DetailDataSets.DetailDataSet7 == null)
+      if (model.DetailDataSets?.DetailDataSet7 == null)
         return;
 
       foreach (var row in model.DetailDataSets.DetailDataSet7.Rows)
@@ -246,9 +246,9 @@ namespace IsblCheck.Context.Development.Package.Handlers
       }
     }
 
-    private void ReadMethodsParameters(ComponentModel model, ReferenceType entity)
+    private static void ReadMethodsParameters(ComponentModel model, ReferenceType entity)
     {
-      if (model.DetailDataSets == null || model.DetailDataSets.DetailDataSet8 == null)
+      if (model.DetailDataSets?.DetailDataSet8 == null)
         return;
 
       foreach (var paramModel in model.DetailDataSets.DetailDataSet8.Rows)
@@ -313,9 +313,9 @@ namespace IsblCheck.Context.Development.Package.Handlers
       }
     }
 
-    private void ReadActions(ComponentModel model, ReferenceType entity)
+    private static void ReadActions(ComponentModel model, ReferenceType entity)
     {
-      if (model.DetailDataSets == null || model.DetailDataSets.DetailDataSet2 == null)
+      if (model.DetailDataSets?.DetailDataSet2 == null)
         return;
 
       foreach (var row in model.DetailDataSets.DetailDataSet2.Rows)
@@ -353,7 +353,7 @@ namespace IsblCheck.Context.Development.Package.Handlers
     /// </summary>
     /// <param name="model">Модель.</param>
     /// <param name="entity">Сущность.</param>
-    private void ReadEvents(ComponentModel model, ReferenceType entity)
+    private static void ReadEvents(ComponentModel model, ReferenceType entity)
     {
       var eventsReq = model.Card.Requisites
         .FirstOrDefault(r => r.Code == EventsReqName);
@@ -370,9 +370,9 @@ namespace IsblCheck.Context.Development.Package.Handlers
     /// </summary>
     /// <param name="model">Модель.</param>
     /// <param name="entity">Сущность.</param>
-    private void ReadCardRequisites(ComponentModel model, ReferenceType entity)
+    private static void ReadCardRequisites(ComponentModel model, ReferenceType entity)
     {
-      if (model.DetailDataSets == null || model.DetailDataSets.DetailDataSet1 == null)
+      if (model.DetailDataSets?.DetailDataSet1 == null)
         return;
 
       foreach (var row in model.DetailDataSets.DetailDataSet1.Rows)
@@ -381,7 +381,7 @@ namespace IsblCheck.Context.Development.Package.Handlers
 
         var numberReq = row.Requisites
           .FirstOrDefault(r => r.Code == ReqNumberReqName);
-        if (numberReq != null && !string.IsNullOrEmpty(numberReq.Value))
+        if (!string.IsNullOrEmpty(numberReq?.Value))
           cardRequisite.Number = int.Parse(numberReq.Value);
 
         var sectionReq = row.Requisites
@@ -416,17 +416,19 @@ namespace IsblCheck.Context.Development.Package.Handlers
 
         var changeEventReq = row.Requisites
           .FirstOrDefault(r => r.Code == ReqChangeEventReqName);
-        if (changeEventReq != null && !string.IsNullOrEmpty(changeEventReq.DecodedText))
+        if (!string.IsNullOrEmpty(changeEventReq?.DecodedText))
         {
-          var @event = new Event();
-          @event.EventType = EventType.Change;
-          @event.CalculationText = changeEventReq.DecodedText;
+          var @event = new Event
+          {
+            EventType = EventType.Change,
+            CalculationText = changeEventReq.DecodedText
+          };
           cardRequisite.Events.Add(@event);
         }
 
         var selectEventReq = row.Requisites
           .FirstOrDefault(r => r.Code == ReqSelectEventsReqName);
-        if (selectEventReq != null && !string.IsNullOrEmpty(selectEventReq.DecodedText))
+        if (!string.IsNullOrEmpty(selectEventReq?.DecodedText))
         {
           var events = EventTextParser.Parse(selectEventReq.DecodedText);
           foreach (var @event in events)
@@ -446,9 +448,9 @@ namespace IsblCheck.Context.Development.Package.Handlers
     /// </summary>
     /// <param name="model"></param>
     /// <param name="entity"></param>
-    private void ReadViews(ComponentModel model, ReferenceType entity)
+    private static void ReadViews(ComponentModel model, ReferenceType entity)
     {
-      if (model.DetailDataSets == null || model.DetailDataSets.DetailDataSet3 == null)
+      if (model.DetailDataSets?.DetailDataSet3 == null)
         return;
 
       foreach (var row in model.DetailDataSets.DetailDataSet3.Rows)
@@ -538,12 +540,12 @@ namespace IsblCheck.Context.Development.Package.Handlers
         if (hasUniqueRecordNamesReq != null)
           entity.HasUniqueRecordNames = hasUniqueRecordNamesReq.ValueLocalizeID == YesValue;
 
-        this.ReadMethods(model, entity);
-        this.ReadMethodsParameters(model, entity);
-        this.ReadActions(model, entity);
-        this.ReadEvents(model, entity);
-        this.ReadCardRequisites(model, entity);
-        this.ReadViews(model, entity);
+        ReadMethods(model, entity);
+        ReadMethodsParameters(model, entity);
+        ReadActions(model, entity);
+        ReadEvents(model, entity);
+        ReadCardRequisites(model, entity);
+        ReadViews(model, entity);
 
         yield return entity;
       }

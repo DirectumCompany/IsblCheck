@@ -1,7 +1,7 @@
-﻿using IsblCheck.Context.Development.Package.Models;
-using IsblCheck.Core.Context.Development;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using IsblCheck.Context.Development.Package.Models;
+using IsblCheck.Core.Context.Development;
 
 namespace IsblCheck.Context.Development.Package.Handlers
 {
@@ -37,8 +37,7 @@ namespace IsblCheck.Context.Development.Package.Handlers
       {
         var entity = PackageHandlerUtils.CreateEntity<LocalizationString>(model);
 
-        if (model.DetailDataSets != null &&
-            model.DetailDataSets.DetailDataSet1 != null)
+        if (model.DetailDataSets?.DetailDataSet1 != null)
         {
           var stringModels = model.DetailDataSets.DetailDataSet1.Rows;
           foreach (var stringModel in stringModels)

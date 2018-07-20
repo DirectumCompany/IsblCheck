@@ -5,6 +5,8 @@
  * ------------------------------------------------------------------------------------ 
  */
 
+// ReSharper disable InconsistentNaming
+
 namespace IsblCheck.Context.Application
 {
   internal static partial class Constants
@@ -93,6 +95,7 @@ namespace IsblCheck.Context.Application
     public const string SYSRES_CONST_ACTIVE_VERSION_STATE_PICK_VALUE = @"Действующая";
     public const string SYSRES_CONST_ADD_REFERENCE_MODE_NAME = @"ДОБАВЛЕНИЕ";
     public const string SYSRES_CONST_ADDITION_REQUISITE_CODE = @"Дополнение";
+    public const string SYSRES_CONST_ADDITION2_REQUISITE_CODE = @"Дополнение2";
     public const string SYSRES_CONST_ADDITIONAL_PARAMS_REQUISITE_CODE = @"ДопПараметры";
     public const string SYSRES_CONST_ADITIONAL_JOB_END_DATE_REQUISITE_NAME = @"Завершено";
     public const string SYSRES_CONST_ADITIONAL_JOB_READ_REQUISITE_NAME = @"Прочтено";
@@ -190,7 +193,6 @@ namespace IsblCheck.Context.Application
     public const string SYSRES_CONST_AUTO_NUMERATION_CODE = @"АВТОНОМЕР";
     public const string SYSRES_CONST_AUTO_STRONG_ENUM_METHOD_FLAG = @"А";
     public const string SYSRES_CONST_AUTOTEXT_NAME_REQUISITE_CODE = @"Дополнение";
-    public const string SYSRES_CONST_AUTOTEXT_TEXT_REQUISITE_CODE = @"Текст";
     public const string SYSRES_CONST_AUTOTEXT_USAGE_ALL = @"Без ограничения";
     public const string SYSRES_CONST_AUTOTEXT_USAGE_ALL_CODE = @"В";
     public const string SYSRES_CONST_AUTOTEXT_USAGE_SIGN = @"Подписание";
@@ -394,7 +396,6 @@ namespace IsblCheck.Context.Application
     public const string SYSRES_CONST_GROUP_NAME_REQUISITE_CODE = @"Дополнение";
     public const string SYSRES_CONST_GROUP_RIGHTS_T_REQUISITE_CODE = @"ГрПраваТ";
     public const string SYSRES_CONST_GROUP_SERVER_CODES_REQUISITE_CODE = @"СтрокаТ2";
-    public const string SYSRES_CONST_GROUP_SERVER_NAME_REQUISITE_CODE = @"Дополнение2";
     public const string SYSRES_CONST_GROUP_SERVICE_CATEGORY_FIELD_VALUE = @"С";
     public const string SYSRES_CONST_GROUP_USER_REQUISITE_CODE = @"ПользовательТ";
     public const string SYSRES_CONST_GROUPS_REFERENCE_CODE = @"ГПЛ";
@@ -638,6 +639,7 @@ namespace IsblCheck.Context.Application
     public const string SYSRES_CONST_SIGNATURE_AND_ENCODE_CERTIFICATE_TYPE_CODE = @"и";
     public const string SYSRES_CONST_SIGNATURE_CERTIFICATE_TYPE_CODE = @"Э";
     public const string SYSRES_CONST_SINGULAR_TITLE_REQUISITE_CODE = @"НаимВЕдЧсл";
+    public const string SYSRES_CONST_SOLUTION_VERSION_COMMENT = @"Текущая версия ""%s""";
     public const string SYSRES_CONST_SQL_SERVER_AUTHENTIFICATION_FLAG_VALUE_CODE = @"Н";
     public const string SYSRES_CONST_SQL_SERVER_ENCODE_AUTHENTIFICATION_FLAG_VALUE_CODE = @"Д";
     public const string SYSRES_CONST_STANDART_ROUTE_REFERENCE_CODE = @"ТМТ";

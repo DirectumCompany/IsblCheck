@@ -1,11 +1,11 @@
-﻿using Common.Logging;
-using IsblCheck.Context.Development.Package.Handlers;
-using IsblCheck.Context.Development.Package.Models;
-using IsblCheck.Core.Context.Development;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Common.Logging;
+using IsblCheck.Context.Development.Package.Handlers;
+using IsblCheck.Context.Development.Package.Models;
+using IsblCheck.Core.Context.Development;
 
 namespace IsblCheck.Context.Development.Folder.Handlers
 {
@@ -15,16 +15,6 @@ namespace IsblCheck.Context.Development.Folder.Handlers
   internal abstract class ReportFolderHandler<T> : FolderHandlerBase<T, ComponentModel> where T: Report
   {
     #region Константы
-
-    /// <summary>
-    /// Расчет.
-    /// </summary>
-    private const string CalculationTextReqName = "Расчет";
-
-    /// <summary>
-    /// Шаблон.
-    /// </summary>
-    private const string TemplateTextReqName = "Шаблон";
 
     /// <summary>
     /// Приложение.

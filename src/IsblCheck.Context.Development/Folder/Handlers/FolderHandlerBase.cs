@@ -1,9 +1,9 @@
-﻿using Common.Logging;
-using IsblCheck.Core.Context.Development;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
+using Common.Logging;
+using IsblCheck.Core.Context.Development;
 
 namespace IsblCheck.Context.Development.Folder.Handlers
 {
@@ -53,7 +53,7 @@ namespace IsblCheck.Context.Development.Folder.Handlers
 
       foreach (var componentFolderPath in Directory.EnumerateDirectories(targetDirectory))
       {
-        var model = this.ReadModel(Path.Combine(componentFolderPath, CardFileName), CardModelRootNode);
+        var model = ReadModel(Path.Combine(componentFolderPath, CardFileName), CardModelRootNode);
         foreach (var component in this.ReadComponents(model, componentFolderPath))
         {
           yield return component;
@@ -73,13 +73,13 @@ namespace IsblCheck.Context.Development.Folder.Handlers
     /// <returns>Список загруженных компонент</returns>
     protected abstract IEnumerable<T> ReadComponents(TModel model, string componentFolderPath);
 
-    private TModel ReadModel(string cardFilePath, string rootElementName)
+    private static TModel ReadModel(string cardFilePath, string rootElementName)
     {
       using (var fileStream = File.OpenRead(cardFilePath))
       {
         var settings = new XmlReaderSettings();
         var serializer = new XmlSerializer(typeof(TModel), new XmlRootAttribute(rootElementName));
-        using (XmlReader reader = XmlReader.Create(fileStream, settings))
+        using (var reader = XmlReader.Create(fileStream, settings))
         {
           return (TModel)serializer.Deserialize(reader);
         }

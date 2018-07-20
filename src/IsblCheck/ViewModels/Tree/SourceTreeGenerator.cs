@@ -1,10 +1,10 @@
-﻿using IsblCheck.Core.Checker;
-using IsblCheck.Core.Context.Development;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using IsblCheck.Core.Checker;
+using IsblCheck.Core.Context.Development;
 
 namespace IsblCheck.ViewModels.Tree
 {
@@ -29,6 +29,11 @@ namespace IsblCheck.ViewModels.Tree
     /// Иконка функций.
     /// </summary>
     private static readonly ImageSource FunctionsIcon;
+
+    /// <summary>
+    /// Иконка управляемых папок.
+    /// </summary>
+    private static readonly ImageSource ManagedFoldersIcon;
 
     /// <summary>
     /// Иконка типов справочников.
@@ -68,7 +73,7 @@ namespace IsblCheck.ViewModels.Tree
     /// Сгенерировать дерево исходных данных.
     /// </summary>
     /// <param name="rootTitle">Наименование корневого узла.</param>
-    /// <param name="provider">Провайдер исходных данных.</param>
+    /// <param name="context">Контекст с разработкой.</param>
     /// <returns>Список контейнеров типов компонент.</returns>
     public IEnumerable<ContainerTreeNode> Generate(string rootTitle, IDevelopmentContext context)
     {
@@ -93,6 +98,10 @@ namespace IsblCheck.ViewModels.Tree
       var integratedReports = context.IntegratedReports.Where(r => r.State == ComponentState.Active);
       var integratedReportsTreeNode = GenerateIntegratedReportsNode(integratedReports);
       componentTypes.Add(integratedReportsTreeNode);
+
+      var managedFolders = context.ManagedFolders.Where(r => r.State == ComponentState.Active);
+      var managedFoldersTreeNode = GenerateManagedFoldersNode(managedFolders);
+      componentTypes.Add(managedFoldersTreeNode);
 
       var referenceTypes = context.ReferenceTypes.Where(r => r.State == ComponentState.Active);
       var referenceTypesTreeNode = GenerateReferenceTypesNode(referenceTypes);
@@ -122,22 +131,22 @@ namespace IsblCheck.ViewModels.Tree
     /// </summary>
     /// <param name="commonReports">Коллекция отчетов.</param>
     /// <returns>Узел отчетов.</returns>
-    private ContainerTreeNode GenerateCommonReportsNode(IEnumerable<CommonReport> commonReports)
+    private static ContainerTreeNode GenerateCommonReportsNode(IEnumerable<CommonReport> commonReports)
     {
       var commonReportNodes = new List<ContainerTreeNode>();
       foreach (var commonReport in commonReports)
       {
-        var commonReportNode = new ContainerTreeNode();
-        commonReportNode.Title = commonReport.Title;
+        var commonReportNode = new ContainerTreeNode { Title = commonReport.Title };
 
-        var documentName = string.Format("Отчет {0}. Расчет", commonReport.Title);
-        var document = new Document(documentName, commonReport.CalculationText);
-        document.ComponentType = ComponentType.CommonReport;
-        document.ComponentName = commonReport.Name;
-        document.Path = "Calculation";
+        var documentName = $"Отчет {commonReport.Title}. Расчет";
+        var document = new Document(documentName, commonReport.CalculationText)
+        {
+          ComponentType = ComponentType.CommonReport,
+          ComponentName = commonReport.Name,
+          Path = "Calculation"
+        };
 
-        var documentNode = new DocumentTreeNode(document);
-        documentNode.Title = "Расчет";
+        var documentNode = new DocumentTreeNode(document) { Title = "Расчет" };
         commonReportNode.Items.Add(documentNode);
 
         // TODO: Пока не генерируем шаблоны, так как там могут быть
@@ -146,10 +155,12 @@ namespace IsblCheck.ViewModels.Tree
         commonReportNodes.Add(commonReportNode);
       }
 
-      var rootNode = new ContainerTreeNode(commonReportNodes);
-      rootNode.TitleLocalizationKey = "COMMON_REPORTS";
-      rootNode.IconSource = ReportsIcon;
-      rootNode.IsItemsCountVisible = true;
+      var rootNode = new ContainerTreeNode(commonReportNodes)
+      {
+        TitleLocalizationKey = "COMMON_REPORTS",
+        IconSource = ReportsIcon,
+        IsItemsCountVisible = true
+      };
       return rootNode;
     }
 
@@ -158,7 +169,7 @@ namespace IsblCheck.ViewModels.Tree
     /// </summary>
     /// <param name="dialogs">Коллекция диалогов.</param>
     /// <returns>Узел диалогов.</returns>
-    private ContainerTreeNode GenerateDialogsNode(IEnumerable<Dialog> dialogs)
+    private static ContainerTreeNode GenerateDialogsNode(IEnumerable<Dialog> dialogs)
     {
       var dialogNodes = new List<ContainerTreeNode>();
       foreach (var dialog in dialogs)
@@ -173,42 +184,45 @@ namespace IsblCheck.ViewModels.Tree
             continue;
           }
 
-          var documentName = string.Format("Диалог {0}. Действие {1}", dialog.Title, action.Name);
-          var document = new Document(documentName, action.CalculationText);
-          document.ComponentType = ComponentType.Dialog;
-          document.ComponentName = dialog.Name;
-          document.Path = string.Format("Actions.{0}", action.Name);
+          var documentName = $"Диалог {dialog.Title}. Действие {action.Name}";
+          var document = new Document(documentName, action.CalculationText)
+          {
+            ComponentType = ComponentType.Dialog,
+            ComponentName = dialog.Name,
+            Path = $"Actions.{action.Name}"
+          };
 
-          var documentNode = new DocumentTreeNode(document);
-          documentNode.Title = string.Format("Действие {0}", action.Name);
+          var documentNode = new DocumentTreeNode(document) { Title = $"Действие {action.Name}" };
           documentNodes.Add(documentNode);
         }
 
         foreach (var method in dialog.Methods)
         {
-          var documentName = string.Format("Диалог {0}. Метод {1}", dialog.Title, method.Name);
-          var document = new Document(documentName, method.CalculationText);
-          document.ComponentType = ComponentType.Dialog;
-          document.ComponentName = dialog.Name;
-          document.Path = string.Format("Methods.{0}", method.Name);
+          var documentName = $"Диалог {dialog.Title}. Метод {method.Name}";
+          var document = new Document(documentName, method.CalculationText)
+          {
+            ComponentType = ComponentType.Dialog,
+            ComponentName = dialog.Name,
+            Path = $"Methods.{method.Name}"
+          };
           document.ContextVariables.AddRange(method.Params.Select(p => p.Name.ToUpper()));
           document.ContextVariables.AddRange(method.Params.Select(p => "!" + p.Name.ToUpper()));
 
-          var documentNode = new DocumentTreeNode(document);
-          documentNode.Title = string.Format("Метод {0}", method.Name);
+          var documentNode = new DocumentTreeNode(document) { Title = $"Метод {method.Name}" };
           documentNodes.Add(documentNode);
         }
 
         foreach (var @event in dialog.Events)
         {
-          var documentName = string.Format("Диалог {0}. Событие {1}", dialog.Title, @event.EventType);
-          var document = new Document(documentName, @event.CalculationText);
-          document.ComponentType = ComponentType.Dialog;
-          document.ComponentName = dialog.Name;
-          document.Path = string.Format("Events.{0}", @event.EventType);
+          var documentName = $"Диалог {dialog.Title}. Событие {@event.EventType}";
+          var document = new Document(documentName, @event.CalculationText)
+          {
+            ComponentType = ComponentType.Dialog,
+            ComponentName = dialog.Name,
+            Path = $"Events.{@event.EventType}"
+          };
 
-          var documentNode = new DocumentTreeNode(document);
-          documentNode.Title = string.Format("Событие {0}", @event.EventType);
+          var documentNode = new DocumentTreeNode(document) { Title = $"Событие {@event.EventType}"};
           documentNodes.Add(documentNode);
         }
 
@@ -216,27 +230,32 @@ namespace IsblCheck.ViewModels.Tree
         {
           foreach (var @event in requisite.Events)
           {
-            var documentName = string.Format("Диалог {0}. Реквизит {1}. Событие {2}", dialog.Title, requisite.Name, @event.EventType);
-            var document = new Document(documentName, @event.CalculationText);
-            document.ComponentType = ComponentType.Dialog;
-            document.ComponentName = dialog.Name;
-            document.Path = string.Format("Requisites.{0}.Events.{1}", requisite.Name, @event.EventType);
+            var documentName = $"Диалог {dialog.Title}. Реквизит {requisite.Name}. Событие {@event.EventType}";
+            var document = new Document(documentName, @event.CalculationText)
+            {
+              ComponentType = ComponentType.Dialog,
+              ComponentName = dialog.Name,
+              Path = $"Requisites.{requisite.Name}.Events.{@event.EventType}"
+            };
 
-            var documentNode = new DocumentTreeNode(document);
-            documentNode.Title = string.Format("Реквизит {0}. Событие {1}", requisite.Name, @event.EventType);
+            var documentNode = new DocumentTreeNode(document)
+            {
+              Title = $"Реквизит {requisite.Name}. Событие {@event.EventType}"
+            };
             documentNodes.Add(documentNode);
           }
         }
 
-        var dialogNode = new ContainerTreeNode(documentNodes);
-        dialogNode.Title = dialog.Title;
+        var dialogNode = new ContainerTreeNode(documentNodes) { Title = dialog.Title };
         dialogNodes.Add(dialogNode);
       }
 
-      var rootNode = new ContainerTreeNode(dialogNodes);
-      rootNode.TitleLocalizationKey = "DIALOGS";
-      rootNode.IconSource = DialogsIcon;
-      rootNode.IsItemsCountVisible = true;
+      var rootNode = new ContainerTreeNode(dialogNodes)
+      {
+        TitleLocalizationKey = "DIALOGS",
+        IconSource = DialogsIcon,
+        IsItemsCountVisible = true
+      };
       return rootNode;
     }
 
@@ -245,7 +264,7 @@ namespace IsblCheck.ViewModels.Tree
     /// </summary>
     /// <param name="documentCardTypes">Коллекция типов карточек электронных документов.</param>
     /// <returns>Узел типов карточек электронных документов.</returns>
-    private ContainerTreeNode GenerateDocumentCardTypesNode(IEnumerable<DocumentCardType> documentCardTypes)
+    private static ContainerTreeNode GenerateDocumentCardTypesNode(IEnumerable<DocumentCardType> documentCardTypes)
     {
       var documentCardTypeNodes = new List<ContainerTreeNode>();
       foreach (var documentCardType in documentCardTypes)
@@ -260,42 +279,45 @@ namespace IsblCheck.ViewModels.Tree
             continue;
           }
 
-          var documentName = string.Format("Тип карточки электронного документа {0}. Действие {1}", documentCardType.Title, action.Name);
-          var document = new Document(documentName, action.CalculationText);
-          document.ComponentType = ComponentType.DocumentCardType;
-          document.ComponentName = documentCardType.Name;
-          document.Path = string.Format("Actions.{0}", action.Name);
+          var documentName = $"Тип карточки электронного документа {documentCardType.Title}. Действие {action.Name}";
+          var document = new Document(documentName, action.CalculationText)
+          {
+            ComponentType = ComponentType.DocumentCardType,
+            ComponentName = documentCardType.Name,
+            Path = $"Actions.{action.Name}"
+          };
 
-          var documentNode = new DocumentTreeNode(document);
-          documentNode.Title = string.Format("Действие {0}", action.Name);
+          var documentNode = new DocumentTreeNode(document) { Title = $"Действие {action.Name}"};
           documentNodes.Add(documentNode);
         }
 
         foreach (var method in documentCardType.Methods)
         {
-          var documentName = string.Format("Тип карточки электронного документа {0}. Метод {1}", documentCardType.Title, method.Name);
-          var document = new Document(documentName, method.CalculationText);
-          document.ComponentType = ComponentType.DocumentCardType;
-          document.ComponentName = documentCardType.Name;
-          document.Path = string.Format("Methods.{0}", method.Name);
+          var documentName = $"Тип карточки электронного документа {documentCardType.Title}. Метод {method.Name}";
+          var document = new Document(documentName, method.CalculationText)
+          {
+            ComponentType = ComponentType.DocumentCardType,
+            ComponentName = documentCardType.Name,
+            Path = $"Methods.{method.Name}"
+          };
           document.ContextVariables.AddRange(method.Params.Select(p => p.Name.ToUpper()));
           document.ContextVariables.AddRange(method.Params.Select(p => "!" + p.Name.ToUpper()));
 
-          var documentNode = new DocumentTreeNode(document);
-          documentNode.Title = string.Format("Метод {0}", method.Name);
+          var documentNode = new DocumentTreeNode(document) { Title = $"Метод {method.Name}"};
           documentNodes.Add(documentNode);
         }
 
         foreach (var @event in documentCardType.Events)
         {
-          var documentName = string.Format("Тип карточки электронного документа {0}. Событие {1}", documentCardType.Title, @event.EventType);
-          var document = new Document(documentName, @event.CalculationText);
-          document.ComponentType = ComponentType.DocumentCardType;
-          document.ComponentName = documentCardType.Name;
-          document.Path = string.Format("Events.{0}", @event.EventType);
+          var documentName = $"Тип карточки электронного документа {documentCardType.Title}. Событие {@event.EventType}";
+          var document = new Document(documentName, @event.CalculationText)
+          {
+            ComponentType = ComponentType.DocumentCardType,
+            ComponentName = documentCardType.Name,
+            Path = $"Events.{@event.EventType}"
+          };
 
-          var documentNode = new DocumentTreeNode(document);
-          documentNode.Title = string.Format("Событие {0}", @event.EventType);
+          var documentNode = new DocumentTreeNode(document) { Title = $"Событие {@event.EventType}"};
           documentNodes.Add(documentNode);
         }
 
@@ -303,27 +325,32 @@ namespace IsblCheck.ViewModels.Tree
         {
           foreach (var @event in requisite.Events)
           {
-            var documentName = string.Format("Тип карточки электронного документа {0}. Реквизит {1}. Событие {2}", documentCardType.Title, requisite.Name, @event.EventType);
-            var document = new Document(documentName, @event.CalculationText);
-            document.ComponentType = ComponentType.DocumentCardType;
-            document.ComponentName = documentCardType.Name;
-            document.Path = string.Format("Requisites.{0}.Events.{1}", requisite.Name, @event.EventType);
+            var documentName = $"Тип карточки электронного документа {documentCardType.Title}. Реквизит {requisite.Name}. Событие {@event.EventType}";
+            var document = new Document(documentName, @event.CalculationText)
+            {
+              ComponentType = ComponentType.DocumentCardType,
+              ComponentName = documentCardType.Name,
+              Path = $"Requisites.{requisite.Name}.Events.{@event.EventType}"
+            };
 
-            var documentNode = new DocumentTreeNode(document);
-            documentNode.Title = string.Format("Реквизит {0}. Событие {1}", requisite.Name, @event.EventType);
+            var documentNode = new DocumentTreeNode(document)
+            {
+              Title = $"Реквизит {requisite.Name}. Событие {@event.EventType}"
+            };
             documentNodes.Add(documentNode);
           }
         }
 
-        var documentCardTypeNode = new ContainerTreeNode(documentNodes);
-        documentCardTypeNode.Title = documentCardType.Title;
+        var documentCardTypeNode = new ContainerTreeNode(documentNodes) { Title = documentCardType.Title };
         documentCardTypeNodes.Add(documentCardTypeNode);
       }
 
-      var rootNode = new ContainerTreeNode(documentCardTypeNodes);
-      rootNode.TitleLocalizationKey = "DOCUMENT_CARD_TYPES";
-      rootNode.IconSource = DocumentCardTypesIcon;
-      rootNode.IsItemsCountVisible = true;
+      var rootNode = new ContainerTreeNode(documentCardTypeNodes)
+      {
+        TitleLocalizationKey = "DOCUMENT_CARD_TYPES",
+        IconSource = DocumentCardTypesIcon,
+        IsItemsCountVisible = true
+      };
       return rootNode;
     }
 
@@ -332,33 +359,35 @@ namespace IsblCheck.ViewModels.Tree
     /// </summary>
     /// <param name="functions">Коллекция функций.</param>
     /// <returns>Узел функций.</returns>
-    private ContainerTreeNode GenerateFunctionsNode(IEnumerable<Function> functions)
+    private static ContainerTreeNode GenerateFunctionsNode(IEnumerable<Function> functions)
     {
       var functionNodes = new List<ContainerTreeNode>();
       foreach (var function in functions)
       {
-        var functionNode = new ContainerTreeNode();
-        functionNode.Title = function.Title;
+        var functionNode = new ContainerTreeNode { Title = function.Title };
 
-        var documentName = string.Format("Функция {0}. Вычисление", function.Title);
-        var document = new Document(documentName, function.CalculationText);
-        document.ComponentType = ComponentType.Function;
-        document.ComponentName = function.Name;
-        document.Path = "Calculation";
+        var documentName = $"Функция {function.Title}. Вычисление";
+        var document = new Document(documentName, function.CalculationText)
+        {
+          ComponentType = ComponentType.Function,
+          ComponentName = function.Name,
+          Path = "Calculation"
+        };
         document.ContextVariables.AddRange(function.Arguments.Select(a => a.Name.ToUpper()));
         document.ContextVariables.AddRange(function.Arguments.Select(a => "!" + a.Name.ToUpper()));
 
-        var documentNode = new DocumentTreeNode(document);
-        documentNode.Title = "Вычисление";
+        var documentNode = new DocumentTreeNode(document) { Title = "Вычисление" };
         functionNode.Items.Add(documentNode);
 
         functionNodes.Add(functionNode);
       }
 
-      var rootNode = new ContainerTreeNode(functionNodes);
-      rootNode.TitleLocalizationKey = "FUNCTIONS";
-      rootNode.IconSource = FunctionsIcon;
-      rootNode.IsItemsCountVisible = true;
+      var rootNode = new ContainerTreeNode(functionNodes)
+      {
+        TitleLocalizationKey = "FUNCTIONS",
+        IconSource = FunctionsIcon,
+        IsItemsCountVisible = true
+      };
       return rootNode;
     }
 
@@ -367,22 +396,22 @@ namespace IsblCheck.ViewModels.Tree
     /// </summary>
     /// <param name="integratedReports">Коллекция интегрированных отчетов.</param>
     /// <returns>Узел интегрированных отчетов.</returns>
-    private ContainerTreeNode GenerateIntegratedReportsNode(IEnumerable<IntegratedReport> integratedReports)
+    private static ContainerTreeNode GenerateIntegratedReportsNode(IEnumerable<IntegratedReport> integratedReports)
     {
       var integratedReportNodes = new List<ContainerTreeNode>();
       foreach (var integratedReport in integratedReports)
       {
-        var integratedReportNode = new ContainerTreeNode();
-        integratedReportNode.Title = integratedReport.Title;
+        var integratedReportNode = new ContainerTreeNode { Title = integratedReport.Title };
 
-        var documentName = string.Format("Интегрированный отчет {0}. Расчет", integratedReport.Title);
-        var document = new Document(documentName, integratedReport.CalculationText);
-        document.ComponentType = ComponentType.IntegratedReport;
-        document.ComponentName = integratedReport.Name;
-        document.Path = "Calculation";
+        var documentName = $"Интегрированный отчет {integratedReport.Title}. Расчет";
+        var document = new Document(documentName, integratedReport.CalculationText)
+        {
+          ComponentType = ComponentType.IntegratedReport,
+          ComponentName = integratedReport.Name,
+          Path = "Calculation"
+        };
 
-        var documentNode = new DocumentTreeNode(document);
-        documentNode.Title = "Расчет";
+        var documentNode = new DocumentTreeNode(document) { Title = "Расчет" };
         integratedReportNode.Items.Add(documentNode);
 
         // TODO: Пока не генерируем шаблоны, так как там могут быть
@@ -391,10 +420,87 @@ namespace IsblCheck.ViewModels.Tree
         integratedReportNodes.Add(integratedReportNode);
       }
 
-      var rootNode = new ContainerTreeNode(integratedReportNodes);
-      rootNode.TitleLocalizationKey = "INTEGRATED_REPORTS";
-      rootNode.IconSource = ReportsIcon;
-      rootNode.IsItemsCountVisible = true;
+      var rootNode = new ContainerTreeNode(integratedReportNodes)
+      {
+        TitleLocalizationKey = "INTEGRATED_REPORTS",
+        IconSource = ReportsIcon,
+        IsItemsCountVisible = true
+      };
+      return rootNode;
+    }
+
+    /// <summary>
+    /// Сгенерировать узел управляемых папок.
+    /// </summary>
+    /// <param name="managedFolders">Коллекция управляемых папок.</param>
+    /// <returns>Узел управляемых папок.</returns>
+    private static ContainerTreeNode GenerateManagedFoldersNode(IEnumerable<ManagedFolder> managedFolders)
+    {
+      var managedFolderNodes = new List<ContainerTreeNode>();
+      foreach (var managedFolder in managedFolders)
+      {
+        var documentNodes = new List<DocumentTreeNode>();
+
+        foreach (var action in managedFolder.Actions)
+        {
+          if (action.ExecutionHandler != null)
+          {
+            // Не добавлять в дерево действия, которые привязаны к методам.
+            continue;
+          }
+
+          var documentName = $"Управляемая папка {managedFolder.Title}. Действие {action.Name}";
+          var document = new Document(documentName, action.CalculationText)
+          {
+            ComponentType = ComponentType.ManagedFolder,
+            ComponentName = managedFolder.Name,
+            Path = $"Actions.{action.Name}"
+          };
+
+          var documentNode = new DocumentTreeNode(document) { Title = $"Действие {action.Name}" };
+          documentNodes.Add(documentNode);
+        }
+
+        foreach (var method in managedFolder.Methods)
+        {
+          var documentName = $"Управляемая папка {managedFolder.Title}. Метод {method.Name}";
+          var document = new Document(documentName, method.CalculationText)
+          {
+            ComponentType = ComponentType.ManagedFolder,
+            ComponentName = managedFolder.Name,
+            Path = $"Methods.{method.Name}"
+          };
+          document.ContextVariables.AddRange(method.Params.Select(p => p.Name.ToUpper()));
+          document.ContextVariables.AddRange(method.Params.Select(p => "!" + p.Name.ToUpper()));
+
+          var documentNode = new DocumentTreeNode(document) { Title = $"Метод {method.Name}" };
+          documentNodes.Add(documentNode);
+        }
+
+        if (managedFolder.SearchDescription != null)
+        {
+          var documentName = $"Управляемая папка {managedFolder.Title}. Событие \"До поиска\"";
+          var document = new Document(documentName, managedFolder.SearchDescription.BeforeSearchEventText)
+          {
+            ComponentType = ComponentType.ManagedFolder,
+            ComponentName = managedFolder.Name,
+            Path = "Events.BeforeSearch"
+          };
+
+          var documentNode = new DocumentTreeNode(document) { Title = "Событие \"До поиска\"" };
+          documentNodes.Add(documentNode);
+        }
+
+        var managedFolderNode = new ContainerTreeNode(documentNodes) { Title = managedFolder.Title };
+        managedFolderNodes.Add(managedFolderNode);
+      }
+
+      var rootNode = new ContainerTreeNode(managedFolderNodes)
+      {
+        TitleLocalizationKey = "MANAGED_FOLDERS",
+        IconSource = ManagedFoldersIcon,
+        IsItemsCountVisible = true
+      };
       return rootNode;
     }
 
@@ -403,7 +509,7 @@ namespace IsblCheck.ViewModels.Tree
     /// </summary>
     /// <param name="referenceTypes">Коллекция типов справочников.</param>
     /// <returns>Узел типов справочников.</returns>
-    private ContainerTreeNode GenerateReferenceTypesNode(IEnumerable<ReferenceType> referenceTypes)
+    private static ContainerTreeNode GenerateReferenceTypesNode(IEnumerable<ReferenceType> referenceTypes)
     {
       var referenceTypeNodes = new List<ContainerTreeNode>();
       foreach (var referenceType in referenceTypes)
@@ -418,42 +524,45 @@ namespace IsblCheck.ViewModels.Tree
             continue;
           }
 
-          var documentName = string.Format("Тип справочника {0}. Действие {1}", referenceType.Title, action.Name);
-          var document = new Document(documentName, action.CalculationText);
-          document.ComponentType = ComponentType.ReferenceType;
-          document.ComponentName = referenceType.Name;
-          document.Path = string.Format("Actions.{0}", action.Name);
+          var documentName = $"Тип справочника {referenceType.Title}. Действие {action.Name}";
+          var document = new Document(documentName, action.CalculationText)
+          {
+            ComponentType = ComponentType.ReferenceType,
+            ComponentName = referenceType.Name,
+            Path = $"Actions.{action.Name}"
+          };
 
-          var documentNode = new DocumentTreeNode(document);
-          documentNode.Title = string.Format("Действие {0}", action.Name);
+          var documentNode = new DocumentTreeNode(document) { Title = $"Действие {action.Name}"};
           documentNodes.Add(documentNode);
         }
 
         foreach (var method in referenceType.Methods)
         {
-          var documentName = string.Format("Тип справочника {0}. Метод {1}", referenceType.Title, method.Name);
-          var document = new Document(documentName, method.CalculationText);
-          document.ComponentType = ComponentType.ReferenceType;
-          document.ComponentName = referenceType.Name;
-          document.Path = string.Format("Methods.{0}", method.Name);
+          var documentName = $"Тип справочника {referenceType.Title}. Метод {method.Name}";
+          var document = new Document(documentName, method.CalculationText)
+          {
+            ComponentType = ComponentType.ReferenceType,
+            ComponentName = referenceType.Name,
+            Path = $"Methods.{method.Name}"
+          };
           document.ContextVariables.AddRange(method.Params.Select(p => p.Name.ToUpper()));
           document.ContextVariables.AddRange(method.Params.Select(p => "!" + p.Name.ToUpper()));
 
-          var documentNode = new DocumentTreeNode(document);
-          documentNode.Title = string.Format("Метод {0}", method.Name);
+          var documentNode = new DocumentTreeNode(document) { Title = $"Метод {method.Name}"};
           documentNodes.Add(documentNode);
         }
 
         foreach (var @event in referenceType.Events)
         {
-          var documentName = string.Format("Тип справочника {0}. Событие {1}", referenceType.Title, @event.EventType);
-          var document = new Document(documentName, @event.CalculationText);
-          document.ComponentType = ComponentType.ReferenceType;
-          document.ComponentName = referenceType.Name;
-          document.Path = string.Format("Events.{0}", @event.EventType);
+          var documentName = $"Тип справочника {referenceType.Title}. Событие {@event.EventType}";
+          var document = new Document(documentName, @event.CalculationText)
+          {
+            ComponentType = ComponentType.ReferenceType,
+            ComponentName = referenceType.Name,
+            Path = $"Events.{@event.EventType}"
+          };
 
-          var documentNode = new DocumentTreeNode(document);
-          documentNode.Title = string.Format("Событие {0}", @event.EventType);
+          var documentNode = new DocumentTreeNode(document) { Title = $"Событие {@event.EventType}"};
           documentNodes.Add(documentNode);
         }
 
@@ -461,27 +570,32 @@ namespace IsblCheck.ViewModels.Tree
         {
           foreach (var @event in requisite.Events)
           {
-            var documentName = string.Format("Тип справочника {0}. Реквизит {1}. Событие {2}", referenceType.Title, requisite.Name, @event.EventType);
-            var document = new Document(documentName, @event.CalculationText);
-            document.ComponentType = ComponentType.ReferenceType;
-            document.ComponentName = referenceType.Name;
-            document.Path = string.Format("Requisites.{0}.Events.{1}", requisite.Name, @event.EventType);
+            var documentName = $"Тип справочника {referenceType.Title}. Реквизит {requisite.Name}. Событие {@event.EventType}";
+            var document = new Document(documentName, @event.CalculationText)
+            {
+              ComponentType = ComponentType.ReferenceType,
+              ComponentName = referenceType.Name,
+              Path = $"Requisites.{requisite.Name}.Events.{@event.EventType}"
+            };
 
-            var documentNode = new DocumentTreeNode(document);
-            documentNode.Title = string.Format("Реквизит {0}. Событие {1}", requisite.Name, @event.EventType);
+            var documentNode = new DocumentTreeNode(document)
+            {
+              Title = $"Реквизит {requisite.Name}. Событие {@event.EventType}"
+            };
             documentNodes.Add(documentNode);
           }
         }
 
-        var referenceTypeNode = new ContainerTreeNode(documentNodes);
-        referenceTypeNode.Title = referenceType.Title;
+        var referenceTypeNode = new ContainerTreeNode(documentNodes) { Title = referenceType.Title };
         referenceTypeNodes.Add(referenceTypeNode);
       }
 
-      var rootNode = new ContainerTreeNode(referenceTypeNodes);
-      rootNode.TitleLocalizationKey = "REFERENCE_TYPES";
-      rootNode.IconSource = ReferenceTypesIcon;
-      rootNode.IsItemsCountVisible = true;
+      var rootNode = new ContainerTreeNode(referenceTypeNodes)
+      {
+        TitleLocalizationKey = "REFERENCE_TYPES",
+        IconSource = ReferenceTypesIcon,
+        IsItemsCountVisible = true
+      };
       return rootNode;
     }
 
@@ -490,31 +604,33 @@ namespace IsblCheck.ViewModels.Tree
     /// </summary>
     /// <param name="scripts">Коллекция сценариев.</param>
     /// <returns>Узел сценариев.</returns>
-    private ContainerTreeNode GenerateScriptsNode(IEnumerable<Script> scripts)
+    private static ContainerTreeNode GenerateScriptsNode(IEnumerable<Script> scripts)
     {
       var scriptNodes = new List<ContainerTreeNode>();
       foreach (var script in scripts)
       {
-        var scriptNode = new ContainerTreeNode();
-        scriptNode.Title = script.Title;
+        var scriptNode = new ContainerTreeNode { Title = script.Title };
 
-        var documentName = string.Format("Сценарий {0}. Вычисление", script.Title);
-        var document = new Document(documentName, script.CalculationText);
-        document.ComponentType = ComponentType.Script;
-        document.ComponentName = script.Name;
-        document.Path = "Calculation";
+        var documentName = $"Сценарий {script.Title}. Вычисление";
+        var document = new Document(documentName, script.CalculationText)
+        {
+          ComponentType = ComponentType.Script,
+          ComponentName = script.Name,
+          Path = "Calculation"
+        };
 
-        var documentNode = new DocumentTreeNode(document);
-        documentNode.Title = "Вычисление";
+        var documentNode = new DocumentTreeNode(document) { Title = "Вычисление" };
         scriptNode.Items.Add(documentNode);
 
         scriptNodes.Add(scriptNode);
       }
 
-      var rootNode = new ContainerTreeNode(scriptNodes);
-      rootNode.TitleLocalizationKey = "SCRIPTS";
-      rootNode.IconSource = ScriptsIcon;
-      rootNode.IsItemsCountVisible = true;
+      var rootNode = new ContainerTreeNode(scriptNodes)
+      {
+        TitleLocalizationKey = "SCRIPTS",
+        IconSource = ScriptsIcon,
+        IsItemsCountVisible = true
+      };
       return rootNode;
     }
 
@@ -523,7 +639,7 @@ namespace IsblCheck.ViewModels.Tree
     /// </summary>
     /// <param name="routeBlocks">Коллекция блоков.</param>
     /// <returns>Узел блоков типовых маршрутов.</returns>
-    private ContainerTreeNode GenerateRouteBlocksNode(IEnumerable<RouteBlock> routeBlocks)
+    private static ContainerTreeNode GenerateRouteBlocksNode(IEnumerable<RouteBlock> routeBlocks)
     {
       var routeBlockNodes = new List<ContainerTreeNode>();
       foreach (var block in routeBlocks.Where(b => b.WorkflowBlock != null))
@@ -534,10 +650,12 @@ namespace IsblCheck.ViewModels.Tree
         foreach (var @event in block.WorkflowBlock.Events.Where(e => !string.IsNullOrEmpty(e.CalculationText)))
         {
           var documentName = $"Блок {block.Name}. Событие \"{@event.Title}\"";
-          var document = new Document(documentName, @event.CalculationText);
-          document.ComponentType = ComponentType.RouteBlock;
-          document.ComponentName = block.Name;
-          document.Path = $"Events.{@event.Name}";
+          var document = new Document(documentName, @event.CalculationText)
+          {
+            ComponentType = ComponentType.RouteBlock,
+            ComponentName = block.Name,
+            Path = $"Events.{@event.Name}"
+          };
 
           documentNodes.Add(new DocumentTreeNode(document) { Title = $"Событие \"{@event.Title}\"" });
         }
@@ -547,10 +665,12 @@ namespace IsblCheck.ViewModels.Tree
         foreach (var action in block.WorkflowBlock.Actions)
         {
           var documentName = $"Блок {block.Name}. Действие \"{action.Name}\"";
-          var document = new Document(documentName, action.CalculationText);
-          document.ComponentType = ComponentType.RouteBlock;
-          document.ComponentName = block.Name;
-          document.Path = $"Actions.{action.Name}";
+          var document = new Document(documentName, action.CalculationText)
+          {
+            ComponentType = ComponentType.RouteBlock,
+            ComponentName = block.Name,
+            Path = $"Actions.{action.Name}"
+          };
 
           documentNodes.Add(new DocumentTreeNode(document) { Title = $"Действие \"{action.Name}\"" });
         }
@@ -560,22 +680,26 @@ namespace IsblCheck.ViewModels.Tree
         foreach (var isblProp in block.WorkflowBlock.IsblProperties.Where(e => !string.IsNullOrEmpty(e.CalculationText)))
         {
           var documentName = $"Блок {block.Name}. Свойство \"{isblProp.Title}\"";
-          var document = new Document(documentName, isblProp.CalculationText);
-          document.ComponentType = ComponentType.RouteBlock;
-          document.ComponentName = block.Name;
-          document.Path = $"Properties.{isblProp.Name}";
+          var document = new Document(documentName, isblProp.CalculationText)
+          {
+            ComponentType = ComponentType.RouteBlock,
+            ComponentName = block.Name,
+            Path = $"Properties.{isblProp.Name}"
+          };
 
           documentNodes.Add(new DocumentTreeNode(document) { Title = $"Свойство \"{isblProp.Title}\"" });
-        } 
+        }
         #endregion
 
         routeBlockNodes.Add(new ContainerTreeNode(documentNodes) { Title = block.Title });
       }
 
-      var rootNode = new ContainerTreeNode(routeBlockNodes);
-      rootNode.TitleLocalizationKey = "ROUTE_BLOCKS";
-      rootNode.IconSource = RouteBlocksIcon;
-      rootNode.IsItemsCountVisible = true;
+      var rootNode = new ContainerTreeNode(routeBlockNodes)
+      {
+        TitleLocalizationKey = "ROUTE_BLOCKS",
+        IconSource = RouteBlocksIcon,
+        IsItemsCountVisible = true
+      };
       return rootNode;
     }
 
@@ -584,7 +708,7 @@ namespace IsblCheck.ViewModels.Tree
     /// </summary>
     /// <param name="standardRoutes">Коллекция типовых маршрутов.</param>
     /// <returns>Узел типовых маршрутов.</returns>
-    private ContainerTreeNode GenerateStandardRoutesNode(IEnumerable<StandardRoute> standardRoutes)
+    private static ContainerTreeNode GenerateStandardRoutesNode(IEnumerable<StandardRoute> standardRoutes)
     {
       var standardRouteNodes = new List<ContainerTreeNode>();
       foreach (var route in standardRoutes.Where(r => r.WorkflowDescription != null))
@@ -592,14 +716,16 @@ namespace IsblCheck.ViewModels.Tree
         var documentNodes = new List<DocumentTreeNode>();
 
         #region События ТМ
-        
+
         foreach (var @event in route.WorkflowDescription.Events.Where(e => !string.IsNullOrEmpty(e.CalculationText)))
         {
           var documentName = $"ТМ \"{route.Title}\". Событие \"{@event.Title}\"";
-          var document = new Document(documentName, @event.CalculationText);
-          document.ComponentType = ComponentType.StandardRoute;
-          document.ComponentName = route.Name;
-          document.Path = $"Events.{@event.Name}";
+          var document = new Document(documentName, @event.CalculationText)
+          {
+            ComponentType = ComponentType.StandardRoute,
+            ComponentName = route.Name,
+            Path = $"Events.{@event.Name}"
+          };
 
           documentNodes.Add(new DocumentTreeNode(document) { Title = $"Событие \"{@event.Title}\"" });
         }
@@ -611,10 +737,12 @@ namespace IsblCheck.ViewModels.Tree
         foreach (var action in route.WorkflowDescription.Actions)
         {
           var documentName = $"ТМ \"{route.Title}\". Действие \"{action.Name}\"";
-          var document = new Document(documentName, action.CalculationText);
-          document.ComponentType = ComponentType.StandardRoute;
-          document.ComponentName = route.Name;
-          document.Path = $"Actions.{action.Name}";
+          var document = new Document(documentName, action.CalculationText)
+          {
+            ComponentType = ComponentType.StandardRoute,
+            ComponentName = route.Name,
+            Path = $"Actions.{action.Name}"
+          };
 
           documentNodes.Add(new DocumentTreeNode(document) { Title = $"Действие \"{action.Name}\"" });
         }
@@ -632,45 +760,57 @@ namespace IsblCheck.ViewModels.Tree
           foreach (var @event in block.Events.Where(e => !string.IsNullOrEmpty(e.CalculationText)))
           {
             var documentName = $"{fullBlockDescription}. Событие \"{@event.Title}\"";
-            var document = new Document(documentName, @event.CalculationText);
-            document.ComponentType = ComponentType.StandardRoute;
-            document.ComponentName = route.Name;
-            document.Path = $"Blocks.{block.Id}.Events.{@event.Name}";
+            var document = new Document(documentName, @event.CalculationText)
+            {
+              ComponentType = ComponentType.StandardRoute,
+              ComponentName = route.Name,
+              Path = $"Blocks.{block.Id}.Events.{@event.Name}"
+            };
 
-            var documentNode = new DocumentTreeNode(document);
-            documentNode.Title = $"{blockDescription}. Событие \"{@event.Title}\"";
+            var documentNode = new DocumentTreeNode(document)
+            {
+              Title = $"{blockDescription}. Событие \"{@event.Title}\""
+            };
             documentNodes.Add(documentNode);
-          } 
+          }
           #endregion
 
           #region Действия блока
           foreach (var action in block.Actions)
           {
             var documentName = $"{fullBlockDescription}. Действие \"{action.Name}\"";
-            var document = new Document(documentName, action.CalculationText);
-            document.ComponentType = ComponentType.StandardRoute;
-            document.ComponentName = route.Name;
-            document.Path = $"Blocks.{block.Id}.Actions.{action.Name}";
+            var document = new Document(documentName, action.CalculationText)
+            {
+              ComponentType = ComponentType.StandardRoute,
+              ComponentName = route.Name,
+              Path = $"Blocks.{block.Id}.Actions.{action.Name}"
+            };
 
-            var documentNode = new DocumentTreeNode(document);
-            documentNode.Title = $"{blockDescription}. Действие \"{action.Name}\"";
+            var documentNode = new DocumentTreeNode(document)
+            {
+              Title = $"{blockDescription}. Действие \"{action.Name}\""
+            };
             documentNodes.Add(documentNode);
-          } 
+          }
           #endregion
 
           #region Вычисления свойств блока
           foreach (var isblProp in block.IsblProperties.Where(e => !string.IsNullOrEmpty(e.CalculationText)))
           {
             var documentName = $"{fullBlockDescription}. Свойство \"{isblProp.Title}\"";
-            var document = new Document(documentName, isblProp.CalculationText);
-            document.ComponentType = ComponentType.StandardRoute;
-            document.ComponentName = route.Name;
-            document.Path = $"Blocks.{block.Id}.Properties.{isblProp.Name}";
+            var document = new Document(documentName, isblProp.CalculationText)
+            {
+              ComponentType = ComponentType.StandardRoute,
+              ComponentName = route.Name,
+              Path = $"Blocks.{block.Id}.Properties.{isblProp.Name}"
+            };
 
-            var documentNode = new DocumentTreeNode(document);
-            documentNode.Title = $"{blockDescription}. Свойство \"{isblProp.Title}\"";
+            var documentNode = new DocumentTreeNode(document)
+            {
+              Title = $"{blockDescription}. Свойство \"{isblProp.Title}\""
+            };
             documentNodes.Add(documentNode);
-          } 
+          }
           #endregion
         }
 
@@ -679,10 +819,12 @@ namespace IsblCheck.ViewModels.Tree
         #endregion
       }
 
-      var rootNode = new ContainerTreeNode(standardRouteNodes);
-      rootNode.TitleLocalizationKey = "STANDARD_ROUTES";
-      rootNode.IconSource = StandardRoutesIcon;
-      rootNode.IsItemsCountVisible = true;
+      var rootNode = new ContainerTreeNode(standardRouteNodes)
+      {
+        TitleLocalizationKey = "STANDARD_ROUTES",
+        IconSource = StandardRoutesIcon,
+        IsItemsCountVisible = true
+      };
       return rootNode;
     }
 
@@ -691,7 +833,7 @@ namespace IsblCheck.ViewModels.Tree
     /// </summary>
     /// <param name="wizards">Коллекция мастеров действий.</param>
     /// <returns>Узел мастеров действий.</returns>
-    private ContainerTreeNode GenerateWizardsTreeNode(IEnumerable<Wizard> wizards)
+    private static ContainerTreeNode GenerateWizardsTreeNode(IEnumerable<Wizard> wizards)
     {
       var wizardNodes = new List<ContainerTreeNode>();
       foreach (var wizard in wizards)
@@ -703,10 +845,12 @@ namespace IsblCheck.ViewModels.Tree
         foreach (var @event in wizard.Events)
         {
           var documentName = $"Мастер \"{wizard.Title}\". Событие \"{@event.Title}\"";
-          var document = new Document(documentName, @event.CalculationText);
-          document.ComponentType = ComponentType.Wizard;
-          document.ComponentName = wizard.Name;
-          document.Path = $"Events.{@event.Name}";
+          var document = new Document(documentName, @event.CalculationText)
+          {
+            ComponentType = ComponentType.Wizard,
+            ComponentName = wizard.Name,
+            Path = $"Events.{@event.Name}"
+          };
 
           documentNodes.Add(new DocumentTreeNode(document) { Title = $"Событие \"{@event.Title}\"" });
         }
@@ -715,7 +859,7 @@ namespace IsblCheck.ViewModels.Tree
 
         #region Этапы мастера
 
-        for (int stepIndex = 0; stepIndex < wizard.Steps.Count; stepIndex++)
+        for (var stepIndex = 0; stepIndex < wizard.Steps.Count; stepIndex++)
         {
           var step = wizard.Steps[stepIndex];
 
@@ -725,26 +869,31 @@ namespace IsblCheck.ViewModels.Tree
           foreach (var @event in step.Events)
           {
             var documentName = $"{fullStepDescription}. Событие \"{@event.Title}\"";
-            var document = new Document(documentName, @event.CalculationText);
-            document.ComponentType = ComponentType.Wizard;
-            document.ComponentName = wizard.Name;
-            document.Path = $"Steps.{stepIndex}.Events.{@event.Name}";
+            var document = new Document(documentName, @event.CalculationText)
+            {
+              ComponentType = ComponentType.Wizard,
+              ComponentName = wizard.Name,
+              Path = $"Steps.{stepIndex}.Events.{@event.Name}"
+            };
 
-            var documentNode = new DocumentTreeNode(document);
-            documentNode.Title = $"{stepDescription}. Событие \"{@event.Title}\"";
+            var documentNode = new DocumentTreeNode(document) { Title = $"{stepDescription}. Событие \"{@event.Title}\"" };
             documentNodes.Add(documentNode);
           }
 
           foreach (var action in step.Actions)
           {
             var documentName = $"{fullStepDescription}. Действие \"{action.Title}\"";
-            var document = new Document(documentName, action.CalculationText);
-            document.ComponentType = ComponentType.Wizard;
-            document.ComponentName = wizard.Name;
-            document.Path = $"Steps.{stepIndex}.Actions.{action.Name}";
+            var document = new Document(documentName, action.CalculationText)
+            {
+              ComponentType = ComponentType.Wizard,
+              ComponentName = wizard.Name,
+              Path = $"Steps.{stepIndex}.Actions.{action.Name}"
+            };
 
-            var documentNode = new DocumentTreeNode(document);
-            documentNode.Title = $"{stepDescription}. Действие \"{action.Title}\"";
+            var documentNode = new DocumentTreeNode(document)
+            {
+              Title = $"{stepDescription}. Действие \"{action.Title}\""
+            };
             documentNodes.Add(documentNode);
           }
         }
@@ -754,10 +903,12 @@ namespace IsblCheck.ViewModels.Tree
         #endregion
       }
 
-      var rootNode = new ContainerTreeNode(wizardNodes);
-      rootNode.TitleLocalizationKey = "WIZARDS";
-      rootNode.IconSource = WizardsIcon;
-      rootNode.IsItemsCountVisible = true;
+      var rootNode = new ContainerTreeNode(wizardNodes)
+      {
+        TitleLocalizationKey = "WIZARDS",
+        IconSource = WizardsIcon,
+        IsItemsCountVisible = true
+      };
       return rootNode;
     }
 
@@ -778,6 +929,9 @@ namespace IsblCheck.ViewModels.Tree
 
       FunctionsIcon = new BitmapImage(new Uri("/Resources/Functions_16.png", UriKind.Relative));
       //FunctionsIcon.Freeze();
+
+      ManagedFoldersIcon = new BitmapImage(new Uri("/Resources/ReferenceIcon_16.png", UriKind.Relative));
+      //ReferenceTypesIcon.Freeze();
 
       ReferenceTypesIcon = new BitmapImage(new Uri("/Resources/ReferenceTypes_16.png", UriKind.Relative));
       //ReferenceTypesIcon.Freeze();

@@ -1,5 +1,5 @@
-﻿using System.Linq;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using IsblCheck.Context.Development.Package.Models;
 using IsblCheck.Core.Context.Development;
 
@@ -56,11 +56,6 @@ namespace IsblCheck.Context.Development.Package.Handlers
     /// Системная категория функции.
     /// </summary>
     private const string SystemCategory = "SYSRES_SYSCOMP.FUNCTION_CATEGORY_SYSTEM";
-
-    /// <summary>
-    /// Прикладная категория функции.
-    /// </summary>
-    private const string UserCategory = "SYSRES_SYSCOMP.FUNCTION_CATEGORY_USER";
 
     /// <summary>
     /// Вариантный.
@@ -122,8 +117,7 @@ namespace IsblCheck.Context.Development.Package.Handlers
         if (functionCommentReq != null)
           entity.Comment = functionCommentReq.DecodedText;
 
-        if (model.DetailDataSets != null &&
-          model.DetailDataSets.DetailDataSet1 != null)
+        if (model.DetailDataSets?.DetailDataSet1 != null)
         {
           var argModels = model.DetailDataSets.DetailDataSet1.Rows;
           foreach (var argModel in argModels)

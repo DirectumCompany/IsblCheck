@@ -1,4 +1,5 @@
-﻿namespace IsblCheck.Context.Application
+﻿// ReSharper disable InconsistentNaming
+namespace IsblCheck.Context.Application
 {
   internal static partial class Constants
   {
@@ -32,9 +33,9 @@
     public const string JOB_BLOCK_ABORT_DEADLINE_PROPERTY = "AbortDeadline";
     public const string JOB_BLOCK_AFTER_FINISH_EVENT = "AfterFinish";
     public const string JOB_BLOCK_AFTER_QUERY_PARAMETERS_EVENT = "AfterQueryParams";
-    public const string JOB_BLOCK_ATTACHMENT_PROPERTY = "Attachment";
     public const string JOB_BLOCK_ATTACHMENTS_RIGHTS_GROUP_PROPERTY = "AttachmentsRightsGroup";
     public const string JOB_BLOCK_ATTACHMENTS_RIGHTS_TYPE_PROPERTY = "AttachmentsRightsType";
+    public const string JOB_BLOCK_ATTACHMENT_PROPERTY = "Attachment";
     public const string JOB_BLOCK_BEFORE_QUERY_PARAMETERS_EVENT = "BeforeQueryParams";
     public const string JOB_BLOCK_BEFORE_START_EVENT = "BeforeStart";
     public const string JOB_BLOCK_CREATED_JOBS_PROPERTY = "CreatedObjects";
@@ -46,6 +47,8 @@
     public const string JOB_BLOCK_JOB_TEXT_PROPERTY = "JobText";
     public const string JOB_BLOCK_NAME_PROPERTY = "Name";
     public const string JOB_BLOCK_NEED_SIGN_ON_PERFORM_PROPERTY = "NeedSignOnPerform";
+    public const string JOB_BLOCK_ON_FORM_HIDE_EVENT = @"OnFormHide";
+    public const string JOB_BLOCK_ON_FORM_SHOW_EVENT = @"OnFormShow";
     public const string JOB_BLOCK_PERFORMER_PROPERTY = "PerformerName";
     public const string JOB_BLOCK_RELATIVE_ABORT_DEADLINE_TYPE_PROPERTY = "RelativeAbortDeadlineType";
     public const string JOB_BLOCK_RELATIVE_DEADLINE_TYPE_PROPERTY = "RelativeDeadlineType";
@@ -83,15 +86,17 @@
     public const string MONITOR_BLOCK_SEARCH_SCRIPT_PROPERTY = "SearchScript";
     // Notice block properties
     public const string NOTICE_BLOCK_AFTER_FINISH_EVENT = "AfterFinish";
-    public const string NOTICE_BLOCK_ATTACHMENT_PROPERTY = "Attachment";
     public const string NOTICE_BLOCK_ATTACHMENTS_RIGHTS_GROUP_PROPERTY = "AttachmentsRightsGroup";
     public const string NOTICE_BLOCK_ATTACHMENTS_RIGHTS_TYPE_PROPERTY = "AttachmentsRightsType";
+    public const string NOTICE_BLOCK_ATTACHMENT_PROPERTY = "Attachment";
     public const string NOTICE_BLOCK_BEFORE_START_EVENT = "BeforeStart";
     public const string NOTICE_BLOCK_CREATED_NOTICES_PROPERTY = "CreatedObjects";
     public const string NOTICE_BLOCK_DEADLINE_PROPERTY = "Deadline";
     public const string NOTICE_BLOCK_IS_RELATIVE_DEADLINE_PROPERTY = "IsRelativeDeadline";
     public const string NOTICE_BLOCK_NAME_PROPERTY = "Name";
     public const string NOTICE_BLOCK_NOTICE_TEXT_PROPERTY = "JobText";
+    public const string NOTICE_BLOCK_ON_FORM_HIDE_EVENT = @"OnFormHide";
+    public const string NOTICE_BLOCK_ON_FORM_SHOW_EVENT = @"OnFormShow";
     public const string NOTICE_BLOCK_PERFORMER_PROPERTY = "PerformerName";
     public const string NOTICE_BLOCK_RELATIVE_DEADLINE_TYPE_PROPERTY = "RelativeDeadlineType";
     public const string NOTICE_BLOCK_SUBJECT_PROPERTY = "Subject";
@@ -197,6 +202,8 @@
     public const string ELS_FOLDER_KIND_CONTROL_NAME = "STFolderKindComboBox";
     public const string REPEAT_PROCESS_CURRENT_OBJECT_EXCEPTION_NAME = "REPEAT_PROCESS_CURRENT_OBJECT_EXCEPTION_NAME";
     // Privileges
+    public const string PRIVILEGE_BULK_DOCUMENT_EXPORT = @"BulkDocumentExport";
+    public const string PRIVILEGE_CLIENT_VERSIONS_MONITORING = @"ClientVersionsMonitoring";
     public const string PRIVILEGE_COMPONENT_FULL_ACCESS = "ComponentFullAccess";
     public const string PRIVILEGE_DEVELOPMENT_EXPORT = "DevelopmentExport";
     public const string PRIVILEGE_DEVELOPMENT_IMPORT = "DevelopmentImport";
@@ -204,7 +211,9 @@
     public const string PRIVILEGE_ESD = "ESD";
     public const string PRIVILEGE_FOLDER_DELETE = "FolderDelete";
     public const string PRIVILEGE_MANAGE_ACCESS_RIGHTS = "ManageAccessRights";
+    public const string PRIVILEGE_MANAGE_DEVELOPMENT_ELEMENT_LOCK = @"ManageDevelopmentElementLock";
     public const string PRIVILEGE_MANAGE_REPLICATION = "ManageReplication";
+    public const string PRIVILEGE_MANAGE_SERVER_EVENTS = @"ManageServerEvents";
     public const string PRIVILEGE_MANAGE_SESSION_SERVER = "ManageSessionServer";
     public const string PRIVILEGE_OBJECT_FULL_ACCESS = "ObjectFullAccess";
     public const string PRIVILEGE_OBJECT_VIEW = "ObjectView";
@@ -221,10 +230,13 @@
     public const string ALL_AVAILABLE_PRIVILEGES_PSEUDOREFERENCE_CODE = "ALL_AVAILABLE_PRIVILEGES";
     public const string ALL_REPLICATE_COMPONENTS_PSEUDOREFERENCE_CODE = "ALL_REPLICATING_COMPONENTS";
     public const string AVAILABLE_DEVELOPERS_COMPONENTS_PSEUDOREFERENCE_CODE = "AVAILABLE_DEVELOPERS_COMPONENTS";
+    public const string CLIENT_PART_VERSIONS_PSEUDOREFERENCE_CODE = @"CLIENT_PART_VERSIONS";
     public const string COMPONENTS_PSEUDOREFERENCE_CODE = "COMPONENTS";
+    public const string COMPONENTS_INSTALLATION_HISTORY_PSEUDOREFERENCE_CODE = @"COMPONENTS_INSTALLATION_HISTORY";
     public const string FILTRATER_SETTINGS_CONFLICTS_PSEUDOREFERENCE_CODE = "FILTERER_SETUP_CONFLICTS";
     public const string GROUPS_PSEUDOREFERENCE_CODE = "SYSTEM_GROUPS";
     public const string RECEIVE_PROTOCOL_PSEUDOREFERENCE_CODE = "DATA_RECEIVE_PROTOCOL";
+    public const string REFERENCE_FULL_REQUISITE_PSEUDOREFERENCE_CODE = @"REFERENCE_FULL_REQUISITES";
     public const string REFERENCE_REQUISITE_PSEUDOREFERENCE_CODE = "REFERENCE_REQUISITES";
     public const string REFERENCE_REQUISITES_PSEUDOREFERENCE_CODE = "REFERENCES_REQUISITES";
     public const string REFTYPES_PSEUDOREFERENCE_CODE = "REFERENCES";
@@ -260,11 +272,50 @@
     public const string SYSREQ_CONST_FIRM_VALUE = "ISBConstFirmValue";
     public const string SYSREQ_CONST_SERVER_STATUS = "ISBConstServerStatus";
     public const string SYSREQ_CONTENTS = "Содержание";
-    public const string SYSREQ_DATE_OPEN = "ДатОткр";
     public const string SYSREQ_DATE_CLOSE = "ДатЗакр";
+    public const string SYSREQ_DATE_OPEN = "ДатОткр";
     public const string SYSREQ_DESCRIPTION = "Описание";
     public const string SYSREQ_DESCRIPTION_LOCALIZE_ID = "ИД локализации описания";
+    public const string SYSREQ_DEVELOPMENT_LOCK_COMMENT = @"ISBLockComment";
+    public const string SYSREQ_DEVELOPMENT_LOCK_DATE = @"ISBLockDate";
+    public const string SYSREQ_DEVELOPMENT_LOCK_USER = @"ISBLockUser";
+    public const string SYSREQ_DIALOGS_REQ_FORMAT = @"ISBDialogRequisiteFormat";
+    public const string SYSREQ_DIALOGS_REQ_LENGTH = @"ISBDialogRequisiteLength";
+    public const string SYSREQ_DIALOGS_REQ_PICK_VALUES = @"ISBDialogRequisitePickValues";
+    public const string SYSREQ_DIALOGS_REQ_PRECISION = @"ISBDialogRequisitePrecision";
+    public const string SYSREQ_DIALOGS_REQ_REFERENCE = @"ISBDialogRequisiteReference";
+    public const string SYSREQ_DIALOGS_REQ_SECTION = @"ISBDialogRequisiteSection";
+    public const string SYSREQ_DIALOGS_REQ_TYPE = @"ISBDialogRequisiteType";
+    public const string SYSREQ_DIALOGS_REQ_VIEW = @"ISBDialogRequisiteView";
+    public const string SYSREQ_DIALOG_ACT_CODE = @"ISBDialogActCode";
+    public const string SYSREQ_DIALOG_ACT_DESCRIPTION = @"ISBDialogActDescription";
+    public const string SYSREQ_DIALOG_ACT_DESCRIPTION_LOCALIZE_ID = @"ISBDialogActDescLocalizeID";
+    public const string SYSREQ_DIALOG_ACT_ENABLED_MODE = @"ISBDialogActEnabledMode";
+    public const string SYSREQ_DIALOG_ACT_HINT = @"ISBDialogActHint";
+    public const string SYSREQ_DIALOG_ACT_HINT_LOCALIZE_ID = @"ISBDialogActHintLocalizeID";
+    public const string SYSREQ_DIALOG_ACT_ICON_NAME = @"ISBDialogActIconName";
+    public const string SYSREQ_DIALOG_ACT_ON_EXECUTE = @"ISBDialogActOnExecute";
+    public const string SYSREQ_DIALOG_ACT_ON_EXECUTE_EXISTS = @"ISBDialogActOnExecuteExists";
+    public const string SYSREQ_DIALOG_ACT_SECTION = @"ISBDialogActSection";
+    public const string SYSREQ_DIALOG_ACT_VISIBLE = @"ISBDialogActVisible";
+    public const string SYSREQ_DIALOG_COMMENT = @"ISBDialogComment";
+    public const string SYSREQ_DIALOG_EVENT_TEXT = @"ISBDialogEventText";
+    public const string SYSREQ_DIALOG_FORM = @"ISBDialogForm";
+    public const string SYSREQ_DIALOG_NAME_LOCALIZE_ID = @"ISBDialogNameLocalizeID";
+    public const string SYSREQ_DIALOG_REQ_CODE = @"ISBDialogReqCode";
+    public const string SYSREQ_DIALOG_REQ_DESCRIPTION = @"ISBDialogReqDescription";
+    public const string SYSREQ_DIALOG_REQ_DESCRIPTION_LOCALIZE_ID = @"ISBDialogReqDescLocalizeID";
+    public const string SYSREQ_DIALOG_REQ_IS_REQUIRED = @"ISBDialogReqIsRequired";
+    public const string SYSREQ_DIALOG_REQ_NUMBER = @"ISBDialogReqNumber";
+    public const string SYSREQ_DIALOG_REQ_ON_CHANGE = @"ISBDialogReqOnChange";
+    public const string SYSREQ_DIALOG_REQ_ON_CHANGE_EXISTS = @"ISBDialogReqOnChangeExists";
+    public const string SYSREQ_DIALOG_REQ_ON_SELECT = @"ISBDialogReqOnSelect";
+    public const string SYSREQ_DIALOG_REQ_ON_SELECT_KIND = @"ISBDialogReqOnSelectKind";
+    public const string SYSREQ_DIALOG_REQ_SAVE_LAST_VALUE = @"ISBDialogReqSaveLastValue";
+    public const string SYSREQ_DIALOG_REQ_SECTION = @"ISBDialogReqSection";
+    public const string SYSREQ_DIALOG_REQ_SELECTION_CONSTRAINED = @"ISBDialogReqSelectionConstrained";
     public const string SYSREQ_DOUBLE = "Дубль";
+    public const string SYSREQ_EDOCKIND_DEFAULT_VERSION_STATE_CODE = "СтадияДок";
     public const string SYSREQ_EDOC_ACCESS_TYPE = "ISBEDocAccessType";
     public const string SYSREQ_EDOC_AUTHOR = "ISBEDocAuthor";
     public const string SYSREQ_EDOC_CREATED = "ISBEDocCreateDate";
@@ -273,8 +324,8 @@
     public const string SYSREQ_EDOC_ENCODE_TYPE = "ISBEncodeType";
     public const string SYSREQ_EDOC_ENCRYPTION_PLUGIN_NAME = "ISBPluginName";
     public const string SYSREQ_EDOC_ENCRYPTION_PLUGIN_VERSION = "ISBPluginVersion";
-    public const string SYSREQ_EDOC_EXPORT_DATE = "ISBEDocExtractDate";
     public const string SYSREQ_EDOC_EXPORTER = "ISBEDocExtractor";
+    public const string SYSREQ_EDOC_EXPORT_DATE = "ISBEDocExtractDate";
     public const string SYSREQ_EDOC_KIND = "ISBEDocKind";
     public const string SYSREQ_EDOC_LIFE_STAGE_NAME = "ISBEDocLifeStageName";
     public const string SYSREQ_EDOC_LOCKED_FOR_SERVER_CODE = "ISBLockedForServer";
@@ -305,9 +356,15 @@
     public const string SYSREQ_EDOC_TYPE_ACT_CODE = "ISBEDocTypeActCode";
     public const string SYSREQ_EDOC_TYPE_ACT_DESCRIPTION = "ISBEDocTypeActDescription";
     public const string SYSREQ_EDOC_TYPE_ACT_DESCRIPTION_LOCALIZE_ID = "ISBEDocTypeActDescLocalizeID";
+    public const string SYSREQ_EDOC_TYPE_ACT_ENABLED_MODE = @"ISBEDocTypeActEnabledMode";
+    public const string SYSREQ_EDOC_TYPE_ACT_HINT = @"ISBEDocTypeActHint";
+    public const string SYSREQ_EDOC_TYPE_ACT_HINT_LOCALIZE_ID = @"ISBEDocTypeActHintLocalizeID";
+    public const string SYSREQ_EDOC_TYPE_ACT_ICON_NAME = @"ISBEDocTypeActIconName";
     public const string SYSREQ_EDOC_TYPE_ACT_ON_EXECUTE = "ISBEDocTypeActOnExecute";
     public const string SYSREQ_EDOC_TYPE_ACT_ON_EXECUTE_EXISTS = "ISBEDocTypeActOnExecuteExists";
     public const string SYSREQ_EDOC_TYPE_ACT_SECTION = "ISBEDocTypeActSection";
+    public const string SYSREQ_EDOC_TYPE_ACT_SHOW_IN_CONTEXT_MENU = @"ISBEDocTypeActShowInContextMenu";
+    public const string SYSREQ_EDOC_TYPE_ACT_VISIBLE = @"ISBEDocTypeActVisible";
     public const string SYSREQ_EDOC_TYPE_ADD_PARAMS = "ISBEDocTypeAddParams";
     public const string SYSREQ_EDOC_TYPE_COMMENT = "ISBEDocTypeComment";
     public const string SYSREQ_EDOC_TYPE_EVENT_TEXT = "ISBEDocTypeEventText";
@@ -337,10 +394,11 @@
     public const string SYSREQ_EDOC_VERSION_CRC = "ISBVersionCRC";
     public const string SYSREQ_EDOC_VERSION_DATA = "ISBVersionData";
     public const string SYSREQ_EDOC_VERSION_EDITOR = "ISBVersionEditor";
-    public const string SYSREQ_EDOC_VERSION_EXPORT_DATE = "ISBVersionExtractDate";
     public const string SYSREQ_EDOC_VERSION_EXPORTER = "ISBVersionExtractor";
+    public const string SYSREQ_EDOC_VERSION_EXPORT_DATE = "ISBVersionExtractDate";
     public const string SYSREQ_EDOC_VERSION_HIDDEN = "ISBVersionHidden";
     public const string SYSREQ_EDOC_VERSION_LIFE_STAGE = "ISBVersionLifeStage";
+    public const string SYSREQ_EDOC_VERSION_LOCKED_FOR_SERVER_CODE = @"ISBVersionLockedForServer";
     public const string SYSREQ_EDOC_VERSION_MODIFIED = "ISBVersionModifyDate";
     public const string SYSREQ_EDOC_VERSION_NOTE = "ISBVersionNote";
     public const string SYSREQ_EDOC_VERSION_SIGNATURE_TYPE = "ISBVersionSignatureType";
@@ -348,7 +406,6 @@
     public const string SYSREQ_EDOC_VERSION_SIZE = "ISBVersionSize";
     public const string SYSREQ_EDOC_VERSION_SOURCE = "ISBVersionSource";
     public const string SYSREQ_EDOC_VERSION_TEXT_MODIFIED = "ISBVersionTextModifyDate";
-    public const string SYSREQ_EDOCKIND_DEFAULT_VERSION_STATE_CODE = "СтадияДок";
     public const string SYSREQ_FOLDER_KIND = "FolderKind";
     public const string SYSREQ_FUNC_CATEGORY = "ISBFuncCategory";
     public const string SYSREQ_FUNC_COMMENT = "ISBFuncComment";
@@ -378,6 +435,8 @@
     public const string SYSREQ_PROFILING_SETTINGS_SQL_PROFILING_ENABLED = "ДаНет4";
     public const string SYSREQ_PROFILING_SETTINGS_START_LOGGED = "ДаНет2";
     public const string SYSREQ_RECORD_STATUS = "СтатУтв";
+    public const string SYSREQ_REFERENCE_TYPE_ID = "Вид";
+    public const string SYSREQ_REF_REQ_DATE_TIME_KIND = @"ISBDateTimeKind";
     public const string SYSREQ_REF_REQ_FIELD_NAME = "ISBRefReqFieldName";
     public const string SYSREQ_REF_REQ_FORMAT = "ISBRefReqFormat";
     public const string SYSREQ_REF_REQ_GENERATED = "ISBRefReqGenerated";
@@ -392,9 +451,18 @@
     public const string SYSREQ_REF_TYPE_ACT_CODE = "ISBRefTypeActCode";
     public const string SYSREQ_REF_TYPE_ACT_DESCRIPTION = "ISBRefTypeActDescription";
     public const string SYSREQ_REF_TYPE_ACT_DESCRIPTION_LOCALIZE_ID = "ISBRefTypeActDescLocalizeID";
+    public const string SYSREQ_REF_TYPE_ACT_ENABLED_IN_SELECT_MODE = @"ISBRefTypeActEnabledInSelectMode";
+    public const string SYSREQ_REF_TYPE_ACT_ENABLED_MODE = @"ISBRefTypeActEnabledMode";
+    public const string SYSREQ_REF_TYPE_ACT_ENABLED_ONLY_FOR_SELECTED = @"ISBRefTypeActEnabledOnlyForSelected";
+    public const string SYSREQ_REF_TYPE_ACT_ENABLED_WHEN_MULTISELECT = @"ISBRefTypeActEnabledWhenMultiSelect";
+    public const string SYSREQ_REF_TYPE_ACT_HINT = @"ISBRefTypeActHint";
+    public const string SYSREQ_REF_TYPE_ACT_HINT_LOCALIZE_ID = @"ISBRefTypeActHintLocalizeID";
+    public const string SYSREQ_REF_TYPE_ACT_ICON_NAME = @"ISBRefTypeActIconName";
     public const string SYSREQ_REF_TYPE_ACT_ON_EXECUTE = "ISBRefTypeActOnExecute";
     public const string SYSREQ_REF_TYPE_ACT_ON_EXECUTE_EXISTS = "ISBRefTypeActOnExecuteExists";
     public const string SYSREQ_REF_TYPE_ACT_SECTION = "ISBRefTypeActSection";
+    public const string SYSREQ_REF_TYPE_ACT_SHOW_IN_CONTEXT_MENU = @"ISBRefTypeActShowInContextMenu";
+    public const string SYSREQ_REF_TYPE_ACT_VISIBLE = @"ISBRefTypeActVisible";
     public const string SYSREQ_REF_TYPE_ADD_PARAMS = "ISBRefTypeAddParams";
     public const string SYSREQ_REF_TYPE_COMMENT = "ISBRefTypeComment";
     public const string SYSREQ_REF_TYPE_COMMON_SETTINGS = "ISBRefTypeCommonSettings";
@@ -422,18 +490,26 @@
     public const string SYSREQ_REF_TYPE_VIEW_CODE = "ISBRefTypeViewCode";
     public const string SYSREQ_REF_TYPE_VIEW_COMMENT = "ISBRefTypeViewComment";
     public const string SYSREQ_REF_TYPE_VIEW_IS_MAIN = "ISBRefTypeViewIsMain";
+    public const string SYSREQ_REF_TYPE_VIEW_LISTFORM = @"ISBRefTypeViewListForm";
     public const string SYSREQ_REF_TYPE_VIEW_NAME = "ISBRefTypeViewName";
     public const string SYSREQ_REF_TYPE_VIEW_NAME_LOCALIZE_ID = "ISBRefTypeViewNameLocalizeID";
-    public const string SYSREQ_REFERENCE_TYPE_ID = "Вид";
+    public const string SYSREQ_REPORT_APP_EDITOR_INTERNAL = @"Встроенный редактор";
+    public const string SYSREQ_REPORT_BASE_REPORT = @"Базовый отчет";
+    public const string SYSREQ_REPORT_BASE_REPORT_ID = @"ИД базового отчета";
+    public const string SYSREQ_REPORT_FILTER = @"Фильтр";
+    public const string SYSREQ_REPORT_NEED_EXECUTE_SCRIPT_ON_DESIGN_TEMPLATE = @"NeedExecuteScriptOnDesignTemplate";
+    public const string SYSREQ_REPORT_REFERENCE_TYPE = @"Тип справочника";
+    public const string SYSREQ_REPORT_SCRIPT = @"Расчет";
+    public const string SYSREQ_REPORT_TEMPLATE = @"Шаблон";
+    public const string SYSREQ_REPORT_VIEWER_CODE = @"Код приложения";
+    public const string SYSREQ_REPORT_VIEWER_NAME = @"Приложение";
+    public const string SYSREQ_REPORT_VIEWER_TYPE = @"Тип приложения";
     public const string SYSREQ_STATE = "Состояние";
     public const string SYSREQ_STATЕ = "Состояние";
     public const string SYSREQ_SYSTEM_SETTINGS_VALUE = "ValuePar";
     public const string SYSREQ_TYPE = "Тип";
     public const string SYSREQ_UNIT = "Модуль";
     public const string SYSREQ_UNIT_ID = "ИДМодуля";
-    public const string SYSREQ_USER_GROUPS_GROUP_FULL_NAME = "Дополнение3";
-    public const string SYSREQ_USER_GROUPS_GROUP_NAME = "Дополнение";
-    public const string SYSREQ_USER_GROUPS_GROUP_SERVER_NAME = "Дополнение2";
     public const string SYSREQ_USERS_ACCESS_RIGHTS = "ПраваТ";
     public const string SYSREQ_USERS_AUTHENTICATION = "Аутентификация";
     public const string SYSREQ_USERS_CATEGORY = "ISBUsersCategory";
@@ -443,6 +519,7 @@
     public const string SYSREQ_USERS_FULL_USER_NAME = "Дополнение3";
     public const string SYSREQ_USERS_GROUP = "ГруппаТ";
     public const string SYSREQ_USERS_IS_MAIN_SERVER = "ISBUsersIsMainServer";
+    public const string SYSREQ_USERS_IS_PASSWORD_POLICY = @"ISBUsersIsPasswordPolicy";
     public const string SYSREQ_USERS_LOGIN = "UserLogin";
     public const string SYSREQ_USERS_REFERENCE_USER_IS_PUBLIC = "ДаНет2";
     public const string SYSREQ_USERS_STATUS = "UserStatus";
@@ -459,6 +536,9 @@
     public const string SYSREQ_USERS_USER_LOGIN = "Дополнение";
     public const string SYSREQ_USERS_USER_MAIN_SERVER = "ДаНетТ";
     public const string SYSREQ_USERS_USER_TYPE = "СтатусПользТ";
+    public const string SYSREQ_USER_GROUPS_GROUP_FULL_NAME = "Дополнение3";
+    public const string SYSREQ_USER_GROUPS_GROUP_NAME = "Дополнение";
+    public const string SYSREQ_USER_GROUPS_GROUP_SERVER_NAME = "Дополнение2";
     public const string SYSREQ_WORK_RULES_FOLDER_ID = "ISBCoordX";
     // Result
     public const string RESULT_VAR_NAME = "Результат";
@@ -551,6 +631,7 @@
     public const string SYSREF_ALL_AVAILABLE_COMPONENTS = "ALL_AVAILABLE_COMPONENTS";
     public const string SYSREF_ALL_AVAILABLE_PRIVILEGES = "ALL_AVAILABLE_PRIVILEGES";
     public const string SYSREF_ALL_REPLICATING_COMPONENTS = "ALL_REPLICATING_COMPONENTS";
+    public const string SYSREF_AUTO_CLEANABLE_FOLDERS = @"AUTO_CLEANABLE_FOLDERS";
     public const string SYSREF_AVAILABLE_DEVELOPERS_COMPONENTS = "AVAILABLE_DEVELOPERS_COMPONENTS";
     public const string SYSREF_CALENDAR_EVENTS = "CALENDAR_EVENTS";
     public const string SYSREF_COMPONENT_TOKEN_HISTORY = "COMPONENT_TOKEN_HISTORY";
@@ -559,11 +640,14 @@
     public const string SYSREF_CONSTANTS = "CONSTANTS";
     public const string SYSREF_DATA_RECEIVE_PROTOCOL = "DATA_RECEIVE_PROTOCOL";
     public const string SYSREF_DATA_SEND_PROTOCOL = "DATA_SEND_PROTOCOL";
+    public const string SYSDLG_DEVELOPMENT_LOCK_SETUP = @"DEVELOPMENT_LOCK_SETUP_DIALOG";
+    public const string SYSREF_DEVELOPMENT_LOCKS = @"DEVELOPMENT_LOCKS";
     public const string SYSREF_DIALOGS = "DIALOGS";
     public const string SYSREF_DIALOGS_REQUISITES = "DIALOGS_REQUISITES";
     public const string SYSREF_EDITORS = "ПРР";
     public const string SYSREF_EDOC_CARDS = "EDOCUMENT_TYPES";
     public const string SYSREF_EDOC_TYPES = "ТЭД";
+    public const string SYSREF_EDOCUMENT_CARD_FULL_REQUISITES = @"EDOCUMENT_CARD_FULL_REQUISITE";
     public const string SYSREF_EDOCUMENT_CARD_REQUISITES = "EDOCUMENT_CARD_REQUISITE";
     public const string SYSREF_EDOCUMENT_CARD_TYPES = "EDOCUMENT_TYPES";
     public const string SYSREF_EDOCUMENT_CARD_TYPES_REFERENCE = "ТЭД";
@@ -587,6 +671,7 @@
     public const string SYSREF_LOCALIZATION_DICTIONARY = "LOCALIZATION_DICTIONARY";
     public const string SYSREF_LOCALIZATION_LANGUAGES = "LOCALIZATION_LANGUAGES";
     public const string SYSREF_MODULES = "MODULES";
+    public const string SYSREF_NOTIFICATIONS = @"NOTIFICATIONS";
     public const string SYSREF_PRIVILEGES = "SYSTEM_PRIVILEGES";
     public const string SYSREF_RECORD_HISTORY = "RECORD_HISTORY";
     public const string SYSREF_REFERENCE_REQUISITES = "REFERENCE_REQUISITES";
@@ -594,6 +679,7 @@
     public const string SYSREF_REFERENCE_TYPES = "REFERENCE_TYPES";
     public const string SYSREF_REFERENCES = "REFERENCES";
     public const string SYSREF_REFERENCES_REQUISITES = "REFERENCES_REQUISITES";
+    public const string SYSREF_REFERENCE_FULL_REQUISITES = @"REFERENCE_FULL_REQUISITES";
     public const string SYSREF_REMOTE_SERVERS = "REMOTE_SERVERS";
     public const string SYSREF_REPLICATION_SESSIONS_LOG = "REPLICATION_SESSIONS_PROTOCOL";
     public const string SYSREF_REPLICATION_SESSIONS_PROTOCOL = "REPLICATION_SESSIONS_PROTOCOL";
@@ -635,6 +721,7 @@
     public const string TEST_EDMS_MAIN_DB_NAME = "ISBEDO7MainTest";
     public const string TEST_EDMS_SECOND_CODE = "EDO7SEC";
     public const string TEST_EDMS_SECOND_DB_NAME = "ISBEDO7SecondTest";
+    public const string TEST_EDMS_SQL_SERVER_NAME = @"ORPINPO\SQL2017";
     public const string TEST_EDMS_SYSTEM_CODE = "EDO7Test";
     public const string TEST_ISB5_MAIN_CODE = "ISB5MAIN";
     public const string TEST_ISB5_SECOND_CODE = "ISB5SEC";
@@ -649,6 +736,7 @@
     public const string INFORMATION_CAPTION = "Информация";
     public const string mrCancel = "2";
     public const string mrOk = "1";
+    public const string mrNone = @"0";
     // Using the document
     public const string EDOC_VERSION_ACTIVE_STAGE_CODE = "Д";
     public const string EDOC_VERSION_DESIGN_STAGE_CODE = "Р";
@@ -676,14 +764,57 @@
     public const string WAIT_BLOCK_NAME_PROPERTY = "Name";
     public const string WAIT_BLOCK_RELATIVE_DEADLINE_TYPE_PROPERTY = "RelativeDeadlineType";
     // SYSRES
+    public const string DIRRES_OFFICEINTEGRATION = "DIRRES_OFFICEINTEGRATION";
+    public const string SYSRES_CLIENTSQLERR = "SYSRES_CLIENTSQLERR";
     public const string SYSRES_COMMON = "SYSRES_COMMON";
     public const string SYSRES_CONST = "SYSRES_CONST";
+    public const string SYSRES_EXTLIBD7 = "SYSRES_EXTLIBD7";
     public const string SYSRES_MBFUNC = "SYSRES_MBFUNC";
+    public const string SYSRES_RTL200 = "SYSRES_RTL200";
+    public const string SYSRES_SAJOBRUNNER = "SYSRES_SAJOBRUNNER";
+    public const string SYSRES_SAKEYREG = "SYSRES_SAKEYREG";
+    public const string SYSRES_SBCAS = "SYSRES_SBCAS";
+    public const string SYSRES_SBCL = "SYSRES_SBCL";
     public const string SYSRES_SBDATA = "SYSRES_SBDATA";
+    public const string SYSRES_SBDEVSUPPORT = "SYSRES_SBDEVSUPPORT";
+    public const string SYSRES_SBDEVSUPPORTGUI = "SYSRES_SBDEVSUPPORTGUI";
+    public const string SYSRES_SBDEVTRANSFER = "SYSRES_SBDEVTRANSFER";
+    public const string SYSRES_SBEDMS = "SYSRES_SBEDMS";
+    public const string SYSRES_SBEDMSGUI = "SYSRES_SBEDMSGUI";
+    public const string SYSRES_SBEDMSSEARCH = "SYSRES_SBEDMSSEARCH";
+    public const string SYSRES_SBEDMSSEARCHGUI = "SYSRES_SBEDMSSEARCHGUI";
     public const string SYSRES_SBGUI = "SYSRES_SBGUI";
     public const string SYSRES_SBINTF = "SYSRES_SBINTF";
+    public const string SYSRES_SBISBL = "SYSRES_SBISBL";
+    public const string SYSRES_SBKERNEL = "SYSRES_SBKERNEL";
+    public const string SYSRES_SBLOGON = "SYSRES_SBLOGON";
     public const string SYSRES_SBREFDSC = "SYSRES_SBREFDSC";
+    public const string SYSRES_SBSYS = "SYSRES_SBSYS";
+    public const string SYSRES_SBWIZARDS = "SYSRES_SBWIZARDS";
+    public const string SYSRES_SBWIZARDSGUI = "SYSRES_SBWIZARDSGUI";
     public const string SYSRES_SQLERRORS = "SYSRES_SQLERRORS";
+    public const string SYSRES_STCONVERT = "SYSRES_STCONVERT";
+    public const string SYSRES_STCONVERTBUILDER = "SYSRES_STCONVERTBUILDER";
+    public const string SYSRES_STDBG = "SYSRES_STDBG";
+    public const string SYSRES_STDSGN = "SYSRES_STDSGN";
+    public const string SYSRES_STEXECSQL = "SYSRES_STEXECSQL";
     public const string SYSRES_SYSCOMP = "SYSRES_SYSCOMP";
+    public const string SYSRES_VCL200 = "SYSRES_VCL200";
+    public const string SYSRES_CONST_DATA_TYPE_DOCUMENT = @"Document";
+
+    public const string tsInternal = @"0";
+    public const string tsISO = @"1";
+    public const string tsMID = @"2";
+
+    // Select type
+    public const string SELECT_TYPE_SELECTABLE = @"S";    
+    public const string SELECT_TYPE_SELECTABLE_ONLY_CHILD = @"O";
+    public const string SELECT_TYPE_SELECTABLE_WITH_CHILD = @"C";
+    public const string SELECT_TYPE_UNSELECTABLE = @"U";
+
+    public const string MIN_CURRENT_PERIOD_BEGIN_DATE = @"01.01.1900";
+    public const string MAX_CURRENT_PERIOD_END_DATE = @"31.12.2900";
+
+    public const string ROUTE_BLOCK_NEED_REQUEST_ACTION_ON_SUBTASKS_PROP_NAME = @"NeedRequestActionOnSubtasks";
   }
 }

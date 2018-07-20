@@ -1,15 +1,14 @@
-﻿using Antlr4.Runtime.Misc;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
 using IsblCheck.BaseRules.Properties;
 using IsblCheck.Core.Checker;
 using IsblCheck.Core.Context;
-using IsblCheck.Core.Context.Development;
 using IsblCheck.Core.Parser;
 using IsblCheck.Core.Reports;
 using IsblCheck.Core.Rules;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace IsblCheck.BaseRules.Variables
 {
@@ -83,14 +82,14 @@ namespace IsblCheck.BaseRules.Variables
       /// <summary>
       /// Определения переменных.
       /// </summary>
-      public List<VariableDefinition> variableDefinitions = new List<VariableDefinition>();
+      public readonly List<VariableDefinition> variableDefinitions = new List<VariableDefinition>();
 
       /// <summary>
       /// Получить родительский блок предложений.
       /// </summary>
       /// <param name="ruleNode">Узел правил.</param>
       /// <returns>Блок предложений.</returns>
-      private IsblParser.StatementBlockContext GetParentStatementBlock(IRuleNode ruleNode)
+      private static IsblParser.StatementBlockContext GetParentStatementBlock(IRuleNode ruleNode)
       {
         var parent = ruleNode.Parent;
         while (parent != null)
@@ -115,8 +114,7 @@ namespace IsblCheck.BaseRules.Variables
           return;
 
         // Проверяем что переменная не левый операнд предложения означивания.
-        var assignStatement = context.Parent as IsblParser.AssignStatementContext;
-        if (assignStatement != null)
+        if (context.Parent is IsblParser.AssignStatementContext assignStatement)
         {
           var leftOperand = assignStatement.GetChild(0) as IsblParser.VariableContext;
           var eq = assignStatement.GetChild(1) as TerminalNodeImpl;
@@ -125,8 +123,7 @@ namespace IsblCheck.BaseRules.Variables
         }
 
         // Проверяем что переменная не левый операнд предложения объявления.
-        var declareStatement = context.Parent as IsblParser.DeclareVariableStatementContext;
-        if (declareStatement != null)
+        if (context.Parent is IsblParser.DeclareVariableStatementContext declareStatement)
         {
           var leftOperand = declareStatement.GetChild(0) as IsblParser.VariableContext;
           if (leftOperand == context)
@@ -158,7 +155,7 @@ namespace IsblCheck.BaseRules.Variables
           return;
 
         // Помечаем предыдущую переменную на этом же уровне как переопределенную.
-        var parentStatementBlock = this.GetParentStatementBlock(context);
+        var parentStatementBlock = GetParentStatementBlock(context);
         var variableDefinition = this.variableDefinitions
           .LastOrDefault(d =>
             d.VariableName.Equals(variableName, StringComparison.OrdinalIgnoreCase) && 
@@ -199,7 +196,7 @@ namespace IsblCheck.BaseRules.Variables
           return;
 
         // Помечаем предыдущую переменную на этом же уровне как переопределенную.
-        var parentStatementBlock = this.GetParentStatementBlock(context);
+        var parentStatementBlock = GetParentStatementBlock(context);
         var variableDefinition = this.variableDefinitions
           .LastOrDefault(d =>
             d.VariableName.Equals(variableName, StringComparison.OrdinalIgnoreCase) &&
@@ -237,13 +234,13 @@ namespace IsblCheck.BaseRules.Variables
     /// <summary>
     /// Инфо правила.
     /// </summary>
-    private static Lazy<IRuleInfo> info = new Lazy<IRuleInfo>(() => 
+    private static readonly Lazy<IRuleInfo> info = new Lazy<IRuleInfo>(() => 
       new RuleInfo(typeof(UsingRedefinedVarRule).Name, Resources.UsingRedefindedVarRuleDescription), true);
 
     /// <summary>
     /// Инфо правила.
     /// </summary>
-    public static IRuleInfo Info { get { return info.Value; } }
+    public static IRuleInfo Info => info.Value;
 
     #endregion
 
@@ -254,7 +251,6 @@ namespace IsblCheck.BaseRules.Variables
     /// </summary>
     /// <param name="report">Отчет.</param>
     /// <param name="document">Документ.</param>
-    /// <param name="tree">Дерево исходного кода.</param>
     /// <param name="context">Контекст.</param>
     public override void Apply(IReport report, IDocument document, IContext context)
     {

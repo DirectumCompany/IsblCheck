@@ -7,14 +7,11 @@ namespace IsblCheck.ViewModels.Validation
   /// <summary>
   /// Валидатор данных формы подключения к бд.
   /// </summary>
-  public class DatabaseCredentialValidator : AbstractValidator<DatabaseCredentialViewModel>
+  public class DatabaseCredentialValidator : ValidatorBase<DatabaseCredentialViewModel>
   {
-    #region Конструктор
+    private readonly bool needCheckDatabase;
 
-    /// <summary>
-    /// Конструктор.
-    /// </summary>
-    public DatabaseCredentialValidator(bool needCheckDatabase = true)
+    protected override void Rules()
     {
       this.RuleFor(d => d.DatabaseSource)
         .NotEmpty()
@@ -23,7 +20,7 @@ namespace IsblCheck.ViewModels.Validation
         .NotEmpty()
         .When(d => !d.IntegratedSecurity)
         .WithMessage(LocalizationManager.Instance.LocalizeString("FIELD_COULD_NOT_BE_EMPTY"));
-      if (needCheckDatabase)
+      if (this.needCheckDatabase)
       {
         this.RuleFor(d => d.Database)
           .NotEmpty()
@@ -31,6 +28,12 @@ namespace IsblCheck.ViewModels.Validation
       }
     }
 
-    #endregion
+    /// <summary>
+    /// Конструктор.
+    /// </summary>
+    public DatabaseCredentialValidator(bool needCheckDatabase = true)
+    {
+      this.needCheckDatabase = needCheckDatabase;
+    }
   }
 }

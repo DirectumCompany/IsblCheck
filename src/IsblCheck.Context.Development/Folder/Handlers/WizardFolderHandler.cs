@@ -1,23 +1,17 @@
-﻿using Common.Logging;
-using IsblCheck.Context.Development.Folder.Models;
-using IsblCheck.Context.Development.Utils;
-using IsblCheck.Core.Context.Development;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
+using Common.Logging;
+using IsblCheck.Context.Development.Folder.Models;
+using IsblCheck.Context.Development.Utils;
+using IsblCheck.Core.Context.Development;
 
 namespace IsblCheck.Context.Development.Folder.Handlers
 {
   internal class WizardFolderHandler : FolderHandlerBase<Wizard, RecordRefModel>
   {
     #region Константы
-
-    /// <summary>
-    /// Значение Активный.
-    /// </summary>
-    private const string ActiveValue = "Д";
 
     /// <summary>
     /// Состояние.
@@ -44,15 +38,17 @@ namespace IsblCheck.Context.Development.Folder.Handlers
 
     #region FolderHandlerBase
 
-    protected override string FolderName { get { return "Wizards"; } }
+    protected override string FolderName => "Wizards";
 
-    protected override string CardModelRootNode { get { return "Wizard"; } }
+    protected override string CardModelRootNode => "Wizard";
 
     protected override IEnumerable<Wizard> ReadComponents(RecordRefModel model, string componentFolderPath)
     {
-      var wizard = new Wizard();
-      wizard.Name = model.Code;
-      wizard.Title = model.Name;
+      var wizard = new Wizard
+      {
+        Name = model.Code,
+        Title = model.Name
+      };
       var stateReq = model.Requisites
         .FirstOrDefault(r => r.Name == StateReqName);
       if (stateReq != null)
@@ -195,7 +191,7 @@ namespace IsblCheck.Context.Development.Folder.Handlers
     }
     private static bool CheckNeighbor(char[] symbols, int index)
     {
-      return (IsRussian(symbols[index]) || symbols[index] == '\'');
+      return IsRussian(symbols[index]) || symbols[index] == '\'';
     }
     public static bool IsRussian(char symbol)
     {

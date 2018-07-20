@@ -7,7 +7,7 @@ namespace IsblCheck.Core.Rules
   /// <summary>
   /// Менеджер правил.
   /// </summary>
-  public interface IRuleManager
+  public interface IRuleManager : IDisposable
   {
     /// <summary>
     /// Событие изменения состава правил.

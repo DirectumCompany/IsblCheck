@@ -1,4 +1,7 @@
-﻿using Antlr4.Runtime.Misc;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
 using IsblCheck.BaseRules.Properties;
 using IsblCheck.Core.Checker;
@@ -6,9 +9,6 @@ using IsblCheck.Core.Context;
 using IsblCheck.Core.Parser;
 using IsblCheck.Core.Reports;
 using IsblCheck.Core.Rules;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace IsblCheck.BaseRules.Variables
 {
@@ -33,7 +33,7 @@ namespace IsblCheck.BaseRules.Variables
     /// </summary>
     private class SelfAssignmentVarListener : IsblBaseListener
     {
-      private IContext mainContext;
+      private readonly IContext mainContext;
 
 
       /// <summary>
@@ -66,8 +66,8 @@ namespace IsblCheck.BaseRules.Variables
           builder.Append(child.GetText());
         }
 
-        string leftExpression = builder.ToString();
-        string rightExpression = context.expression().GetText();
+        var leftExpression = builder.ToString();
+        var rightExpression = context.expression().GetText();
         if(mainContext.Application.IsExistPredefinedVariable(context.variable().GetText()))
         {
           leftExpression = leftExpression.Trim('!');
@@ -78,13 +78,13 @@ namespace IsblCheck.BaseRules.Variables
         {
           if (context.typedefinition() == null)
           {
-            IsblParser.InvocationCallContext[] invCallContexts = context.invocationCall();
+            var invCallContexts = context.invocationCall();
 
-            int numberOfInvCalls = invCallContexts.Length;
+            var numberOfInvCalls = invCallContexts.Length;
             if (numberOfInvCalls > 1)
             {
-              string requisites = invCallContexts[numberOfInvCalls - 2].identifier().GetText();
-              string value = invCallContexts[numberOfInvCalls - 1].identifier().GetText();
+              var requisites = invCallContexts[numberOfInvCalls - 2].identifier().GetText();
+              var value = invCallContexts[numberOfInvCalls - 1].identifier().GetText();
 
               if (!requisites.Equals("requisites", StringComparison.OrdinalIgnoreCase) ||
                 !(value.Equals("value", StringComparison.OrdinalIgnoreCase) || value.StartsWith("as", StringComparison.OrdinalIgnoreCase)) ||
@@ -114,16 +114,12 @@ namespace IsblCheck.BaseRules.Variables
         }
       }
 
-      /// <summary>
-      /// Проверка на знак равенства.
-      /// </summary>
-      /// <param name="context">Контекст.</param>
-      private bool IsEqual(IParseTree child)
+      private static bool IsEqual(IParseTree child)
       {
         var eq = child as TerminalNodeImpl;
-        return (eq != null &&
-          ((eq.Symbol.Type == IsblParser.EQ) ||
-          (eq.Symbol.Type == IsblParser.COLON)));
+        return eq != null &&
+               ((eq.Symbol.Type == IsblParser.EQ) ||
+                (eq.Symbol.Type == IsblParser.COLON));
       }
 
     }
@@ -135,13 +131,13 @@ namespace IsblCheck.BaseRules.Variables
     /// <summary>
     /// Инфо правила.
     /// </summary>
-    private static Lazy<IRuleInfo> info = new Lazy<IRuleInfo>(() => 
+    private static readonly Lazy<IRuleInfo> info = new Lazy<IRuleInfo>(() => 
       new RuleInfo(typeof(SelfAssignmentVarRule).Name, Resources.SelfAssignmentVarRuleDescription), true);
 
     /// <summary>
     /// Инфо правила.
     /// </summary>
-    public static IRuleInfo Info { get { return info.Value; } }
+    public static IRuleInfo Info => info.Value;
 
     #endregion
 
@@ -152,7 +148,6 @@ namespace IsblCheck.BaseRules.Variables
     /// </summary>
     /// <param name="report">Отчет.</param>
     /// <param name="document">Документ.</param>
-    /// <param name="tree">Дерево исходного кода.</param>
     /// <param name="context">Контекст.</param>
     public override void Apply(IReport report, IDocument document, IContext context)
     {

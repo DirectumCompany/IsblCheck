@@ -16,7 +16,6 @@ namespace IsblCheck.ViewModels.Tree
     /// Конструктор.
     /// </summary>
     /// <param name="document">Документ.</param>
-    /// <param name="openDocument">Действие открытия документа.</param>
     public DocumentTreeNode(IDocument document)
     {
       this.Document = document;

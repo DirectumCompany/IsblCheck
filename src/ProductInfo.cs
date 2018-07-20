@@ -4,5 +4,5 @@
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCompany("Компания DIRECTUM")]
 [assembly: AssemblyCopyright("Copyright © Компания DIRECTUM 2018")]
-[assembly: AssemblyInformationalVersion("1.1.1.0001")]
+[assembly: AssemblyInformationalVersion("1.2.0.0000")]
 

@@ -1,7 +1,7 @@
-﻿using IsblCheck.Common.Panels;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.IO;
 using System.Windows;
+using IsblCheck.Common.Panels;
 using Xceed.Wpf.AvalonDock.Layout;
 using Xceed.Wpf.AvalonDock.Layout.Serialization;
 
@@ -37,7 +37,7 @@ namespace IsblCheck.Views
       if (!File.Exists(LayoutRootConfigurationFile))
         return;
       var layoutSerializer = new XmlLayoutSerializer(this.DockingManager);
-      layoutSerializer.LayoutSerializationCallback += this.LayoutSerializationCallbackHandler;
+      layoutSerializer.LayoutSerializationCallback += LayoutSerializationCallbackHandler;
       layoutSerializer.Deserialize(LayoutRootConfigurationFile);
     }
 
@@ -57,7 +57,7 @@ namespace IsblCheck.Views
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private void LayoutSerializationCallbackHandler(object sender, LayoutSerializationCallbackEventArgs e)
+    private static void LayoutSerializationCallbackHandler(object sender, LayoutSerializationCallbackEventArgs e)
     {
       if (string.IsNullOrEmpty(e.Model.ContentId))
       {

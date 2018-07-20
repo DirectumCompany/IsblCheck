@@ -1,14 +1,14 @@
-﻿using Common.Logging;
-using IsblCheck.Context.Development.Package.Handlers;
-using IsblCheck.Context.Development.Package.Models;
-using IsblCheck.Core.Context.Development;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Xml;
 using System.Xml.Serialization;
+using Common.Logging;
+using IsblCheck.Context.Development.Package.Handlers;
+using IsblCheck.Context.Development.Package.Models;
+using IsblCheck.Core.Context.Development;
 
 namespace IsblCheck.Context.Development.Package
 {
@@ -30,7 +30,7 @@ namespace IsblCheck.Context.Development.Package
     /// <summary>
     /// Имя файла пакета.
     /// </summary>
-    public string PackageFilePath { get; private set; }
+    public string PackageFilePath { get; }
 
     /// <summary>
     /// Прочитать список компонент.
@@ -50,7 +50,7 @@ namespace IsblCheck.Context.Development.Package
       {
         return handler.Read(this.packageComponents);
       }
-      catch(Exception ex)
+      catch (Exception ex)
       {
         log.Error("Package reading error.", ex);
         throw;
@@ -61,12 +61,10 @@ namespace IsblCheck.Context.Development.Package
     /// Получить тип обработчика для компоненты.
     /// </summary>
     /// <typeparam name="T">Тип компоненты.</typeparam>
-    private Type ResolveComponentHandler<T>() where T : Component
+    private static Type ResolveComponentHandler<T>() where T : Component
     {
       return Assembly.GetExecutingAssembly().DefinedTypes
-        .Where(t => t.IsClass)
-        .Where(t => t.ImplementedInterfaces.Contains(typeof(IPackageHandler<T>)))
-        .FirstOrDefault();
+        .FirstOrDefault(t => t.IsClass && t.ImplementedInterfaces.Contains(typeof(IPackageHandler<T>)));
     }
 
     /// <summary>
@@ -76,20 +74,19 @@ namespace IsblCheck.Context.Development.Package
     {
       try
       {
-        using (FileStream fileStream = File.OpenRead(this.PackageFilePath))
+        using (var fileStream = File.OpenRead(this.PackageFilePath))
         {
-          var settings = new XmlReaderSettings();
-          settings.ConformanceLevel = ConformanceLevel.Document;
+          var settings = new XmlReaderSettings { ConformanceLevel = ConformanceLevel.Document };
 
           var serializer = new XmlSerializer(typeof(ComponentsModel));
 
-          using (XmlReader reader = XmlReader.Create(fileStream, settings))
+          using (var reader = XmlReader.Create(fileStream, settings))
           {
             this.packageComponents = (ComponentsModel)serializer.Deserialize(reader);
           }
         }
       }
-      catch(Exception ex)
+      catch (Exception ex)
       {
         log.Error("Package reading error.", ex);
         throw;

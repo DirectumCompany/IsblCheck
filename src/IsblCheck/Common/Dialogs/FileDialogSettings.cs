@@ -66,7 +66,7 @@
       this.CheckPathExists = true;
       this.DefaultExt = string.Empty;
       this.FileName = string.Empty;
-      this.FileNames = new string[]
+      this.FileNames = new[]
       {
         string.Empty
       };

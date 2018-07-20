@@ -1,7 +1,7 @@
-﻿using IsblCheck.Core.Context.Development;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System;
+using IsblCheck.Core.Context.Development;
 
 namespace IsblCheck.Context.Development.Database.Handlers
 {
@@ -26,11 +26,13 @@ namespace IsblCheck.Context.Development.Database.Handlers
         {
           while (reader.Read())
           {
-            var constant = new Constant();
-            constant.Name = reader["Name"] as string;
-            constant.Title = reader["Title"] as string;
-            constant.IsCommon = YesValue.Equals(reader["IsCommon"] as string);
-            constant.IsReplicated = YesValue.Equals(reader["IsReplicated"] as string);
+            var constant = new Constant
+            {
+              Name = reader["Name"] as string,
+              Title = reader["Title"] as string,
+              IsCommon = YesValue.Equals(reader["IsCommon"] as string),
+              IsReplicated = YesValue.Equals(reader["IsReplicated"] as string)
+            };
 
             components.Add(constant);
           }

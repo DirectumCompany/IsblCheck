@@ -1,13 +1,14 @@
-﻿using Autofac;
-using IsblCheck.Common.Patterns;
+﻿using System;
 using System.Linq;
+using Autofac;
+using IsblCheck.Common.Patterns;
 
 namespace IsblCheck.Common.Dialogs
 {
   /// <summary>
   /// Менеджер панелей.
   /// </summary>
-  public class DialogManager : Singleton<DialogManager>
+  public class DialogManager : Singleton<DialogManager>, IDisposable
   {
     #region Поля и свойства
 
@@ -78,6 +79,29 @@ namespace IsblCheck.Common.Dialogs
       var parameters = args.Select((value, index) => new PositionalParameter(index, value));
       return this.container.Resolve<TDialog>(parameters);
     }
+
+    #region IDisposable Support
+
+    private bool disposedValue;
+
+    protected virtual void Dispose(bool disposing)
+    {
+      if (!disposedValue)
+      {
+        if (disposing)
+        {
+          this.container.Dispose();
+        }
+        disposedValue = true;
+      }
+    }
+
+    public void Dispose()
+    {
+      Dispose(true);
+    }
+
+    #endregion
 
     #endregion
   }

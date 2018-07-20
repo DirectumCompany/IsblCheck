@@ -334,4 +334,7 @@
   <data name="EXPORT_SUCCESS" xml:space="preserve">
     <value>Экспорт успешно завершен</value>
   </data>
+  <data name="MANAGED_FOLDERS" xml:space="preserve">
+    <value>Управляемые папки</value>
+  </data>
 </root>

@@ -1,11 +1,11 @@
-﻿using Common.Logging;
-using IsblCheck.Context.Development.Package.Handlers;
-using IsblCheck.Context.Development.Package.Models;
-using IsblCheck.Core.Context.Development;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Common.Logging;
+using IsblCheck.Context.Development.Package.Handlers;
+using IsblCheck.Context.Development.Package.Models;
+using IsblCheck.Core.Context.Development;
 
 namespace IsblCheck.Context.Development.Folder.Handlers
 {
@@ -50,11 +50,6 @@ namespace IsblCheck.Context.Development.Folder.Handlers
     /// Системная категория функции.
     /// </summary>
     private const string SystemCategory = "SYSRES_SYSCOMP.FUNCTION_CATEGORY_SYSTEM";
-
-    /// <summary>
-    /// Прикладная категория функции.
-    /// </summary>
-    private const string UserCategory = "SYSRES_SYSCOMP.FUNCTION_CATEGORY_USER";
 
     /// <summary>
     /// Вариантный.
@@ -106,9 +101,9 @@ namespace IsblCheck.Context.Development.Folder.Handlers
 
     #region FolderHandlerBase
 
-    protected override string FolderName { get { return "Functions"; } }
+    protected override string FolderName => "Functions";
 
-    protected override string CardModelRootNode { get { return "Function"; } }
+    protected override string CardModelRootNode => "Function";
 
     protected override IEnumerable<Function> ReadComponents(ComponentModel model, string componentFolderPath)
     {
@@ -136,8 +131,7 @@ namespace IsblCheck.Context.Development.Folder.Handlers
       if (functionCommentReq != null)
         entity.Comment = functionCommentReq.Value;
 
-      if (model.DetailDataSets != null &&
-        model.DetailDataSets.DetailDataSet1 != null)
+      if (model.DetailDataSets?.DetailDataSet1 != null)
       {
         var argModels = model.DetailDataSets.DetailDataSet1.Rows;
         foreach (var argModel in argModels)

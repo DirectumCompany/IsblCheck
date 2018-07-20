@@ -1,10 +1,10 @@
-﻿using IsblCheck.Context.Development.Utils;
-using IsblCheck.Core.Context.Development;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
+using IsblCheck.Context.Development.Utils;
+using IsblCheck.Core.Context.Development;
 
 namespace IsblCheck.Context.Development.Database.Handlers
 {
@@ -30,20 +30,20 @@ namespace IsblCheck.Context.Development.Database.Handlers
         {
           while (reader.Read())
           {
-            var routeBlock = new RouteBlock();
-            routeBlock.Name = reader["Name"] as string;
-            routeBlock.Title = reader["Title"] as string;
+            var routeBlock = new RouteBlock
+            {
+              Name = reader["Name"] as string,
+              Title = reader["Title"] as string
+            };
             if (ActiveValue.Equals(reader["State"] as string))
               routeBlock.State = ComponentState.Active;
             else
               routeBlock.State = ComponentState.Closed;
-            RouteBlockType blockType;
-            if (Enum.TryParse(reader["BaseBlockType"] as string, out blockType))
+            if (Enum.TryParse(reader["BaseBlockType"] as string, out RouteBlockType blockType))
               routeBlock.BaseBlockType = blockType;
             else
               routeBlock.BaseBlockType = RouteBlockType.Unknown;
-            var blockDescriptionRawData = reader["Properties"] as byte[];
-            if (blockDescriptionRawData != null)
+            if (reader["Properties"] is byte[] blockDescriptionRawData)
             {
               var blockDescription = Encoding.GetEncoding(1251).GetString(blockDescriptionRawData);
               if (!string.IsNullOrWhiteSpace(blockDescription))

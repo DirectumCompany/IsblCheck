@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using IsblCheck.Core.Context.Development;
-using IsblCheck.Context.Development.Package.Models;
 using IsblCheck.Context.Development.Package.Handlers;
+using IsblCheck.Context.Development.Package.Models;
+using IsblCheck.Core.Context.Development;
 
 namespace IsblCheck.Context.Development.Folder.Handlers
 {
@@ -34,9 +34,9 @@ namespace IsblCheck.Context.Development.Folder.Handlers
 
     #region FolderHandlerBase
 
-    protected override string FolderName { get { return "Constants"; } }
+    protected override string FolderName => "Constants";
 
-    protected override string CardModelRootNode { get { return "Constant"; } }
+    protected override string CardModelRootNode => "Constant";
 
     protected override IEnumerable<Constant> ReadComponents(ComponentModel model, string componentFolderPath)
     {

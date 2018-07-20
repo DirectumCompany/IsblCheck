@@ -9,9 +9,9 @@ namespace IsblCheck.Context.Development.Folder.Handlers
   {
     #region FolderHandlerBase
 
-    protected override string FolderName { get { return "Reports"; } }
+    protected override string FolderName => "Reports";
 
-    protected override string CardModelRootNode { get { return "Report"; } }
+    protected override string CardModelRootNode => "Report";
 
     #endregion
   }

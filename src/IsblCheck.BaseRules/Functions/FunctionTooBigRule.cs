@@ -1,9 +1,9 @@
-﻿using IsblCheck.BaseRules.Properties;
+﻿using System;
+using IsblCheck.BaseRules.Properties;
 using IsblCheck.Core.Checker;
 using IsblCheck.Core.Context;
 using IsblCheck.Core.Reports;
 using IsblCheck.Core.Rules;
-using System;
 
 namespace IsblCheck.BaseRules.Functions
 {
@@ -31,13 +31,13 @@ namespace IsblCheck.BaseRules.Functions
     /// <summary>
     /// Инфо правила.
     /// </summary>
-    private static Lazy<IRuleInfo> info = new Lazy<IRuleInfo>(() =>
+    private static readonly Lazy<IRuleInfo> info = new Lazy<IRuleInfo>(() =>
       new RuleInfo(typeof(FunctionTooBigRule).Name, Resources.FunctionTooBigRuleDescription), true);
 
     /// <summary>
     /// Инфо правила.
     /// </summary>
-    public static IRuleInfo Info { get { return info.Value; } }
+    public static IRuleInfo Info => info.Value;
 
     #endregion
 
@@ -50,7 +50,7 @@ namespace IsblCheck.BaseRules.Functions
 
       var linesCount = 0;
       var functionText = document.Text;
-      for (int i = 0; i < functionText.Length; i++)
+      for (var i = 0; i < functionText.Length; i++)
       {
         if (functionText[i] == '\n')
           linesCount++;

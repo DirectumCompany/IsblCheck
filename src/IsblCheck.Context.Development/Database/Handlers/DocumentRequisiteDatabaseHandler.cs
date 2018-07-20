@@ -1,7 +1,7 @@
-﻿using IsblCheck.Core.Context.Development;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System;
+using IsblCheck.Core.Context.Development;
 
 namespace IsblCheck.Context.Development.Database.Handlers
 {
@@ -26,23 +26,22 @@ namespace IsblCheck.Context.Development.Database.Handlers
         {
           while (reader.Read())
           {
-            var documentRequisite = new DocumentRequisite();
-            documentRequisite.Name = reader["Name"] as string;
-            documentRequisite.Title = reader["Title"] as string;
+            var documentRequisite = new DocumentRequisite
+            {
+              Name = reader["Name"] as string,
+              Title = reader["Title"] as string
+            };
 
-            var requisiteSectionValue = reader["Section"] as string;
-            if (requisiteSectionValue != null &&
+            if (reader["Section"] is string requisiteSectionValue &&
               RequisiteSectionValues.ContainsKey(requisiteSectionValue))
               documentRequisite.Section = RequisiteSectionValues[requisiteSectionValue];
 
-            var requisiteTypeValue = reader["Type"] as string;
-            if (requisiteTypeValue != null &&
+            if (reader["Type"] is string requisiteTypeValue &&
               RequisiteTypeValues.ContainsKey(requisiteTypeValue))
               documentRequisite.Type = RequisiteTypeValues[requisiteTypeValue];
 
-            var requisiteFormatValue = reader["Format"] as string;
 
-            if (requisiteFormatValue != null &&
+            if (reader["Format"] is string requisiteFormatValue &&
               RequisiteFormatValues.ContainsKey(requisiteFormatValue))
               documentRequisite.Format = RequisiteFormatValues[requisiteFormatValue];
 
@@ -57,16 +56,17 @@ namespace IsblCheck.Context.Development.Database.Handlers
             documentRequisite.ReferenceType = reader["ReferenceType"] as string;
             documentRequisite.ReferenceView = reader["ReferenceView"] as string;
 
-            var pickValuesValue = reader["PickValues"] as string;
-            if (pickValuesValue != null)
+            if (reader["PickValues"] is string pickValuesValue)
             {
               var pickValues = pickValuesValue.Split(';');
               foreach (var pickValue in pickValues)
               {
                 var pickValueParts = pickValue.Split('=', '|');
-                var reqPickValue = new RequisitePickValue();
-                reqPickValue.Id = pickValueParts[0][0];
-                reqPickValue.Value = pickValueParts[1];
+                var reqPickValue = new RequisitePickValue
+                {
+                  Id = pickValueParts[0][0],
+                  Value = pickValueParts[1]
+                };
                 documentRequisite.PickValues.Add(reqPickValue);
               }
             }

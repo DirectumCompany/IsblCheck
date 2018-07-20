@@ -1,9 +1,9 @@
-﻿using IsblCheck.Context.Development.Utils;
-using IsblCheck.Core.Context.Development;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Text;
+using IsblCheck.Context.Development.Utils;
+using IsblCheck.Core.Context.Development;
 
 namespace IsblCheck.Context.Development.Database.Handlers
 {
@@ -29,15 +29,16 @@ namespace IsblCheck.Context.Development.Database.Handlers
         {
           while (reader.Read())
           {
-            var standardRoute = new StandardRoute();
-            standardRoute.Name = (reader["Name"] as string).Trim();
-            standardRoute.Title = (reader["Title"] as string).Trim();
+            var standardRoute = new StandardRoute
+            {
+              Name = (reader["Name"] as string).Trim(),
+              Title = (reader["Title"] as string).Trim()
+            };
             if (ActiveValue.Equals(reader["State"] as string))
               standardRoute.State = ComponentState.Active;
             else
               standardRoute.State = ComponentState.Closed;
-            var workflowDescriptionRawData = reader["WorkflowDescription"] as byte[];
-            if (workflowDescriptionRawData != null)
+            if (reader["WorkflowDescription"] is byte[] workflowDescriptionRawData)
             {
               var workflowDescription = Encoding.GetEncoding(1251).GetString(workflowDescriptionRawData);
               if (!string.IsNullOrWhiteSpace(workflowDescription))

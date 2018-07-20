@@ -59,10 +59,10 @@ namespace IsblCheck.Core.Rules
     public void Register<T>(IRuleInfo ruleInfo) where T : AbstractRule
     {
       if (this.RuleTypes.ContainsKey(ruleInfo))
-        throw new ArgumentException("Rule with current info is already registered.", "ruleInfo");
+        throw new ArgumentException("Rule with current info is already registered.", nameof(ruleInfo));
 
       if (this.RuleTypes.Any(pair => pair.Key.Name == ruleInfo.Name))
-        throw new ArgumentException("Rule with current name is already registered.", "ruleInfo");
+        throw new ArgumentException("Rule with current name is already registered.", nameof(ruleInfo));
 
       if (this.RuleTypes.ContainsValue(typeof(T)))
         throw new Exception("Current rule is already registered with other info.");

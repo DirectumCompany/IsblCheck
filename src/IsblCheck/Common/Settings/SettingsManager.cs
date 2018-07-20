@@ -1,5 +1,5 @@
-﻿using IsblCheck.Common.Patterns;
-using System;
+﻿using System;
+using IsblCheck.Common.Patterns;
 
 namespace IsblCheck.Common.Settings
 {
@@ -31,9 +31,8 @@ namespace IsblCheck.Common.Settings
     /// <param name="settingKey">Имя настройки.</param>
     private void OnSettingChanged(string settingKey)
     {
-      EventHandler<string> handler = this.SettingChanged;
-      if (handler != null)
-        handler.Invoke(this, settingKey);
+      var handler = this.SettingChanged;
+      handler?.Invoke(this, settingKey);
     }
 
     #endregion
@@ -68,17 +67,6 @@ namespace IsblCheck.Common.Settings
       this.SettingsProvider.SetValue(key, value);
       this.SettingsProvider.Save();
       this.OnSettingChanged(key);
-    }
-
-    #endregion
-
-    #region Конструкторы
-
-    /// <summary>
-    /// Конструктор.
-    /// </summary>
-    protected SettingsManager()
-    {
     }
 
     #endregion

@@ -1,16 +1,16 @@
-﻿using GalaSoft.MvvmLight.CommandWpf;
+﻿using System;
+using System.ComponentModel;
+using System.Linq;
+using System.Windows;
+using System.Windows.Data;
+using System.Windows.Input;
+using GalaSoft.MvvmLight.CommandWpf;
 using IsblCheck.Common.Dialogs;
 using IsblCheck.Common.Localization;
 using IsblCheck.Common.Panels;
 using IsblCheck.Core.Reports;
 using IsblCheck.Reports.Printers;
 using IsblCheck.Services;
-using System;
-using System.ComponentModel;
-using System.Linq;
-using System.Windows;
-using System.Windows.Data;
-using System.Windows.Input;
 
 namespace IsblCheck.ViewModels.Panels
 {
@@ -53,8 +53,7 @@ namespace IsblCheck.ViewModels.Panels
         this.isErrorsShown = value;
         this.RaisePropertyChanged();
 
-        if (this.ReportMessages != null)
-          this.ReportMessages.Refresh();
+        this.ReportMessages?.Refresh();
       }
     }
     private bool isErrorsShown = true;
@@ -71,8 +70,7 @@ namespace IsblCheck.ViewModels.Panels
           return;
         this.isWarningsShown = value;
         this.RaisePropertyChanged();
-        if (this.ReportMessages != null)
-          this.ReportMessages.Refresh();
+        this.ReportMessages?.Refresh();
       }
     }
     private bool isWarningsShown = true;
@@ -90,8 +88,7 @@ namespace IsblCheck.ViewModels.Panels
         this.isInformationsShown = value;
         this.RaisePropertyChanged();
 
-        if (this.ReportMessages != null)
-          this.ReportMessages.Refresh();
+        this.ReportMessages?.Refresh();
       }
     }
     private bool isInformationsShown = true;
@@ -103,9 +100,7 @@ namespace IsblCheck.ViewModels.Panels
     {
       get
       {
-        if (this.Report == null)
-          return 0;
-        return this.Report.Messages.Count(m => m.Severity == Severity.Error);
+        return this.Report?.Messages.Count(m => m.Severity == Severity.Error) ?? 0;
       }
     }
 
@@ -116,9 +111,7 @@ namespace IsblCheck.ViewModels.Panels
     {
       get
       {
-        if (this.Report == null)
-          return 0;
-        return this.Report.Messages.Count(m => m.Severity == Severity.Warning);
+        return this.Report?.Messages.Count(m => m.Severity == Severity.Warning) ?? 0;
       }
     }
 
@@ -129,9 +122,7 @@ namespace IsblCheck.ViewModels.Panels
     {
       get
       {
-        if (this.Report == null)
-          return 0;
-        return this.Report.Messages.Count(m => m.Severity == Severity.Information);
+        return this.Report?.Messages.Count(m => m.Severity == Severity.Information) ?? 0;
       }
     }
 
