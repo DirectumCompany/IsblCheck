@@ -1,3 +1,8 @@
+![License](https://img.shields.io/github/license/mashape/apistatus.svg)
+![Supported platforms](https://img.shields.io/badge/platform-win--32%20%7C%20win--64-green.svg)
+![GitHub issues](https://img.shields.io/github/issues/DirectumCompany/IsblCheck.svg)
+![GitHub release](https://img.shields.io/github/release/DirectumCompany/IsblCheck.svg)
+
 # Описание
 
 Инструмент для анализа ISBL кода, который служит для выявления ошибок в коде на стадии разработки. По сути является статическим анализатором кода.
