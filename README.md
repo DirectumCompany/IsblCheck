@@ -1,6 +1,6 @@
 # ISBL Check
 
-![License](https://img.shields.io/github/license/mashape/apistatus.svg)
+[![License](https://img.shields.io/github/license/mashape/apistatus.svg)][License]
 ![Supported platforms](https://img.shields.io/badge/platform-win--32%20%7C%20win--64-green.svg)
 [![GitHub issues](https://img.shields.io/github/issues/DirectumCompany/IsblCheck.svg)][Issues]
 [![GitHub release](https://img.shields.io/github/release/DirectumCompany/IsblCheck.svg)][Releases]
@@ -72,3 +72,4 @@ Standalone-инсталлятор для агента IsblCheck. Пока без
 
 [Releases]: ../../releases "Releases"
 [Issues]: ../../issues "Issues"
+[License]: /LICENSE "License"
